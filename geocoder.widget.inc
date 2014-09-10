@@ -325,7 +325,9 @@ function geocoder_widget_get_field_concat($items) {
   // Check if we should concatenate
   $concat = '';
   foreach ($items as $item) {
-    $concat .= trim($item['value']) . ', ';
+    if (!empty($item['value'])) {
+      $concat .= trim($item['value']) . ', ';
+    }
   }
   $concat = trim($concat, ', ');
   $items = array(array('value' => $concat));
