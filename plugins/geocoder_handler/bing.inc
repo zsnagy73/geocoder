@@ -75,7 +75,7 @@ function geocoder_bing($address, $options = array()) {
         '@code' => $result->code,
         '@error' => $result->error,
       );
-      $msg = t('HTTP request to google API failed.\nCode: @code\nError: @error', $args);
+      $msg = t('HTTP request to Bing API failed.\nCode: @code\nError: @error', $args);
       throw new Exception($msg);
     }
 
