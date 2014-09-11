@@ -141,7 +141,7 @@ function geocoder_google_field($field, $field_item, $options = array()) {
   }
   if ($field['type'] == 'taxonomy_term_reference') {
     $term = taxonomy_term_load($field_item['tid']);
-    return geocoder_google($term->name);
+    return geocoder_google($term->name, $options);
   }
 }
 
