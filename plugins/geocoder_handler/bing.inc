@@ -33,7 +33,7 @@ function geocoder_bing($address, $options = array()) {
       throw new Exception('You must specify a key.');
     }
 
-    if (isset($options['address'])) {
+    if (isset($options['address']) && is_array($options['address'])) {
       $query = array(
         'countryRegion' => (isset($options['address']['country']) ? $options['address']['country'] : ''),
         'adminDistrict' => (isset($options['address']['administrative_area']) ? $options['address']['administrative_area'] : ''),
