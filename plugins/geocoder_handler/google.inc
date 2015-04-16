@@ -37,6 +37,10 @@ function geocoder_google($address, $options = array()) {
       'sensor' => 'false',
     );
 
+    if (isset($options['extra_query']) && is_array($options['extra_query'])) {
+      $query += $options['extra_query'];
+    }
+
     $url = url("http://maps.googleapis.com/maps/api/geocode/json", array('query' => $query));
     $result = drupal_http_request($url);
     $delay_trigger = TRUE;
