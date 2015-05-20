@@ -41,6 +41,17 @@ function geocoder_google($address, $options = array()) {
       $query += $options['extra_query'];
     }
 
+    // Add any given biasing.
+    if (!empty($options['biasing']['bounds'])) {
+      $query['bounds'] = $options['biasing']['bounds'];
+    }
+    if (!empty($options['biasing']['region'])) {
+      $query['region'] = $options['biasing']['region'];
+    }
+    if (!empty($options['biasing']['components'])) {
+      $query['components'] = $options['biasing']['components'];
+    }
+
     $url = url("http://maps.googleapis.com/maps/api/geocode/json", array('query' => $query));
     $result = drupal_http_request($url);
     $delay_trigger = TRUE;
@@ -181,6 +192,34 @@ function geocoder_google_form($default_values = array()) {
     ),
     '#default_value' => isset($default_values['reject_results']) ? $default_values['reject_results'] : array(),
     '#description' => 'Reject results that do not meet a certain level of quality or precision. Check all types of results to reject.',
+  );
+
+  $form['biasing'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Result biasing'),
+    '#description' => t('To help reduce ambiguous results you can set give preference to or restrict results using viewports biasing, region biasing and component filtering. Please see !link for details on how to use these options.', array(
+      '!link' => l(t('The Google Geocoding API'), 'https://developers.google.com/maps/documentation/geocoding/'),
+    )),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['biasing']['bounds'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Viewport biasing'),
+    '#description' => t('Provide latitude/longitude coordinates of the southwest and northeast corners using a pipe (|) to separate the coordinates.'),
+    '#default_value' => isset($default_values['biasing']['bounds']) ? $default_values['biasing']['bounds']: NULL,
+  );
+  $form['biasing']['region'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Region biasing'),
+    '#description' => t('Provide a ccTLD for the desired region.'),
+    '#default_value' => isset($default_values['biasing']['region']) ? $default_values['biasing']['region']: NULL,
+  );
+  $form['biasing']['components'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Component filtering'),
+    '#description' => t('Provide a set of component:value pairs separated by a pipe (|) to filter results.'),
+    '#default_value' => isset($default_values['biasing']['components']) ? $default_values['biasing']['components']: NULL,
   );
 
   return $form;
