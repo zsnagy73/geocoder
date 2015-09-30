@@ -29,7 +29,7 @@ function geocoder_yandex($address, $options = array()) {
     $consumer_key = $geocoder_settings["geocoder_apikey_yandex"];
   }
   else {
-    drupal_set_message("You must set up your Yandex API key. Click <a href='$base_path/admin/config/content/geocoder'>here</a>",'error');
+    drupal_set_message(t('You must set up your Yandex API key. Click !config', array('!config' => l(t('here'), $base_path .'admin/config/content/geocoder'))),'error');
     return;
   }
 
