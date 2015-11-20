@@ -7,7 +7,7 @@ function geocoder_field_widget_info() {
   return array(
     'geocoder' => array(
       'label' => t('Geocode from another field'),
-      'field types' => array('geofield', 'geolocation_latlng', 'location'),
+      'field types' => array('geofield', 'geolocation_latlng', 'location', 'postgis'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
         'default value' => FIELD_BEHAVIOR_NONE,
@@ -191,7 +191,6 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
     $handler = geocoder_get_handler($field_instance['widget']['settings']['geocoder_handler']);
     $field_name = is_array($field_instance['widget']['settings']['geocoder_field']) ? reset($field_instance['widget']['settings']['geocoder_field']) : $field_instance['widget']['settings']['geocoder_field'];
     $target_info = field_info_field($field_instance['field_name']);
-    $target_type = $target_info['type'];
 
     // Determine the source type, if it's a entity-key, we mock it as a "text" field
     if (in_array($field_name, $entity_info['entity keys']) && $entity) {
@@ -304,7 +303,7 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
       }
       else {
         // Resolve multiple-values - get back values from our delta-resolver
-        $values = geocoder_widget_resolve_deltas($geometries, $delta_handling, $target_type);
+        $values = geocoder_widget_resolve_deltas($geometries, $delta_handling, $target_info);
 
         // Set the values - geofields do not support languages
         return array(LANGUAGE_NONE => $values);
@@ -340,13 +339,13 @@ function geocoder_widget_get_field_concat($items) {
  * Given a list of geometries, and user configuration on how to handle deltas,
  * we created a list of items to be inserted into the fields.
  */
-function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default', $field_type) {
+function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default', $target_info) {
   $values = array();
 
   // Default delta handling: just pass one delta to the next
   if ($delta_handling == 'default') {
     foreach ($geometries as $geometry) {
-      $values[] = geocoder_widget_values_from_geometry($geometry, $field_type);
+      $values[] = geocoder_widget_values_from_geometry($geometry, $target_info);
     }
   }
 
@@ -356,18 +355,18 @@ function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default'
     if (in_array($type, array('MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'))) {
       $components = $geometries[0]->getComponents();
       foreach ($components as $component) {
-        $values[] = geocoder_widget_values_from_geometry($component, $field_type);
+        $values[] = geocoder_widget_values_from_geometry($component, $target_info);
       }
     }
     else {
-      $values[] = geocoder_widget_values_from_geometry($geometries[0], $field_type);
+      $values[] = geocoder_widget_values_from_geometry($geometries[0], $target_info);
     }
   }
 
   // For multiple-to-single handling, run it though geometryReduce
    if ($delta_handling == 'm_to_s' || $delta_handling == 'c_to_s') {
     $reduced_geom = geoPHP::geometryReduce($geometries);
-    $values[] = geocoder_widget_values_from_geometry($reduced_geom, $field_type);
+    $values[] = geocoder_widget_values_from_geometry($reduced_geom, $target_info);
   }
 
   return $values;
@@ -379,9 +378,9 @@ function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default'
  * Given a geometry and the field type, return back a values array for that field.
  * The passed back array represents a single delta.
  */
-function geocoder_widget_values_from_geometry($geometry, $field_type) {
-  if ($field_type == 'geofield') return geofield_get_values_from_geometry($geometry);
-  if ($field_type == 'geolocation_latlng') {
+function geocoder_widget_values_from_geometry($geometry, $target_info) {
+  if ($target_info['type'] == 'geofield') return geofield_get_values_from_geometry($geometry);
+  if ($target_info['type'] == 'geolocation_latlng') {
     $centroid = $geometry->centroid();
     $lat = $centroid->y();
     $lng = $centroid->x();
@@ -394,12 +393,22 @@ function geocoder_widget_values_from_geometry($geometry, $field_type) {
       'lng_rad' => deg2rad($lng),
     );
   }
-  if ($field_type == 'location') {
+  if ($target_info['type'] == 'location') {
     $centroid = $geometry->centroid();
     return array(
       'latitude' => $centroid->y(),
       'longitude' => $centroid->x(),
       'source' => 2,
+    );
+  }
+  if ($target_info['type'] == 'postgis') {
+    $srid = $geometry->getSRID() ? $geometry->getSRID() : '4326';
+    $type = $target_info['settings']['type'];
+    $postgis_geometry = new PostgisGeometry($type, $srid);
+    $postgis_geometry->fromText($geometry->asText());
+    $postgis_geometry->transform($target_info['settings']['srid']);
+    return array(
+      'geometry' => $postgis_geometry->getGeometry(),
     );
   }
 }
