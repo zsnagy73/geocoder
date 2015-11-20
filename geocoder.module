@@ -8,6 +8,10 @@
 include_once('geocoder.widget.inc');
 include_once('geocoder.services.inc');
 
+define('GEOCODER_GOOGLE_AUTH_NONE', 1);
+define('GEOCODER_GOOGLE_AUTH_KEY', 2);
+define('GEOCODER_GOOGLE_AUTH_WORK', 3);
+
 /**
  * The Geocoder API call.
  *

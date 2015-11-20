@@ -52,7 +52,54 @@ function geocoder_google($address, $options = array()) {
       $query['components'] = $options['biasing']['components'];
     }
 
-    $url = url("http://maps.googleapis.com/maps/api/geocode/json", array('query' => $query));
+    // Add Google API authentication parameters.
+    switch (variable_get('geocoder_google_auth_method')) {
+
+      // Google Geocoding API Key.
+      case GEOCODER_GOOGLE_AUTH_KEY:
+        $geocoder_settings = variable_get("geocoder_settings", array());
+        if (!empty($geocoder_settings['geocoder_apikey_google'])) {
+          $query['key'] = $geocoder_settings['geocoder_apikey_google'];
+        }
+        break;
+
+      // Google Maps for Work signature.
+      case GEOCODER_GOOGLE_AUTH_WORK:
+        $client_id   = variable_get('geocoder_google_client_id', FALSE);
+        $private_key = variable_get('geocoder_google_private_key', FALSE);
+        if (!empty($client_id) && !empty($private_key)) {
+          $google_maps_for_work = TRUE;
+          $query['client']      = $client_id;
+        }
+        break;
+    }
+
+    // Build the URL.
+    $url = url("https://maps.googleapis.com/maps/api/geocode/json", array(
+      'query' => $query,
+    ));
+
+    // If authenticating via Google Maps for Work, add signature.
+    // @see https://developers.google.com/maps/documentation/business/webservices/auth#generating_valid_signatures
+    if (!empty($google_maps_for_work)) {
+
+      // Strip off the protocol and host for signing.
+      $parsed      = parse_url($url);
+      $url_to_sign = $parsed['path'] . '?' . $parsed['query'];
+
+      // Decode the key in a URL-safe way (RFC 4648 Section 5).
+      // @see https://www.ietf.org/rfc/rfc4648.txt
+      $decoded_key = base64_decode(strtr($private_key, '-_', '+/'));
+
+      // Use HMAC SHA1 to sign the URL with the decoded key.
+      $signature = hash_hmac('sha1', $url_to_sign, $decoded_key, TRUE);
+
+      // Append the signature to the URL's query parameters. Do this manually to
+      // avoid URL encoding.
+      $url .= '&signature=' . strtr(base64_encode($signature), '+/', '-_');
+    }
+
+    // Send the request.
     $result = drupal_http_request($url);
     $delay_trigger = TRUE;
 
