@@ -62,15 +62,20 @@ function geocoder_google($address, $options = array()) {
         '@error' => $result->error,
       );
       $msg = t('HTTP request to google API failed.\nCode: @code\nError: @error', $args);
-      throw new Exception($msg);
+      throw new Exception($msg, WATCHDOG_ERROR);
     }
 
     $data = json_decode($result->data);
 
-    if ($data->status != 'OK') {
+    if ($data->status == 'ZERO_RESULTS') {
+      $args = array('@status' => $data->status, '@address' => $address);
+      $msg = t('Google API returned zero results on @address status.\nStatus: @status', $args);
+      throw new Exception($msg, WATCHDOG_NOTICE);
+    }
+    elseif ($data->status != 'OK') {
       $args = array('@status' => $data->status);
       $msg = t('Google API returned bad status.\nStatus: @status', $args);
-      throw new Exception($msg);
+      throw new Exception($msg, WATCHDOG_WARNING);
     }
 
     $geometries = array();
@@ -137,7 +142,7 @@ function geocoder_google($address, $options = array()) {
 
     return $geometry;
   } catch (Exception $e) {
-    watchdog_exception('geocoder', $e);
+    watchdog_exception('geocoder', $e, $e->getMessage(), array(), $e->getCode());
     return FALSE;
   }
 }
