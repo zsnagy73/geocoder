@@ -161,7 +161,7 @@ function geocoder_ctools_plugin_api() {
 }
 
 /**
- * Implementation of hook_ctools_plugin_dierctory() to let the system know
+ * Implementation of hook_ctools_plugin_directory() to let the system know
  * we implement plugins.
  */
 function geocoder_ctools_plugin_directory($module, $plugin) {
@@ -219,8 +219,8 @@ function geocoder_service_check_perms($handler) {
  * Page callback for AJAX / Geocoder service
  *
  * This service can be accessed at /geocoder/service/<handler>
- * and takes the query-parameter "data". Optinally a "output"
- * paramater may also be passed. "output" corresponds to
+ * and takes the query-parameter "data". Optionally a "output"
+ * parameter may also be passed. "output" corresponds to
  * geoPHP output formats.
  *
  * Some examples:

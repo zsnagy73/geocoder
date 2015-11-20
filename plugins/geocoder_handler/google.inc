@@ -127,7 +127,7 @@ function geocoder_google($address, $options = array()) {
         return geoPHP::geometryReduce($geometries);
       }
     }
-    // The connonical geometry is the first result (best guesse)
+    // The canonical geometry is the first result (best guess)
     $geometry = array_shift($geometries);
 
     // If there are any other geometries, these are auxiliary geometries that represent "alternatives"

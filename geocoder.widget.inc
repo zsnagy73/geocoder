@@ -318,7 +318,7 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
  * Get field items and info
  *
  * We always pass the full field-item array (with all columns) to the handler, but there is some preprocessing
- * that we need to do for the special case of entity-labels and multi-field contactenation
+ * that we need to do for the special case of entity-labels and multi-field concatenation
  * For these two special cases we "mock-up" a text-field and pass it back for geocoding
  */
 function geocoder_widget_get_field_concat($items) {
@@ -335,7 +335,7 @@ function geocoder_widget_get_field_concat($items) {
 }
 
 /**
- * Geocder Widget - Resolve Deltas
+ * Geocoder Widget - Resolve Deltas
  *
  * Given a list of geometries, and user configuration on how to handle deltas,
  * we created a list of items to be inserted into the fields.
@@ -374,7 +374,7 @@ function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default'
 }
 
 /**
- * Geocder Widget - Field values from geometry
+ * Geocoder Widget - Field values from geometry
  *
  * Given a geometry and the field type, return back a values array for that field.
  * The passed back array represents a single delta.
