@@ -32,10 +32,7 @@ function geocoder_google($address, $options = array()) {
 
     geophp_load();
 
-    $query = array(
-      'address' => $address,
-      'sensor' => 'false',
-    );
+    $query = array('address' => $address);
 
     if (isset($options['extra_query']) && is_array($options['extra_query'])) {
       $query += $options['extra_query'];
