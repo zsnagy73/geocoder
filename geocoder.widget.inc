@@ -290,7 +290,13 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
           }
         }
         catch (Exception $e) {
-          watchdog_exception('geocoder', $e);
+          $uri_info = entity_uri($entity_type, $entity);
+          watchdog_exception('geocoder', $e, NULL, array(), WATCHDOG_ERROR,
+            l(t('View offending entity (@entity_type: @bundle).', array(
+              '@entity_type' => $entity_info['label'],
+              '@bundle' => isset($entity->type) ? $entity->type : '',
+            )), $uri_info['path'])
+          );
           return FALSE;
         }
       }

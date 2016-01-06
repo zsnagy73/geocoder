@@ -186,8 +186,8 @@ function geocoder_google($address, $options = array()) {
 
     return $geometry;
   } catch (Exception $e) {
-    watchdog_exception('geocoder', $e, $e->getMessage(), array(), $e->getCode());
-    return FALSE;
+    // Just rethrow the exception, the geocoder widget handles it.
+    throw $e;
   }
 }
 
