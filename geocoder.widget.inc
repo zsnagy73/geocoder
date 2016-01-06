@@ -413,9 +413,8 @@ function geocoder_widget_values_from_geometry($geometry, $target_info) {
   }
 }
 
-
 /**
- * Geocoder Widget - Parse an address field
+ * Geocoder Widget - Parse an address field.
  */
 function geocoder_widget_parse_addressfield($field_item) {
   $address = '';
@@ -424,7 +423,15 @@ function geocoder_widget_parse_addressfield($field_item) {
   if (!empty($field_item['locality']))                $address .= $field_item['locality'] . ',';
   if (!empty($field_item['administrative_area']))     $address .= $field_item['administrative_area'] . ',';
   if (!empty($field_item['sub_administrative_area'])) $address .= $field_item['sub_administrative_area'] . ',';
-  if (!empty($field_item['country']))                 $address .= $field_item['country'] . ',';
+  if (!empty($field_item['country'])) {
+    // Convert country code to country name.
+    include_once DRUPAL_ROOT . '/includes/locale.inc';
+    $countries = country_get_list();
+    if (array_key_exists($field_item['country'], $countries)) {
+      $field_item['country'] = $countries[$field_item['country']];
+    }
+    $address .= $field_item['country'] . ',';
+  }
   if (!empty($field_item['postal_code']))             $address .= $field_item['postal_code'] . ',';
 
   $address = rtrim($address, ', ');
@@ -453,7 +460,11 @@ function geocoder_widget_parse_locationfield($field_item) {
   return $address;
 }
 
-
+/**
+ * Helper function to compare 2 arrays recursively.
+ *
+ * @TODO: conform to drupal coding standards.
+ */
 function geocoder_widget_array_recursive_diff($aArray1, $aArray2) {
   $aReturn = array();
   if (empty($aArray1)) {
