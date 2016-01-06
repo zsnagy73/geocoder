@@ -51,6 +51,24 @@ function geocoder_field_widget_settings_form($this_field, $instance) {
 
       $entity_fields['name']['label'] = t('Name');
       break;
+
+    case 'country':
+      $all_fields['name'] = array(
+        'field_name' => 'name',
+        'type' => 'text',
+      );
+
+      $entity_fields['name']['label'] = t('Name');
+      break;
+
+    case 'country':
+      $all_fields['name'] = array(
+        'field_name' => 'name',
+        'type' => 'text',
+      );
+
+      $entity_fields['name']['label'] = t('Name');
+      break;
   }
 
   // Get a list of all valid fields that we both support and are part of this entity
