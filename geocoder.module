@@ -177,7 +177,9 @@ function geocoder_ctools_plugin_directory($module, $plugin) {
  */
 function geocoder_ctools_plugin_type() {
   return array(
-    'geocoder_handler' => array(),
+    'geocoder_handler' => array(
+      'cache' => TRUE,
+    ),
   );
 }
 
