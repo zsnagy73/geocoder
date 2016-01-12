@@ -20,16 +20,15 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class MapQuest extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $configuration = $this->getConfiguration();
-        $this->setHandler(new \Geocoder\Provider\MapQuest($this->getAdapter(), $configuration['apiKey'], $configuration['licensed']));
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\MapQuest($this->getAdapter(), $configuration['apiKey'], $configuration['licensed']));
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

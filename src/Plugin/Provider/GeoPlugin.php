@@ -20,15 +20,14 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class GeoPlugin extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $this->setHandler(new \Geocoder\Provider\GeoPlugin());
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $this->setHandler(new \Geocoder\Provider\GeoPlugin());
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

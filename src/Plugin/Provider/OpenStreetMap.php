@@ -20,15 +20,14 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class OpenStreetMap extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $this->setHandler(new \Geocoder\Provider\OpenStreetMap($this->getAdapter()));
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $this->setHandler(new \Geocoder\Provider\OpenStreetMap($this->getAdapter()));
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

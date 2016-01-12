@@ -20,7 +20,6 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class Geonames extends GeocoderProvider {
   /**
    * @inheritdoc

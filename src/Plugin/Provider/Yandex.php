@@ -20,15 +20,14 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class Yandex extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

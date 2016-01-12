@@ -20,16 +20,15 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class Nominatim extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $configuration = $this->getConfiguration();
-        $this->setHandler(new \Geocoder\Provider\Nominatim($this->getAdapter(), $configuration['rootUrl']));
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\Nominatim($this->getAdapter(), $configuration['rootUrl']));
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

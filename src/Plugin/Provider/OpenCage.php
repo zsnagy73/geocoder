@@ -20,16 +20,15 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-
 class OpenCage extends GeocoderProvider {
-    /**
-     * @inheritdoc
-     */
-    public function init() {
-        $configuration = $this->getConfiguration();
-        $this->setHandler(new \Geocoder\Provider\OpenCage($this->getAdapter(), $configuration['apiKey']));
+  /**
+   * @inheritdoc
+   */
+  public function init() {
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\OpenCage($this->getAdapter(), $configuration['apiKey']));
 
-        return parent::init();
-    }
+    return parent::init();
+  }
 
 }

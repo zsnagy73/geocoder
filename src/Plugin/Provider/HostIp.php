@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * The Geoip plugin.
+ * The HostIp plugin.
  */
 
 namespace Drupal\geocoder\Plugin\Provider;
@@ -11,21 +11,21 @@ use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Geoip.
+ * Class HostIp.
  *
  * @GeocoderProviderPlugin(
- *  id = "Geoip",
+ *  id = "HostIp",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class Geoip extends GeocoderProvider {
+class HostIp extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\Geoip());
+    $this->setHandler(new \Geocoder\Provider\HostIp($this->getAdapter()));
 
     return parent::init();
   }
