@@ -246,25 +246,12 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
       return array();
     }
 
-    // For entities being updated, determine if another geocode is necessary
-    if ($entity) {
-      if (!empty($entity->original)) {
-        //@@TODO: Deal with entity-properties (non-fields)
-        //@@TODO: This isn't working with file fields. Should use some kind of lookup / map
-        $field_original = field_get_items($entity_type, $entity->original, $field_name, isset($entity->original->language) ? $entity->original->language : NULL);
-        $target_original = field_get_items($entity_type, $entity->original, $field_instance['field_name'], isset($entity->original->language) ? $entity->original->language : NULL);
-        if (!empty($field_original) && !empty($target_original)) {
-          $diff = geocoder_widget_array_recursive_diff($field_original, $source_field_values);
-          if (empty($diff)) {
-            return FALSE;
-          }
-        }
-      }
-    }
-
     // Get the handler-specific-settings
     if (isset($field_instance['widget']['settings']['handler_settings'][$handler['name']])) {
       $handler_settings = $field_instance['widget']['settings']['handler_settings'][$handler['name']];
+    }
+    else {
+      $handler_settings = array();
     }
 
     // Determine how we deal with deltas (multi-value fields)
@@ -281,44 +268,44 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
     }
 
     // Allow other modules to alter values before we geocode them.
-    drupal_alter('geocoder_geocode_values',
-        $source_field_values, $field_info, $handler_settings, $field_instance
-    );
+    drupal_alter('geocoder_geocode_values', $source_field_values, $field_info, $handler_settings, $field_instance);
 
     if (is_array($source_field_values) && count($source_field_values)) {
-      $values = array();
-
-      // Geocode geometries
+      // Geocode geometries.
       $geometries = array();
       foreach ($source_field_values as $delta => $item) {
-        // Geocode any value from our source field.
-        try {
-          if (isset($handler_settings)) {
+        // Attempt to retrieve from persistent cache.
+        $geometry = geocoder_cache_get($handler['name'], $item, $handler_settings);
+
+        // No cache record, so fetch live.
+        if ($geometry === NULL) {
+          // Geocode any value from our source field.
+          try {
             $geometry = call_user_func($handler['field_callback'], $field_info, $item, $handler_settings);
+
+            // Save result persistently.
+            geocoder_cache_set($geometry, $handler['name'], $item, $handler_settings);
           }
-          else {
-            $geometry = call_user_func($handler['field_callback'], $field_info, $item);
-          }
-          if ($geometry instanceof Geometry) {
-            $geometries[] = $geometry;
+          catch (Exception $e) {
+            $uri_info = entity_uri($entity_type, $entity);
+            watchdog_exception('geocoder', $e, NULL, array(), WATCHDOG_ERROR,
+              l(t('View offending entity (@entity_type: @bundle).', array(
+                '@entity_type' => $entity_info['label'],
+                '@bundle' => isset($entity->type) ? $entity->type : '',
+              )), $uri_info['path'])
+            );
+            return FALSE;
           }
         }
-        catch (Exception $e) {
-          $uri_info = entity_uri($entity_type, $entity);
-          watchdog_exception('geocoder', $e, NULL, array(), WATCHDOG_ERROR,
-            l(t('View offending entity (@entity_type: @bundle).', array(
-              '@entity_type' => $entity_info['label'],
-              '@bundle' => isset($entity->type) ? $entity->type : '',
-            )), $uri_info['path'])
-          );
-          return FALSE;
+
+        if ($geometry instanceof Geometry) {
+          $geometries[] = $geometry;
         }
       }
 
       if (empty($geometries)) {
         // This field has no data, so set the field to an empty array in
         // order to delete its saved data.
-        $values = array(NULL);
         return array();
       }
       else {
@@ -384,7 +371,7 @@ function geocoder_widget_resolve_deltas($geometries, $delta_handling = 'default'
   }
 
   // For multiple-to-single handling, run it though geometryReduce
-   if ($delta_handling == 'm_to_s' || $delta_handling == 'c_to_s') {
+  if ($delta_handling == 'm_to_s' || $delta_handling == 'c_to_s') {
     $reduced_geom = geoPHP::geometryReduce($geometries);
     $values[] = geocoder_widget_values_from_geometry($reduced_geom, $target_info);
   }
@@ -478,31 +465,4 @@ function geocoder_widget_parse_locationfield($field_item) {
   $address = rtrim($address, ', ');
 
   return $address;
-}
-
-/**
- * Helper function to compare 2 arrays recursively.
- *
- * @TODO: conform to drupal coding standards.
- */
-function geocoder_widget_array_recursive_diff($aArray1, $aArray2) {
-  $aReturn = array();
-  if (empty($aArray1)) {
-    return $aReturn;
-  }
-  foreach ($aArray1 as $mKey => $mValue) {
-    if (array_key_exists($mKey, $aArray2)) {
-      if (is_array($mValue)) {
-        $aRecursiveDiff = geocoder_widget_array_recursive_diff($mValue, $aArray2[$mKey]);
-        if (count($aRecursiveDiff)) { $aReturn[$mKey] = $aRecursiveDiff; }
-      } elseif (!empty($mValue)) {
-        if ($mValue != $aArray2[$mKey]) {
-          $aReturn[$mKey] = $mValue;
-        }
-      }
-    } elseif (!empty($mValue)) {
-      $aReturn[$mKey] = $mValue;
-    }
-  }
-  return $aReturn;
 }
