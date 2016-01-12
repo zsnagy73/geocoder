@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * The Geoip plugin.
+ * The Yandex plugin.
  */
 
 namespace Drupal\geocoder\Plugin\Provider;
@@ -11,24 +11,24 @@ use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Geoip.
+ * Class Yandex.
  *
  * @GeocoderProviderPlugin(
- *  id = "Geoip",
+ *  id = "Yandex",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
 
-class Geoip extends GeocoderProvider {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\Geoip());
+class Yandex extends GeocoderProvider {
+    /**
+     * @inheritdoc
+     */
+    public function init() {
+        $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
 
-    return parent::init();
-  }
+        return parent::init();
+    }
 
 }

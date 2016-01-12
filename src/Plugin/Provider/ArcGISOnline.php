@@ -31,4 +31,5 @@ class ArcGISOnline extends GeocoderProvider {
 
     return parent::init();
   }
+
 }

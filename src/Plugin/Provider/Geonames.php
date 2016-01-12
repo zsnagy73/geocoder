@@ -31,4 +31,5 @@ class Geonames extends GeocoderProvider {
 
     return parent::init();
   }
+
 }

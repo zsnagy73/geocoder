@@ -30,4 +30,5 @@ class GoogleMaps extends GeocoderProvider {
 
     return parent::init();
   }
+
 }

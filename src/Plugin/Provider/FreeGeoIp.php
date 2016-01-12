@@ -30,4 +30,5 @@ class FreeGeoIp extends GeocoderProvider {
 
     return parent::init();
   }
+
 }

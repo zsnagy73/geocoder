@@ -31,4 +31,5 @@ class BingMaps extends GeocoderProvider {
 
     return parent::init();
   }
+
 }
