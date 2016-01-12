@@ -22,7 +22,7 @@ include('vendor/autoload.php');
  * @return array
  *
  * @example:
- *    geocoder('Google', '1600 Amphitheatre Parkway Mountain View, CA 94043');
+ *    geocoder('GoogleMaps', '1600 Amphitheatre Parkway Mountain View, CA 94043');
  */
 function geocoder($handler, $data, $options = array()) {
   return \Drupal\geocoder\Geocoder::geocode($handler, $data)->first()->toArray();
@@ -45,7 +45,7 @@ function geocoder($handler, $data, $options = array()) {
  * @return array
  *
  * @example:
- *    reverse('Google', '37.4224504', '-122.0840859');
+ *    reverse('GoogleMaps', '37.4224504', '-122.0840859');
  */
 function reverse($handler, $latitude, $longitude, $options = array()) {
   return \Drupal\geocoder\Geocoder::reverse($handler, $latitude, $longitude, $options)->first()->toArray();

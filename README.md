@@ -1,6 +1,6 @@
 # Geocoder
 
-This is a the Geocoder module for Drupal 7 rewritten using the Geocoder PHP library.
+This is the Geocoder module for Drupal 7 rewritten using the Geocoder PHP library.
 
 # Installation
 * Install the contrib module [Service Container](https://www.drupal.org/project/service_container) which is now a requirement.

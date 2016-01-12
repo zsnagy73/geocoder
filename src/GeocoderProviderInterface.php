@@ -48,7 +48,7 @@ interface GeocoderProviderInterface {
   public function getHandler();
 
   /**
-   * Set the Geocoder handler to use.
+   * Set the configuration.
    *
    * @param array $configuration
    *   The configuration.
@@ -56,6 +56,14 @@ interface GeocoderProviderInterface {
    * @return GeocoderProvider
    */
   public function setConfiguration($configuration = array());
+
+  /**
+   * Get the configuration.
+   *
+   * @return array
+   *   The configuration array.
+   */
+  public function getConfiguration();
 
   /**
    * Geocode a string

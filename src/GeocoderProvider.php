@@ -117,6 +117,13 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  /**
    * Geocode a string
    *
    * @param string $data

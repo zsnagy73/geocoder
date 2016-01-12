@@ -9,7 +9,7 @@ class Geocoder {
   /* @var GeocoderProviderInterface $plugin */
   protected static $plugin;
 
-  public static function geocode($plugin = 'Google', $data, $options = array()) {
+  public static function geocode($plugin = 'GoogleMaps', $data, $options = array()) {
     if (!isset(self::$plugin)) {
       self::setPlugin($plugin, $options);
     }
@@ -17,7 +17,7 @@ class Geocoder {
     return self::getPlugin()->setConfiguration($options)->geocode($data);
   }
 
-  public static function reverse($plugin = 'Google', $latitude, $longitude, $options = array()) {
+  public static function reverse($plugin = 'GoogleMaps', $latitude, $longitude, $options = array()) {
     if (!isset(self::$plugin)) {
       self::setPlugin($plugin, $options);
     }
@@ -31,7 +31,7 @@ class Geocoder {
    * @param string $plugin
    *   The Plugin ID to use.
    */
-  public static function setPlugin($plugin = 'Google', $configuration = array()) {
+  public static function setPlugin($plugin = 'GoogleMaps', $configuration = array()) {
     self::$plugin = \Drupal::service('geocoder.Provider')->createInstance($plugin, $configuration);
   }
 

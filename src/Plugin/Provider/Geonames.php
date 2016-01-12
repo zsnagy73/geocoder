@@ -1,33 +1,33 @@
 <?php
 /**
  * @file
- * Map: Map.
+ * The Geonames plugin.
  */
 
 namespace Drupal\geocoder\Plugin\Provider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
-use Geocoder\Provider\GoogleMaps;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Google.
+ * Class Geonames.
  *
  * @GeocoderProviderPlugin(
- *  id = "Google",
+ *  id = "Geonames",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
 
-class Google extends GeocoderProvider {
+class Geonames extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new GoogleMaps($this->getAdapter()));
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\Geonames($this->getAdapter(), $configuration['username']));
 
     return parent::init();
   }
