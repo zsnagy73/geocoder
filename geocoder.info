@@ -1,11 +1,8 @@
-name = Geocoder 2.x
+name = Geocoder
 description = An API and widget to geocode various known data into other GIS data types.
 core = 7.x
 
-dependencies[] = geophp
+dependencies[] = composer_manager
 dependencies[] = service_container:service_container_annotation_discovery
 
-configure = admin/config/content/geocoder
-
 registry_autoload[] = PSR-4
-registry_autoload[] = PSR-0
