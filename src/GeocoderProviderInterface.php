@@ -87,4 +87,34 @@ interface GeocoderProviderInterface {
    */
   public function reverse($latitude, $longitude);
 
+  /**
+   * Set a cache
+   *
+   * @param string $cid
+   *   The cache ID.
+   *
+   * @param mixed $data
+   *   The data to cache
+   */
+  public function cache_set($cid, $data);
+
+  /**
+   * Retrive a cache ID.
+   *
+   * @param string $cid
+   *   The cache ID.
+   *
+   * @return bool|mixed
+   *   The cache value.
+   */
+  public function cache_get($cid);
+
+  /**
+   * Get a cache ID from an array of arguments.
+   *
+   * @return string
+   *   The cache ID.
+   */
+  public function getCacheCid();
+
 }

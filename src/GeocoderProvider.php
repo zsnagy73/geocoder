@@ -144,12 +144,7 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
   }
 
   /**
-   * Geocode a string
-   *
-   * @param string $data
-   *   The string to geocode
-   *
-   * @return AddressCollection
+   * {@inheritdoc}
    */
   public function geocode($data) {
     $cid = $this->getCacheCid($data);
@@ -171,14 +166,7 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
   }
 
   /**
-   * Reverse geocode a string
-   *
-   * @param string $latitude
-   *   The latitude
-   * @param string $longitude
-   *   The longitude
-   *
-   * @return AddressCollection
+   * {@inheritdoc}
    */
   public function reverse($latitude, $longitude) {
     $cid = $this->getCacheCid($latitude, $longitude);
@@ -199,6 +187,9 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
     return $value;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function cache_get($cid) {
     if ($cache = cache_get($cid, 'cache_geocoder')) {
       return $cache->data;
@@ -207,14 +198,15 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function cache_set($cid, $data) {
     cache_set($cid, $data, 'cache_geocoder', CACHE_PERMANENT);
   }
 
   /**
-   * Get a cache ID.
-   *
-   * @return string
+   * {@inheritdoc}
    */
   public function getCacheCid() {
     $args = func_get_args();
@@ -224,4 +216,5 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
 
     return sha1(serialize(array_filter($args)));
   }
+
 }
