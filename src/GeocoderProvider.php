@@ -4,9 +4,9 @@ namespace Drupal\geocoder\GeocoderProvider;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
+use Drupal\geocoder\Config;
 use Drupal\geocoder\GeocoderProviderInterface;
 use Drupal\service_container\Messenger\MessengerInterface;
-use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\AbstractHttpProvider;
 use Geocoder\Provider\Provider;
 use Ivory\HttpAdapter\HttpAdapterInterface;
@@ -191,8 +191,10 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
    * {@inheritdoc}
    */
   public function cache_get($cid) {
-    if ($cache = cache_get($cid, 'cache_geocoder')) {
-      return $cache->data;
+    if ((bool) Config::get('geocoder.cache', TRUE)) {
+      if ($cache = cache_get($cid, 'cache_geocoder')) {
+        return $cache->data;
+      }
     }
 
     return FALSE;
@@ -202,7 +204,9 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
    * {@inheritdoc}
    */
   public function cache_set($cid, $data) {
-    cache_set($cid, $data, 'cache_geocoder', CACHE_PERMANENT);
+    if ((bool) Config::get('geocoder.cache', TRUE)) {
+      cache_set($cid, $data, 'cache_geocoder', CACHE_PERMANENT);
+    }
   }
 
   /**
