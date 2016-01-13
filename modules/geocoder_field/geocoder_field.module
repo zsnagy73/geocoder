@@ -450,6 +450,7 @@ function geocoder_field_field_formatter_info() {
     'settings' => array(
       'format_handlers' => array('address'),
       'geocoder_handler' => 'GoogleMaps',
+      'default_country' => '',
     )
   );
 
@@ -471,6 +472,14 @@ function geocoder_field_field_formatter_settings_form($field, $instance, $view_m
     '#options' => \Drupal\geocoder\Geocoder::getPlugins(),
     '#description' => t('Select which type of geocoding plugin you would like to use.'),
     '#required' => TRUE,
+  );
+
+  $form['default_country'] = array(
+    '#type' => 'select',
+    '#title' => t('Default country'),
+    '#options' => array('site_default' => t('- Site default -')) + _addressfield_country_options_list(),
+    '#default_value' => $settings['default_country'],
+    '#empty_value' => '',
   );
 
   $form['format_handlers'] = array(
@@ -512,18 +521,19 @@ function geocoder_field_field_formatter_view($entity_type, $entity, $field, $ins
   switch ($display['type']) {
     case 'geocoder_reverse':
       foreach ($items as $delta => $item) {
-        $geocoder = reverse($geocoder_handler, $item['lat'], $item['lon']);
-        $geocoder = _geocoder_field_geocoder_to_addressfield($geocoder);
+        if ($geocoder = reverse($geocoder_handler, $item['lat'], $item['lon'])) {
+          $geocoder = _geocoder_field_geocoder_to_addressfield($geocoder, $field, $display, $instance);
 
-        $context = array(
-          'mode' => 'render',
-          'field' => $field,
-          'instance' => $instance,
-          'langcode' => $langcode,
-          'delta' => $delta,
-        );
+          $context = array(
+            'mode' => 'render',
+            'field' => $field,
+            'instance' => $instance,
+            'langcode' => $langcode,
+            'delta' => $delta,
+          );
 
-        $element[$delta] = addressfield_generate($geocoder, array_values($settings['format_handlers']), $context);
+          $element[$delta] = addressfield_generate($geocoder, array_values($settings['format_handlers']), $context);
+        }
       }
       break;
   }
@@ -535,7 +545,38 @@ function geocoder_field_field_formatter_view($entity_type, $entity, $field, $ins
  * Helper function. Transform an array from Geocoder PHP library into an
  * array for AddressField module.
  */
-function _geocoder_field_geocoder_to_addressfield($geocoder) {
+function _geocoder_field_geocoder_to_addressfield($geocoder, $field, $display, $instance) {
+  $available_countries = _addressfield_country_options_list($field, $instance);
+  $default_country = $display['settings']['default_country'];
+  // Resolve the special site_default option.
+  if ($default_country == 'site_default') {
+    $default_country = variable_get('site_default_country', '');
+  }
+  // Fallback to the first country in the list if the default country is not
+  // available, or is empty even though the field is required.
+  $not_available = $default_country && !isset($available_countries[$default_country]);
+  $empty_but_required = empty($default_country) && !empty($instance['required']);
+  if ($not_available || $empty_but_required) {
+    $default_country = key($available_countries);
+  }
+
+  $geocoder += array(
+    'country' => $default_country,
+    'name_line' => '',
+    'first_name' => '',
+    'last_name' => '',
+    'organisation_name' => '',
+    'administrative_area' => '',
+    'sub_administrative_area' => '',
+    'locality' => '',
+    'dependent_locality' => '',
+    'postal_code' => '',
+    'thoroughfare' => '',
+    'premise' => '',
+    'sub_premise' => '',
+    'data' => '',
+  );
+
   $thoroughfare = array();
   if (isset($geocoder['streetNumber'])) {
     $thoroughfare[] = $geocoder['streetNumber'];
