@@ -290,7 +290,6 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
   }
 }
 
-
 /**
  * Get field items and info
  *
@@ -446,8 +445,12 @@ function geocoder_field_field_formatter_info() {
   $formatters = array();
 
   $formatters['geocoder_reverse'] = array(
-    'label' => t('Openlayers'),
+    'label' => t('Reverse geocoding to address'),
     'field types' => array('geofield'),
+    'settings' => array(
+      'format_handlers' => array('address'),
+      'geocoder_handler' => 'GoogleMaps',
+    )
   );
 
   return $formatters;
@@ -458,13 +461,97 @@ function geocoder_field_field_formatter_info() {
  */
 function geocoder_field_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $form = array();
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $form['geocoder_handler'] = array(
+    '#type' => 'select',
+    '#title' => t('Geocoder'),
+    '#default_value' => $settings['geocoder_handler'],
+    '#options' => \Drupal\geocoder\Geocoder::getPlugins(),
+    '#description' => t('Select which type of geocoding plugin you would like to use.'),
+    '#required' => TRUE,
+  );
+
+  $form['format_handlers'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Format handlers'),
+    '#options' => addressfield_format_plugins_options(),
+    '#process' => array('form_process_checkboxes', '_addressfield_field_formatter_settings_form_process_add_state'),
+    '#element_validate' => array('_addressfield_field_formatter_settings_form_validate'),
+    '#default_value' => $settings['format_handlers'],
+  );
 
   return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function geocoder_field_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $summary = array();
+
+  list(, $geocoder_handler) = explode(':', $settings['geocoder_handler'], 2);
+
+  $summary[] = t('Geocoder plugin: @data', array('@data' => $geocoder_handler));
+
+  return implode('<br />', $summary);
 }
 
 /**
  * Implements hook_field_formatter_view().
  */
 function geocoder_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
 
+  list(, $geocoder_handler) = explode(':', $settings['geocoder_handler'], 2);
+
+  switch ($display['type']) {
+    case 'geocoder_reverse':
+      foreach ($items as $delta => $item) {
+        $geocoder = reverse($geocoder_handler, $item['lat'], $item['lon']);
+        $geocoder = _geocoder_field_geocoder_to_addressfield($geocoder);
+
+        $context = array(
+          'mode' => 'render',
+          'field' => $field,
+          'instance' => $instance,
+          'langcode' => $langcode,
+          'delta' => $delta,
+        );
+
+        $element[$delta] = addressfield_generate($geocoder, array_values($settings['format_handlers']), $context);
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Helper function. Transform an array from Geocoder PHP library into an
+ * array for AddressField module.
+ */
+function _geocoder_field_geocoder_to_addressfield($geocoder) {
+  $thoroughfare = array();
+  if (isset($geocoder['streetNumber'])) {
+    $thoroughfare[] = $geocoder['streetNumber'];
+  }
+  if (isset($geocoder['streetName'])) {
+    $thoroughfare[] = $geocoder['streetName'];
+  }
+
+  $geocoder['thoroughfare'] = implode(', ', $thoroughfare);
+
+  if (isset($geocoder['postalCode'])) {
+    $geocoder['postal_code'] = $geocoder['postalCode'];
+  }
+  if (isset($geocoder['countryCode'])) {
+    $geocoder['country'] = $geocoder['countryCode'];
+  }
+
+  return $geocoder;
 }
