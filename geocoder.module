@@ -130,6 +130,7 @@ function geocoder_handler_info($field_type = NULL) {
 function geocoder_get_handler($handler_name) {
   $handlers = geocoder_handler_info();
   if (isset($handlers[$handler_name])) {
+    require_once $handlers[$handler_name]['path'] . '/' . $handlers[$handler_name]['file'];
     return $handlers[$handler_name];
   }
   else return FALSE;
