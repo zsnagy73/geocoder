@@ -1,31 +1,32 @@
 <?php
 /**
  * @file
- * The HostIp plugin.
+ * The IpInfoDb plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class HostIp.
+ * Class IpInfoDb.
  *
  * @GeocoderProviderPlugin(
- *  id = "HostIp",
+ *  id = "IpInfoDb",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class HostIp extends GeocoderProvider {
+class IpInfoDb extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\HostIp($this->getAdapter()));
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\IpInfoDb($this->getAdapter(), $configuration['apiKey']));
 
     return parent::init();
   }

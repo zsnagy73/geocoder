@@ -4,7 +4,7 @@
  * The TomTom plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;

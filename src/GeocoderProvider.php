@@ -132,7 +132,20 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
    * @return AddressCollection
    */
   public function geocode($data) {
-    return $this->getHandler()->geocode($data);
+    $cid = $this->getCacheCid($data);
+
+    if ($value = $this->cache_get($cid)) {
+      return $value;
+    }
+
+    try {
+      $value = $this->getHandler()->geocode($data);
+      $this->cache_set($cid, $value);
+    } catch (\Exception $e) {
+      $value = FALSE;
+    }
+
+    return $value;
   }
 
   /**
@@ -146,7 +159,45 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
    * @return AddressCollection
    */
   public function reverse($latitude, $longitude) {
-    return $this->getHandler()->reverse($latitude, $longitude);
+    $cid = $this->getCacheCid($latitude, $longitude);
+
+    if ($value = $this->cache_get($cid)) {
+      return $value;
+    }
+
+    try {
+      $value = $this->getHandler()->reverse($latitude, $longitude);
+      $this->cache_set($cid, $value);
+    } catch (\Exception $e) {
+      $value = FALSE;
+    }
+
+    return $value;
   }
 
+  public function cache_get($cid) {
+    if ($cache = cache_get($cid, 'cache_geocoder')) {
+      return $cache->data;
+    }
+
+    return FALSE;
+  }
+
+  public function cache_set($cid, $data) {
+    cache_set($cid, $data, 'cache_geocoder', CACHE_PERMANENT);
+  }
+
+  /**
+   * Get a cache ID.
+   *
+   * @return string
+   */
+  public function getCacheCid() {
+    $args = func_get_args();
+
+    $args[] = $this->getPluginId();
+    $args[] = $this->getConfiguration();
+
+    return sha1(serialize(array_filter($args)));
+  }
 }

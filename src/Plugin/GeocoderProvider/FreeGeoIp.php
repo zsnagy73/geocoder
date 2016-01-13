@@ -1,32 +1,31 @@
 <?php
 /**
  * @file
- * The BingMaps plugin.
+ * The FreeGeoIp plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class BingMaps.
+ * Class FreeGeoIp.
  *
  * @GeocoderProviderPlugin(
- *  id = "BingMaps",
+ *  id = "FreeGeoIp",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class BingMaps extends GeocoderProvider {
+class FreeGeoIp extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\BingMaps($this->getAdapter(), $configuration['apiKey']));
+    $this->setHandler(new \Geocoder\Provider\FreeGeoIp($this->getAdapter()));
 
     return parent::init();
   }

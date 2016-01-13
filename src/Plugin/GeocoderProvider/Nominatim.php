@@ -1,32 +1,32 @@
 <?php
 /**
  * @file
- * The IpInfoDb plugin.
+ * The Nominatim plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class IpInfoDb.
+ * Class Nominatim.
  *
  * @GeocoderProviderPlugin(
- *  id = "IpInfoDb",
+ *  id = "Nominatim",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class IpInfoDb extends GeocoderProvider {
+class Nominatim extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
     $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\IpInfoDb($this->getAdapter(), $configuration['apiKey']));
+    $this->setHandler(new \Geocoder\Provider\Nominatim($this->getAdapter(), $configuration['rootUrl']));
 
     return parent::init();
   }

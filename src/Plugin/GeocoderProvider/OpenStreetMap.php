@@ -1,31 +1,31 @@
 <?php
 /**
  * @file
- * The Yandex plugin.
+ * The OpenStreetMap plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Yandex.
+ * Class OpenStreetMap.
  *
  * @GeocoderProviderPlugin(
- *  id = "Yandex",
+ *  id = "OpenStreetMap",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class Yandex extends GeocoderProvider {
+class OpenStreetMap extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
+    $this->setHandler(new \Geocoder\Provider\OpenStreetMap($this->getAdapter()));
 
     return parent::init();
   }

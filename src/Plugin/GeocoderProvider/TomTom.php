@@ -1,32 +1,32 @@
 <?php
 /**
  * @file
- * The MapQuest plugin.
+ * The TomTom plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class MapQuest.
+ * Class TomTom.
  *
  * @GeocoderProviderPlugin(
- *  id = "MapQuest",
+ *  id = "TomTom",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class MapQuest extends GeocoderProvider {
+class TomTom extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
     $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\MapQuest($this->getAdapter(), $configuration['apiKey'], $configuration['licensed']));
+    $this->setHandler(new \Geocoder\Provider\TomTom($this->getAdapter(), $configuration['apiKey']));
 
     return parent::init();
   }

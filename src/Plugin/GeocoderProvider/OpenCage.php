@@ -1,32 +1,32 @@
 <?php
 /**
  * @file
- * The ArcGISOnline plugin.
+ * The OpenCage plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class ArcGISOnline.
+ * Class OpenCage.
  *
  * @GeocoderProviderPlugin(
- *  id = "ArcGISOnline",
+ *  id = "OpenCage",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class ArcGISOnline extends GeocoderProvider {
+class OpenCage extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
     $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\ArcGISOnline($this->getAdapter(), $configuration['sourceCountry']));
+    $this->setHandler(new \Geocoder\Provider\OpenCage($this->getAdapter(), $configuration['apiKey']));
 
     return parent::init();
   }

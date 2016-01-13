@@ -1,31 +1,32 @@
 <?php
 /**
  * @file
- * The GoogleMaps plugin.
+ * The MaxMind plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class GoogleMaps.
+ * Class MaxMind.
  *
  * @GeocoderProviderPlugin(
- *  id = "GoogleMaps",
+ *  id = "MaxMind",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class GoogleMaps extends GeocoderProvider {
+class MaxMind extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\GoogleMaps($this->getAdapter()));
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\MaxMind($this->getAdapter(), $configuration['apiKey']));
 
     return parent::init();
   }

@@ -266,8 +266,12 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
       // Geocode geometries.
       $geometries = array();
       foreach ($source_field_values as $delta => $item) {
-        $geocoder_value = geocoder($plugin_id, $item['value']);
-        $geometry = new Point($geocoder_value['longitude'], $geocoder_value['latitude']);
+        $geometry = FALSE;
+
+        if ($geocoder_value = geocoder($plugin_id, $item['value'])) {
+          geophp_load();
+          $geometry = new Point($geocoder_value['longitude'], $geocoder_value['latitude']);
+        }
 
         if ($geometry instanceof Geometry) {
           $geometries[] = $geometry;
@@ -322,7 +326,7 @@ function geocoder_field_widget_resolve_deltas($geometries, $delta_handling = 'de
   // Default delta handling: just pass one delta to the next
   if ($delta_handling == 'default') {
     foreach ($geometries as $geometry) {
-      $values[] = geocoder_widget_values_from_geometry($geometry, $target_info);
+      $values[] = geocoder_field_widget_values_from_geometry($geometry, $target_info);
     }
   }
 
@@ -332,18 +336,18 @@ function geocoder_field_widget_resolve_deltas($geometries, $delta_handling = 'de
     if (in_array($type, array('MultiPoint', 'MultiLineString', 'MultiPolygon', 'GeometryCollection'))) {
       $components = $geometries[0]->getComponents();
       foreach ($components as $component) {
-        $values[] = geocoder_widget_values_from_geometry($component, $target_info);
+        $values[] = geocoder_field_widget_values_from_geometry($component, $target_info);
       }
     }
     else {
-      $values[] = geocoder_widget_values_from_geometry($geometries[0], $target_info);
+      $values[] = geocoder_field_widget_values_from_geometry($geometries[0], $target_info);
     }
   }
 
   // For multiple-to-single handling, run it though geometryReduce
   if ($delta_handling == 'm_to_s' || $delta_handling == 'c_to_s') {
     $reduced_geom = geoPHP::geometryReduce($geometries);
-    $values[] = geocoder_widget_values_from_geometry($reduced_geom, $target_info);
+    $values[] = geocoder_field_widget_values_from_geometry($reduced_geom, $target_info);
   }
 
   return $values;

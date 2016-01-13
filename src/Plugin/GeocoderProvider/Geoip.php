@@ -1,32 +1,31 @@
 <?php
 /**
  * @file
- * The MaxMind plugin.
+ * The Geoip plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class MaxMind.
+ * Class Geoip.
  *
  * @GeocoderProviderPlugin(
- *  id = "MaxMind",
+ *  id = "Geoip",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class MaxMind extends GeocoderProvider {
+class Geoip extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\MaxMind($this->getAdapter(), $configuration['apiKey']));
+    $this->setHandler(new \Geocoder\Provider\Geoip());
 
     return parent::init();
   }

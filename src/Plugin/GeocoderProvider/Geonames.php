@@ -1,31 +1,32 @@
 <?php
 /**
  * @file
- * The GeoPlugin plugin.
+ * The Geonames plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class GeoPlugin.
+ * Class Geonames.
  *
  * @GeocoderProviderPlugin(
- *  id = "GeoPlugin",
+ *  id = "Geonames",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class GeoPlugin extends GeocoderProvider {
+class Geonames extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\GeoPlugin());
+    $configuration = $this->getConfiguration();
+    $this->setHandler(new \Geocoder\Provider\Geonames($this->getAdapter(), $configuration['username']));
 
     return parent::init();
   }

@@ -1,31 +1,31 @@
 <?php
 /**
  * @file
- * The OpenStreetMap plugin.
+ * The GeoPlugin plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class OpenStreetMap.
+ * Class GeoPlugin.
  *
  * @GeocoderProviderPlugin(
- *  id = "OpenStreetMap",
+ *  id = "GeoPlugin",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class OpenStreetMap extends GeocoderProvider {
+class GeoPlugin extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\OpenStreetMap($this->getAdapter()));
+    $this->setHandler(new \Geocoder\Provider\GeoPlugin());
 
     return parent::init();
   }

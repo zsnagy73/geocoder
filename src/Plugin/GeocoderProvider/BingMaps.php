@@ -1,32 +1,32 @@
 <?php
 /**
  * @file
- * The Nominatim plugin.
+ * The BingMaps plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Nominatim.
+ * Class BingMaps.
  *
  * @GeocoderProviderPlugin(
- *  id = "Nominatim",
+ *  id = "BingMaps",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class Nominatim extends GeocoderProvider {
+class BingMaps extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
     $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\Nominatim($this->getAdapter(), $configuration['rootUrl']));
+    $this->setHandler(new \Geocoder\Provider\BingMaps($this->getAdapter(), $configuration['apiKey']));
 
     return parent::init();
   }

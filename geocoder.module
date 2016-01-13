@@ -23,26 +23,13 @@
  *    geocoder('GoogleMaps', '1600 Amphitheatre Parkway Mountain View, CA 94043');
  */
 function geocoder($plugin_id, $data, $options = array()) {
-  $data_array = compact('plugin_id', 'data', 'options');
-  ksort($data_array);
-  $cid = sha1(serialize($data_array));
+  \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
 
-  if ($value = geocoder_cache_get($cid)) {
-    return $value;
+  if ($value = \Drupal\geocoder\Geocoder::geocode($plugin_id, $data)) {
+    return $value->first()->toArray();
   }
 
-  try {
-    \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
-    $value = \Drupal\geocoder\Geocoder::geocode($plugin_id, $data)->first()->toArray();
-  } catch (Exception $e) {
-
-  }
-
-  if (is_array($value)) {
-    geocoder_cache_set($cid, $value);
-  }
-
-  return $value;
+  return FALSE;
 }
 
 /**
@@ -65,57 +52,10 @@ function geocoder($plugin_id, $data, $options = array()) {
  *    reverse('GoogleMaps', '37.4224504', '-122.0840859');
  */
 function reverse($plugin_id, $latitude, $longitude, $options = array()) {
-  $data_array = compact('plugin_id', 'latitude', 'longitude', 'options');
-  ksort($data_array);
-  $cid = sha1(serialize($data_array));
+  \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
 
-  if ($value = geocoder_cache_get($cid)) {
-    return $value;
-  }
-
-  try {
-    \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
-    $value = \Drupal\geocoder\Geocoder::reverse($plugin_id, $latitude, $longitude, $options)->first()->toArray();
-  } catch (Exception $e) {
-
-  }
-
-  if (is_array($value)) {
-    geocoder_cache_set($cid, $value);
-  }
-
-  return $value;
-}
-
-/**
- * Cache a geocoded result.
- *
- * @param string $cid
- *   The cache ID.
- * @param mixed $value
- *   The value to cache.
- */
-function geocoder_cache_set($cid, $value) {
-  // Don't cache no-results, to live geocode the same data again next time.
-  if (!$value && variable_get('geocoder_cache_empty_results', TRUE)) {
-    return;
-  }
-
-  cache_set($cid, $value, 'cache_geocoder', variable_get('geocoder_cache_ttl', CACHE_PERMANENT));
-}
-
-/**
- * Get a cached geocoded value.
- *
- * @param string $cid
- *   The cache ID.
- *
- * @return mixed
- *   The value
- */
-function geocoder_cache_get($cid) {
-  if ($cache = cache_get($cid, 'cache_geocoder')) {
-    return $cache->data;
+  if ($value = \Drupal\geocoder\Geocoder::reverse($plugin_id, $latitude, $longitude)) {
+    return $value->first()->toArray();
   }
 
   return FALSE;

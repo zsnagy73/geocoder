@@ -1,32 +1,31 @@
 <?php
 /**
  * @file
- * The Geonames plugin.
+ * The Yandex plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Geonames.
+ * Class Yandex.
  *
  * @GeocoderProviderPlugin(
- *  id = "Geonames",
+ *  id = "Yandex",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class Geonames extends GeocoderProvider {
+class Yandex extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\Geonames($this->getAdapter(), $configuration['username']));
+    $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
 
     return parent::init();
   }

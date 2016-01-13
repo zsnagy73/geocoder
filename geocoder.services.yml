@@ -1,6 +1,6 @@
 parameters:
   annotated_plugins_auto_discovery.geocoder:
-    - { owner: 'geocoder', type: 'Provider', directory: 'Plugin/Provider', class: 'Drupal\geocoder\Component\Annotation\GeocoderProviderPlugin'}
+    - { owner: 'geocoder', type: 'Provider', directory: 'Plugin/GeocoderProvider', class: 'Drupal\geocoder\Component\Annotation\GeocoderProviderPlugin'}
 
 services:
   geocoder.http_adapter:

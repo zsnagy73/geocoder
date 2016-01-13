@@ -1,32 +1,31 @@
 <?php
 /**
  * @file
- * The OpenCage plugin.
+ * The HostIp plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class OpenCage.
+ * Class HostIp.
  *
  * @GeocoderProviderPlugin(
- *  id = "OpenCage",
+ *  id = "HostIp",
  *  arguments = {
  *    "@geocoder.http_adapter"
  *  }
  * )
  */
-class OpenCage extends GeocoderProvider {
+class HostIp extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\OpenCage($this->getAdapter(), $configuration['apiKey']));
+    $this->setHandler(new \Geocoder\Provider\HostIp($this->getAdapter()));
 
     return parent::init();
   }
