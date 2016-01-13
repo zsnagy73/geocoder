@@ -269,11 +269,10 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
         $geometry = FALSE;
 
         if ($geocoder_value = geocoder($plugin_id, $item['value'])) {
-          geophp_load();
-          $geometry = new Point($geocoder_value['longitude'], $geocoder_value['latitude']);
+          $geometry = new \Point($geocoder_value['longitude'], $geocoder_value['latitude']);
         }
 
-        if ($geometry instanceof Geometry) {
+        if ($geometry instanceof \Geometry) {
           $geometries[] = $geometry;
         }
       }
@@ -346,7 +345,7 @@ function geocoder_field_widget_resolve_deltas($geometries, $delta_handling = 'de
 
   // For multiple-to-single handling, run it though geometryReduce
   if ($delta_handling == 'm_to_s' || $delta_handling == 'c_to_s') {
-    $reduced_geom = geoPHP::geometryReduce($geometries);
+    $reduced_geom = \geoPHP::geometryReduce($geometries);
     $values[] = geocoder_field_widget_values_from_geometry($reduced_geom, $target_info);
   }
 
