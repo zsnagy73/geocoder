@@ -1,5 +1,6 @@
 {
     "require": {
-        "willdurand/geocoder": "^3.3"
+        "willdurand/geocoder": "^3.3",
+        "phayes/geophp": "^1.2"
     }
 }
