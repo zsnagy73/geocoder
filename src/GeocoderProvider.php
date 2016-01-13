@@ -3,7 +3,9 @@
 namespace Drupal\geocoder\GeocoderProvider;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\geocoder\GeocoderProviderInterface;
+use Drupal\service_container\Messenger\MessengerInterface;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\AbstractHttpProvider;
 use Geocoder\Provider\Provider;
@@ -45,14 +47,32 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
   protected $configuration;
 
   /**
+   * The messenger service.
+   *
+   * @var MessengerInterface
+   */
+  protected $messenger;
+
+  /**
+   * The loggerChannel service.
+   *
+   * @var LoggerChannelInterface
+   */
+  protected $loggerChannel;
+
+  /**
    * @var Provider;
    */
   private $handler;
 
-  public function __construct($configuration, $plugin_id, $plugin_definition, HttpAdapterInterface $adapter) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, HttpAdapterInterface $adapter, LoggerChannelInterface $logger_channel, MessengerInterface $messenger) {
     $this->configuration = $configuration;
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
+
+    $this->loggerChannel = $logger_channel;
+    $this->messenger = $messenger;
+
     parent::__construct($adapter);
     $this->init();
   }
@@ -142,6 +162,8 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
       $value = $this->getHandler()->geocode($data);
       $this->cache_set($cid, $value);
     } catch (\Exception $e) {
+      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
+      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
       $value = FALSE;
     }
 
@@ -169,6 +191,8 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
       $value = $this->getHandler()->reverse($latitude, $longitude);
       $this->cache_set($cid, $value);
     } catch (\Exception $e) {
+      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
+      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
       $value = FALSE;
     }
 

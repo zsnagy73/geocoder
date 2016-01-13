@@ -16,7 +16,9 @@ use Geocoder\Provider\Provider;
  * @GeocoderProviderPlugin(
  *  id = "MaxMind",
  *  arguments = {
- *    "@geocoder.http_adapter"
+ *   "@geocoder.http_adapter",
+ *   "@logger.channel.default",
+ *   "@messenger"
  *  }
  * )
  */

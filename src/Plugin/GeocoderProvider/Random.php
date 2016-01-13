@@ -20,7 +20,9 @@ use Geocoder\Provider\Provider;
  * @GeocoderProviderPlugin(
  *  id = "Random",
  *  arguments = {
- *    "@geocoder.http_adapter"
+ *   "@geocoder.http_adapter",
+ *   "@logger.channel.default",
+ *   "@messenger"
  *  }
  * )
  */
