@@ -5,8 +5,6 @@
  * Module file for geocoder module.
  */
 
-require 'geocoder.widget.inc';
-
 /**
  * The Geocoder API call.
  *
