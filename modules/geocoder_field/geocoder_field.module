@@ -200,6 +200,7 @@ function geocoder_field_field_widget_settings_form($this_field, $instance) {
   // Add the table to the form.
   $form['geocoder_handlers'] = array(
     '#theme' => 'table',
+    '#caption' => t('Select the geocoder plugin in use, from the top to the bottom.'),
     // The row form elements need to be processed and build,
     // therefore pass them as element children.
     'elements' => $row_elements,
@@ -396,7 +397,7 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
         $geometry = FALSE;
 
         if ($geocoder_value = geocoder($geocoder_handlers, $item['value'])) {
-          $geometry = geoPHP::load(sprintf('POINT (%s %s)', $geocoder_value['longitude'], $geocoder_value['latitude']), 'wkt');
+          $geometry = \geoPHP::load(sprintf('POINT (%s %s)', $geocoder_value['longitude'], $geocoder_value['latitude']), 'wkt');
         }
 
         if ($geometry instanceof \Geometry) {
@@ -703,6 +704,7 @@ function geocoder_field_field_formatter_settings_form($field, $instance, $view_m
   // Add the table to the form.
   $form['geocoder_handlers'] = array(
     '#theme' => 'table',
+    '#caption' => t('Select the geocoder plugin in use, from the top to the bottom.'),
     // The row form elements need to be processed and build,
     // therefore pass them as element children.
     'elements' => $row_elements,
