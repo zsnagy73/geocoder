@@ -15,9 +15,13 @@ This is the Geocoder module for Drupal 7 rewritten using the Geocoder PHP librar
 
 # API
 
-## Get a list of available plugins
+## Get a list of available Provider plugins
 
-```\Drupal\geocoder\Geocoder::getPlugins()```
+```\Drupal\geocoder\Geocoder::getProviderPlugins()```
+
+## Get a list of available Dumper plugins
+
+```\Drupal\geocoder\Geocoder::getDumperPlugins()```
 
 ## Geocode a string
 
@@ -30,7 +34,9 @@ $options = array(
   'BingMaps' => array(), // array of options
 );
 
-$address = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+// or
+$addressCollection = geocode($plugins, $address, $options);
 ```
 
 ## Reverse geocode coordinates
@@ -45,12 +51,14 @@ $options = array(
   'BingMaps' => array(), // array of options
 );
 
-$address = \Drupal\geocoder\Geocoder::reverse($plugins, $address, $options);
+$addressCollection = \Drupal\geocoder\Geocoder::reverse($plugins, $address, $options);
+// or
+$addressCollection = reverse($plugins, $address, $options);
 ```
 
 ## Return format
 
-Both ```Geocoder::geocode()``` and ```Geocoder::reverse()``` returns the same object: an ```Geocoder\Model\AddressCollection```, which is itself composed of ```Geocoder\Model\Address```.
+Both ```Geocoder::geocode()``` and ```Geocoder::reverse()``` and both ```reverse()``` and ```geocode()``` returns the same object: ```Geocoder\Model\AddressCollection```, which is itself composed of ```Geocoder\Model\Address```.
 
 You can transform those objects into arrays. Example:
 
@@ -63,12 +71,33 @@ $options = array(
   'BingMaps' => array(), // array of options
 );
 
-$address = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
-$address_array = $address->first()->toArray();
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$address_array = $addressCollection->first()->toArray();
 
-// Or you can play a bit more with the API
+// You can play a bit more with the API
 
-$address = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
-$latitude = $address->getCoordinates()->getLatitude();
-$longitude = $address->getCoordinates()->getLongitude();
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$latitude = $addressCollection->first()->getCoordinates()->getLatitude();
+$longitude = $addressCollection->first()->getCoordinates()->getLongitude();
+```
+
+You can also convert these to different formats using the Dumper plugins.
+Get the list of available Dumper by doing:
+
+```\Drupal\geocoder\Geocoder::getDumperPlugins()```
+
+Here's an example on how to use a Dumper
+
+```php
+$plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
+$address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
+$options = array(
+  'Geonames' => array(), // array of options
+  'GoogleMaps' => array(), // array of options
+  'BingMaps' => array(), // array of options
+);
+$dumper = \Drupal::service('geocoder.Dumper')->createService('geojson');
+
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$geojson = $dumper->dump($addressCollection->first());
 ```

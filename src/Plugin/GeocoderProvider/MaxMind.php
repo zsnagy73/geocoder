@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
-use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
+use Drupal\geocoder\GeocoderProvider;
 use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 

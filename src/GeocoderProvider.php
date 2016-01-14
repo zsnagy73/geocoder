@@ -1,13 +1,12 @@
 <?php
 
-namespace Drupal\geocoder\GeocoderProvider;
+namespace Drupal\geocoder;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\geocoder\Config;
 use Drupal\geocoder\GeocoderProviderInterface;
 use Drupal\service_container\Messenger\MessengerInterface;
-use Geocoder\Geocoder;
 use Geocoder\Provider\AbstractHttpProvider;
 use Geocoder\Provider\Provider;
 use Ivory\HttpAdapter\HttpAdapterInterface;

@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder;
 
-use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
+use Drupal\geocoder\GeocoderProvider;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 

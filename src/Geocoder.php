@@ -2,7 +2,7 @@
 
 namespace Drupal\geocoder;
 
-use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
+use Drupal\geocoder\GeocoderProvider;
 use Geocoder\Exception\InvalidCredentials;
 
 class Geocoder {
@@ -85,16 +85,32 @@ class Geocoder {
   }
 
   /**
-   * Gets a list of available plugins.
+   * Gets a list of available Provider plugins.
    *
    * @return string[]
-   *   The Geocoder plugins available.
+   *   The Geocoder plugins Provider available.
    */
-  public static function getPlugins() {
+  public static function getProviderPlugins() {
     $options = array();
     foreach (\Drupal::service('geocoder.Provider')->getDefinitions() as $data) {
       $name = isset($data['label']) ? $data['label'] : $data['id'];
-      $options['geocoder:' . $data['id']] = $name;
+      $options[drupal_strtolower($data['id'])] = $name;
+    }
+    asort($options);
+    return $options;
+  }
+
+  /**
+   * Gets a list of available Dumper plugins.
+   *
+   * @return string[]
+   *   The Geocoder Dumper plugins available.
+   */
+  public static function getDumperPlugins() {
+    $options = array();
+    foreach (\Drupal::service('geocoder.Dumper')->getDefinitions() as $data) {
+      $name = isset($data['label']) ? $data['label'] : $data['id'];
+      $options[drupal_strtolower($data['id'])] = $name;
     }
     asort($options);
     return $options;

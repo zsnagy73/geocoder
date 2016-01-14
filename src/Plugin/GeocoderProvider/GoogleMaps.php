@@ -6,9 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\GeocoderProvider;
 
-use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\GeocoderProvider;
 
 /**
  * Class GoogleMaps.

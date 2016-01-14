@@ -7,8 +7,8 @@
  */
 function geocoder_services_services_capabilities() {
   $object = new stdClass();
-  $object->plugins = array_values(\Drupal\geocoder\Geocoder::getPlugins());
-  $object->output = \geoPHP::getAdapterMap();
+  $object->plugins = array_values(\Drupal\geocoder\Geocoder::getProviderPlugins());
+  $object->output = array_values(\Drupal\geocoder\Geocoder::getDumperPlugins());
   return $object;
 }
 
@@ -24,18 +24,24 @@ function geocoder_services_services_capabilities() {
 function geocoder_services_geocoder_geocode_callback($plugin_id, $data, $output) {
   geocoder_services_check_request($plugin_id, $output);
 
-  if ($addresscollection = \Drupal\geocoder\Geocoder::geocode($plugin_id, $data)) {
-    $raw = $addresscollection->first()->toArray();
-    return array(
-      'count' => $addresscollection->count(),
-      'raw' => $raw,
-      'formatted' => \geoPHP::load(sprintf('Point (%s %s)', $raw['longitude'], $raw['latitude']))->out($output),
+  if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($plugin_id, $data)) {
+    $data = array(
+      'count' => $addressCollection->count(),
     );
+
+    foreach($addressCollection as $address) {
+      $data['collection'][] = array(
+        'raw' => $address->toArray(),
+        'formatted' => \Drupal::service('geocoder.Dumper')->createInstance($output)->dump($address),
+      );
+    }
   } else {
-    return array(
-      'count' => 0,
+    $data = array(
+      'count' => 0
     );
   }
+
+  return $data;
 }
 
 /**
@@ -51,18 +57,24 @@ function geocoder_services_geocoder_reverse_callback($plugin_id, $data, $output)
   geocoder_services_check_request($plugin_id, $output);
   list($latitude, $longitude) = explode(',', $data, 2);
 
-  if ($addresscollection = \Drupal\geocoder\Geocoder::reverse($plugin_id, $latitude, $longitude)) {
-    $raw = $addresscollection->first()->toArray();
-    return array(
-      'count' => $addresscollection->count(),
-      'raw' => $raw,
-      'formatted' => \geoPHP::load(sprintf('Point (%s %s)', $raw['longitude'], $raw['latitude']))->out($output),
+  if ($addressCollection = \Drupal\geocoder\Geocoder::reverse($plugin_id, $latitude, $longitude)) {
+    $data = array(
+      'count' => $addressCollection->count(),
     );
+
+    foreach($addressCollection as $address) {
+      $data['collection'][] = array(
+        'raw' => $address->toArray(),
+        'formatted' => \Drupal::service('geocoder.Dumper')->createInstance($output)->dump($address),
+      );
+    }
   } else {
-    return array(
-      'count' => 0,
+    $data = array(
+      'count' => 0
     );
   }
+
+  return $data;
 }
 
 /**
@@ -101,13 +113,13 @@ function geocoder_services_check_request($plugin_id, $output) {
   }
 
   if (!(\Drupal::service('geocoder.Provider')->hasDefinition($plugin_id))) {
-    drupal_set_message(t('Could not find plugin @plugin_id', array('@plugin_id' => $plugin_id)), 'error');
+    drupal_set_message(t('Could not find provider plugin @plugin_id', array('@plugin_id' => $plugin_id)), 'error');
     drupal_not_found();
     drupal_exit();
   }
 
-  if (!in_array($output, array_keys(\geoPHP::getAdapterMap()))) {
-    drupal_set_message(t('Could not find output adapter @output', array('@output' => $output)), 'error');
+  if (!(\Drupal::service('geocoder.Dumper')->hasDefinition($output))) {
+    drupal_set_message(t('Could not find dumper plugin @plugin_id', array('@plugin_id' => $output)), 'error');
     drupal_not_found();
     drupal_exit();
   }
