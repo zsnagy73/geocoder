@@ -396,6 +396,11 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
       foreach ($source_field_values as $delta => $item) {
         $geometry = FALSE;
 
+        if (in_array($field_info['type'], array('file', 'image'))) {
+          $file = file_load($item['fid']);
+          $item['value'] = drupal_realpath($file->uri);
+        }
+
         if ($geocoder_value = geocoder($geocoder_handlers, $item['value'])) {
           $geometry = \geoPHP::load(sprintf('POINT (%s %s)', $geocoder_value['longitude'], $geocoder_value['latitude']), 'wkt');
         }
