@@ -2,30 +2,29 @@
 
 /**
  * @file
- * Module file for geocoder module.
+ * Module file for Geocoder module.
  */
 
 /**
  * The Geocoder API call.
  *
- * Given a plugin id and data, geocode the data into an array using the handler.
+ * Given one or more plugin id(s), geocode the given data.
  *
- * @param string $plugin_id
- *   The geocoder plugin id to use.
+ * @param string|string[] $plugin_ids
+ *   The geocoder plugin id(s) to use.
  * @param string $data
  *   Data to be passed into the handler for geocoding. For example a address string.
- * @param array $options
+ * @param array $options (optional)
  *   Additional options to pass to the handler. Exact key / values to pass depend on the handler.
  *
- * @return array
+ * @return array|FALSE
  *
  * @example:
  *    geocoder('GoogleMaps', '1600 Amphitheatre Parkway Mountain View, CA 94043');
+ *    geocoder(array('FreeGeoIp', 'GoogleMaps'), '8.8.8.8');
  */
-function geocoder($plugin_id, $data, $options = array()) {
-  \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
-
-  if ($value = \Drupal\geocoder\Geocoder::geocode($plugin_id, $data)) {
+function geocoder($plugin_ids, $data, array $options = array()) {
+  if ($value = \Drupal\geocoder\Geocoder::geocode($plugin_ids, $data, $options)) {
     return $value->first()->toArray();
   }
 
@@ -33,28 +32,26 @@ function geocoder($plugin_id, $data, $options = array()) {
 }
 
 /**
- * The Reverse geocoder API call.
+ * The reverse Geocoder API call.
  *
- * Given a plugin id, a latitude and a longitude, reverse geocode the data into an array using the handler.
+ * Given one or more plugin id(s), a latitude and a longitude, reverse geocode the given data.
  *
- * @param string $plugin_id
- *   The geocoder plugin id to use.
+ * @param string|string[] $plugin_ids
+ *   The geocoder plugin id(s) to use.
  * @param string $latitude
  *   The latitude.
  * @param string $longitude
  *   The longitude.
- * @param array $options
+ * @param array $options (optional)
  *   Additional options to pass to the handler. Exact key / values to pass depend on the handler.
  *
- * @return array
+ * @return array|FALSE
  *
  * @example:
  *    reverse('GoogleMaps', '37.4224504', '-122.0840859');
  */
-function reverse($plugin_id, $latitude, $longitude, $options = array()) {
-  \Drupal\geocoder\Geocoder::setPlugin($plugin_id, $options);
-
-  if ($value = \Drupal\geocoder\Geocoder::reverse($plugin_id, $latitude, $longitude)) {
+function reverse($plugin_ids = 'GoogleMaps', $latitude, $longitude, array $options = array()) {
+  if ($value = \Drupal\geocoder\Geocoder::reverse($plugin_ids, $latitude, $longitude, $options)) {
     return $value->first()->toArray();
   }
 

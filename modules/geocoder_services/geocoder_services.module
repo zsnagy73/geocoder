@@ -114,7 +114,7 @@ function geocoder_services_services_geocode($plugin_id, $data, $output) {
     return array(
       'count' => $addresscollection->count(),
       'raw' => $raw,
-      'formatted' => geoPHP::load(new Point($raw['longitude'], $raw['latitude']))->out($output),
+      'formatted' => geoPHP::load(sprintf('Point (%s %s)', $raw['longitude'], $raw['latitude']))->out($output),
     );
   } else {
     return array(

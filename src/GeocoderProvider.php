@@ -7,6 +7,7 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\geocoder\Config;
 use Drupal\geocoder\GeocoderProviderInterface;
 use Drupal\service_container\Messenger\MessengerInterface;
+use Geocoder\Geocoder;
 use Geocoder\Provider\AbstractHttpProvider;
 use Geocoder\Provider\Provider;
 use Ivory\HttpAdapter\HttpAdapterInterface;
@@ -155,12 +156,13 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
 
     try {
       $value = $this->getHandler()->geocode($data);
-      $this->cache_set($cid, $value);
     } catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
+      throw $e;
+    } catch (\InvalidCredentials $e) {
+      throw $e;
     }
+
+    $this->cache_set($cid, $value);
 
     return $value;
   }
@@ -177,12 +179,11 @@ class GeocoderProvider extends AbstractHttpProvider implements PluginInspectionI
 
     try {
       $value = $this->getHandler()->reverse($latitude, $longitude);
-      $this->cache_set($cid, $value);
     } catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
+      throw $e;
     }
+
+    $this->cache_set($cid, $value);
 
     return $value;
   }

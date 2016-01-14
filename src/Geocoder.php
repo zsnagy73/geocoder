@@ -3,6 +3,7 @@
 namespace Drupal\geocoder;
 
 use Drupal\geocoder\GeocoderProvider\GeocoderProvider;
+use Geocoder\Exception\InvalidCredentials;
 
 class Geocoder {
 
@@ -10,33 +11,57 @@ class Geocoder {
   protected static $plugin;
 
   /**
-   * @param string $plugin
+   * @param string|array $plugins
    * @param $data
    * @param array $options
    *
    * @return \Geocoder\Model\AddressCollection
    */
-  public static function geocode($plugin = 'GoogleMaps', $data, $options = array()) {
-    if (!isset(self::$plugin)) {
+  public static function geocode($plugins = array('GoogleMaps'), $data, array $options = array()) {
+    foreach ((array) $plugins as $plugin) {
+      $options += array($plugin => array());
       self::setPlugin($plugin, $options);
+
+      try {
+        return self::getPlugin()->geocode($data);
+      } catch (InvalidCredentials $e) {
+        self::log($e->getMessage(), 'error');
+      } catch (\Exception $e) {
+        self::log($e->getMessage(), 'error');
+      }
     }
 
-    return self::getPlugin()->setConfiguration($options)->geocode($data);
+   $exception = new \Exception(sprintf('No plugin could geocode: "%s".', $data));
+    self::log($exception->getMessage(), 'error');
+
+    return FALSE;
   }
 
   /**
-   * @param string $plugin
+   * @param string|string[] $plugins
    * @param $data
    * @param array $options
    *
    * @return \Geocoder\Model\AddressCollection
    */
-  public static function reverse($plugin = 'GoogleMaps', $latitude, $longitude, $options = array()) {
-    if (!isset(self::$plugin)) {
-      self::setPlugin($plugin, $options);
+  public static function reverse($plugins = 'GoogleMaps', $latitude, $longitude, array $options = array()) {
+    foreach ((array) $plugins as $plugin) {
+      $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
+      self::setPlugin($plugin, $plugin_options);
+
+      try {
+        return self::getPlugin()->reverse($latitude, $longitude);
+      } catch (InvalidCredentials $e) {
+        self::log($e->getMessage(), 'error');
+      } catch (\Exception $e) {
+        self::log($e->getMessage(), 'error');
+      }
     }
 
-    return self::getPlugin()->setConfiguration($options)->reverse($latitude, $longitude);
+    $exception = new \Exception(sprintf('No plugin could reverse geocode: "%s %s".', $latitude, $longitude));
+    self::log($exception->getMessage(), 'error');
+
+    return FALSE;
   }
 
   /**
@@ -45,7 +70,7 @@ class Geocoder {
    * @param string $plugin
    *   The Plugin ID to use.
    */
-  public static function setPlugin($plugin = 'GoogleMaps', $configuration = array()) {
+  public static function setPlugin($plugin = 'GoogleMaps', array $configuration = array()) {
     self::$plugin = \Drupal::service('geocoder.Provider')->createInstance($plugin, $configuration);
   }
 
@@ -73,6 +98,19 @@ class Geocoder {
     }
     asort($options);
     return $options;
+  }
+
+  /**
+   * Log a message in the Drupal watchdog and on screen.
+   *
+   * @param $message
+   *   The message
+   * @param $type
+   *   The type of message
+   */
+  public static function log($message, $type) {
+    \Drupal::service('logger.dblog')->log($type, $message, array('channel' => 'geocoder'));
+    \Drupal::service('messenger')->addMessage($message, $type);
   }
 
 }

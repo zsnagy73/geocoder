@@ -92,18 +92,128 @@ function geocoder_field_field_widget_settings_form($this_field, $instance) {
       break;
   }
 
-  $form['geocoder_handler'] = array(
-    '#type' => 'select',
-    '#title' => t('Geocoder'),
-    '#default_value' => isset($settings['geocoder_handler']) ? $settings['geocoder_handler']: '',
-    '#options' => $available_handlers,
-    '#description' => t('Select which type of geocoding plugin you would like to use.'),
-    '#required' => TRUE,
-  );
+  $geocoder_plugins = (array) $settings['geocoder_handlers'];
+  $plugins = array_combine(array_values(\Drupal\geocoder\Geocoder::getPlugins()), array_values(\Drupal\geocoder\Geocoder::getPlugins()));
+  $plugins_array = array();
 
-  $form['handler_settings'] = array(
-    '#tree' => TRUE,
+  $i = 0;
+  foreach ($plugins as $plugin) {
+    $plugins_array[$plugin] = array(
+      'name' => $plugin,
+      'weight' => $i++,
+      'enabled' => 0,
+    );
+  }
+
+  $i = 0;
+  foreach($geocoder_plugins as $name => $option) {
+    if (is_array($option)) {
+      if ($option['enabled'] == 1) {
+        $plugins_array[$name]['enabled'] = 1;
+        $plugins_array[$name]['weight'] = isset($option['weight']) ? $option['weight'] : $i++;
+      }
+    } else {
+      if ($plugins[$option]) {
+        $plugins_array[$option]['enabled'] = 1;
+        $plugins_array[$option]['weight'] = $i++;
+      }
+    }
+  }
+
+  uasort($plugins_array, function($a, $b) {
+    if ($a['enabled'] > $b['enabled']) {
+      return -1;
+    }
+    elseif ($a['enabled'] < $b['enabled']) {
+      return 1;
+    }
+    if ($a['weight'] < $b['weight']) {
+      return -1;
+    }
+    elseif ($a['weight'] > $b['weight']) {
+      return 1;
+    }
+    if ($a['name'] < $b['name']) {
+      return -1;
+    }
+    elseif ($a['name'] > $b['name']) {
+      return 1;
+    }
+    return 0;
+  });
+
+  $data = array();
+  foreach ($plugins_array as $plugin) {
+    $data[$plugin['name']] = array(
+      'name' => $plugin['name'],
+      'machine_name' => $plugin['name'],
+      'weight' => $plugin['weight'],
+      'enabled' => $plugin['enabled'],
+    );
+  }
+
+  $rows = array();
+  $row_elements = array();
+  foreach ($data as $id => $entry) {
+    $rows[$id] = array(
+      'data' => array(
+        array(
+          'class',
+          array(
+            'entry-cross',
+          ),
+        ),
+        array(
+          'data' => array(
+            '#type' => 'weight',
+            '#title' => t('Weight'),
+            '#title_display' => 'invisible',
+            '#default_value' => $entry['weight'],
+            '#parents' => array('instance', 'widget', 'settings', 'geocoder_handlers', $id, 'weight'),
+            '#attributes' => array(
+              'class' => array('entry-order-weight'),
+            ),
+          ),
+        ),
+        array(
+          'data' => array(
+            '#type' => 'checkbox',
+            '#title' => t('Enable'),
+            '#title_display' => 'invisible',
+            '#default_value' => (bool) $entry['enabled'],
+            '#parents' => array('instance', 'widget', 'settings', 'geocoder_handlers', $id, 'enabled'),
+          ),
+        ),
+        check_plain($entry['name']),
+      ),
+      'class' => array('draggable'),
+    );
+    // Build rows of the form elements in the table.
+    $row_elements[$id] = array(
+      'weight' => &$rows[$id]['data'][1]['data'],
+      'enabled' => &$rows[$id]['data'][2]['data'],
+    );
+  }
+
+  $form['#tree'] = TRUE;
+
+  // Add the table to the form.
+  $form['geocoder_handlers'] = array(
+    '#theme' => 'table',
+    // The row form elements need to be processed and build,
+    // therefore pass them as element children.
+    'elements' => $row_elements,
+    '#header' => array(
+      // We need two empty columns for the weigth field and the cross.
+      array('data' => NULL, 'colspan' => 2),
+      t('Enabled'),
+      t('Name'),
+    ),
+    '#rows' => $rows,
+    '#empty' => t('There are no entries available.'),
+    '#attributes' => array('id' => 'entry-order-geocoder-handlers'),
   );
+  drupal_add_tabledrag('entry-order-geocoder-handlers', 'order', 'sibling', 'entry-order-weight');
 
   $form['delta_handling'] = array(
     '#type' => 'select',
@@ -228,10 +338,27 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
   }
 
   // Required settings
-  if (isset($field_instance['widget']['settings']['geocoder_handler']) && isset($field_instance['widget']['settings']['geocoder_field'])) {
+  if (isset($field_instance['widget']['settings']['geocoder_handlers']) && isset($field_instance['widget']['settings']['geocoder_field'])) {
 
-    list(,$plugin_id) = explode(':', $field_instance['widget']['settings']['geocoder_handler'], 2);
-    \Drupal\geocoder\Geocoder::setPlugin($plugin_id);
+    $geocoder_handlers = array_filter($field_instance['widget']['settings']['geocoder_handlers'], function($v, $k) {
+      return (bool) $v['enabled'];
+    }, ARRAY_FILTER_USE_BOTH);
+    uasort($geocoder_handlers, function($a, $b) {
+      if ($a['enabled'] > $b['enabled']) {
+        return -1;
+      }
+      elseif ($a['enabled'] < $b['enabled']) {
+        return 1;
+      }
+      if ($a['weight'] < $b['weight']) {
+        return -1;
+      }
+      elseif ($a['weight'] > $b['weight']) {
+        return 1;
+      }
+      return 0;
+    });
+    $geocoder_handlers = array_keys($geocoder_handlers);
 
     $target_info = field_info_field($field_instance['field_name']);
     $field_info = geocoder_field_widget_get_field_info($entity_type, $field_instance, $entity);
@@ -268,8 +395,8 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
       foreach ($source_field_values as $delta => $item) {
         $geometry = FALSE;
 
-        if ($geocoder_value = geocoder($plugin_id, $item['value'])) {
-          $geometry = new \Point($geocoder_value['longitude'], $geocoder_value['latitude']);
+        if ($geocoder_value = geocoder($geocoder_handlers, $item['value'])) {
+          $geometry = geoPHP::load(sprintf('POINT (%s %s)', $geocoder_value['longitude'], $geocoder_value['latitude']), 'wkt');
         }
 
         if ($geometry instanceof \Geometry) {
@@ -452,7 +579,7 @@ function geocoder_field_field_formatter_info() {
     'field types' => array('geofield'),
     'settings' => array(
       'format_handlers' => array('address'),
-      'geocoder_handler' => 'GoogleMaps',
+      'geocoder_handlers' => array('GoogleMaps'),
       'default_country' => '',
     )
   );
@@ -468,14 +595,128 @@ function geocoder_field_field_formatter_settings_form($field, $instance, $view_m
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
 
-  $form['geocoder_handler'] = array(
-    '#type' => 'select',
-    '#title' => t('Geocoder'),
-    '#default_value' => $settings['geocoder_handler'],
-    '#options' => \Drupal\geocoder\Geocoder::getPlugins(),
-    '#description' => t('Select which type of geocoding plugin you would like to use.'),
-    '#required' => TRUE,
+  $geocoder_plugins = (array) $settings['geocoder_handlers'];
+  $plugins = array_combine(array_values(\Drupal\geocoder\Geocoder::getPlugins()), array_values(\Drupal\geocoder\Geocoder::getPlugins()));
+  $plugins_array = array();
+
+  $i = 0;
+  foreach ($plugins as $plugin) {
+    $plugins_array[$plugin] = array(
+      'name' => $plugin,
+      'weight' => $i++,
+      'enabled' => 0,
+    );
+  }
+
+  $i = 0;
+  foreach($geocoder_plugins as $name => $option) {
+    if (is_array($option)) {
+      if ($option['enabled'] == 1) {
+        $plugins_array[$name]['enabled'] = 1;
+        $plugins_array[$name]['weight'] = isset($option['weight']) ? $option['weight'] : $i++;
+      }
+    } else {
+      if ($plugins[$option]) {
+        $plugins_array[$option]['enabled'] = 1;
+        $plugins_array[$option]['weight'] = $i++;
+      }
+    }
+  }
+
+  uasort($plugins_array, function($a, $b) {
+    if ($a['enabled'] > $b['enabled']) {
+      return -1;
+    }
+    elseif ($a['enabled'] < $b['enabled']) {
+      return 1;
+    }
+    if ($a['weight'] < $b['weight']) {
+      return -1;
+    }
+    elseif ($a['weight'] > $b['weight']) {
+      return 1;
+    }
+    if ($a['name'] < $b['name']) {
+      return -1;
+    }
+    elseif ($a['name'] > $b['name']) {
+      return 1;
+    }
+    return 0;
+  });
+
+  $data = array();
+  foreach ($plugins_array as $plugin) {
+    $data[$plugin['name']] = array(
+      'name' => $plugin['name'],
+      'machine_name' => $plugin['name'],
+      'weight' => $plugin['weight'],
+      'enabled' => $plugin['enabled'],
+    );
+  }
+
+  $rows = array();
+  $row_elements = array();
+  foreach ($data as $id => $entry) {
+    $rows[$id] = array(
+      'data' => array(
+        array(
+          'class',
+          array(
+            'entry-cross',
+          ),
+        ),
+        array(
+          'data' => array(
+            '#type' => 'weight',
+            '#title' => t('Weight'),
+            '#title_display' => 'invisible',
+            '#default_value' => $entry['weight'],
+            '#parents' => array('fields', $field['field_name'], 'settings_edit_form', 'settings', 'geocoder_handlers', $id, 'weight'),
+            '#attributes' => array(
+              'class' => array('entry-order-weight'),
+            ),
+          ),
+        ),
+        array(
+          'data' => array(
+            '#type' => 'checkbox',
+            '#title' => t('Enable'),
+            '#title_display' => 'invisible',
+            '#default_value' => (bool) $entry['enabled'],
+            '#parents' => array('fields', $field['field_name'], 'settings_edit_form', 'settings', 'geocoder_handlers', $id, 'enabled'),
+          ),
+        ),
+        check_plain($entry['name']),
+      ),
+      'class' => array('draggable'),
+    );
+    // Build rows of the form elements in the table.
+    $row_elements[$id] = array(
+      'weight' => &$rows[$id]['data'][1]['data'],
+      'enabled' => &$rows[$id]['data'][2]['data'],
+    );
+  }
+
+  $form['#tree'] = TRUE;
+
+  // Add the table to the form.
+  $form['geocoder_handlers'] = array(
+    '#theme' => 'table',
+    // The row form elements need to be processed and build,
+    // therefore pass them as element children.
+    'elements' => $row_elements,
+    '#header' => array(
+      // We need two empty columns for the weigth field and the cross.
+      array('data' => NULL, 'colspan' => 2),
+      t('Enabled'),
+      t('Name'),
+    ),
+    '#rows' => $rows,
+    '#empty' => t('There are no entries available.'),
+    '#attributes' => array('id' => 'entry-order-geocoder-handlers'),
   );
+  drupal_add_tabledrag('entry-order-geocoder-handlers', 'order', 'sibling', 'entry-order-weight');
 
   $form['default_country'] = array(
     '#type' => 'select',
@@ -505,9 +746,29 @@ function geocoder_field_field_formatter_settings_summary($field, $instance, $vie
   $settings = $display['settings'];
   $summary = array();
 
-  list(, $geocoder_handler) = explode(':', $settings['geocoder_handler'], 2);
+  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v, $k) {
+    return (bool) $v['enabled'];
+  }, ARRAY_FILTER_USE_BOTH);
 
-  $summary[] = t('Geocoder plugin: @data', array('@data' => $geocoder_handler));
+  uasort($geocoder_handlers, function($a, $b) {
+    if ($a['enabled'] > $b['enabled']) {
+      return -1;
+    }
+    elseif ($a['enabled'] < $b['enabled']) {
+      return 1;
+    }
+    if ($a['weight'] < $b['weight']) {
+      return -1;
+    }
+    elseif ($a['weight'] > $b['weight']) {
+      return 1;
+    }
+    return 0;
+  });
+
+  $geocoder_handlers = implode(', ', array_keys($geocoder_handlers));
+
+  $summary[] = t('Geocoder plugin: @data', array('@data' => $geocoder_handlers));
 
   return implode('<br />', $summary);
 }
@@ -519,12 +780,31 @@ function geocoder_field_field_formatter_view($entity_type, $entity, $field, $ins
   $element = array();
   $settings = $display['settings'];
 
-  list(, $geocoder_handler) = explode(':', $settings['geocoder_handler'], 2);
+  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v, $k) {
+    return (bool) $v['enabled'];
+  }, ARRAY_FILTER_USE_BOTH);
+
+  uasort($geocoder_handlers, function($a, $b) {
+    if ($a['enabled'] > $b['enabled']) {
+      return -1;
+    }
+    elseif ($a['enabled'] < $b['enabled']) {
+      return 1;
+    }
+    if ($a['weight'] < $b['weight']) {
+      return -1;
+    }
+    elseif ($a['weight'] > $b['weight']) {
+      return 1;
+    }
+    return 0;
+  });
+  $geocoder_handlers = array_keys($geocoder_handlers);
 
   switch ($display['type']) {
     case 'geocoder_reverse':
       foreach ($items as $delta => $item) {
-        if ($geocoder = reverse($geocoder_handler, $item['lat'], $item['lon'])) {
+        if ($geocoder = reverse($geocoder_handlers, $item['lat'], $item['lon'])) {
           $geocoder = _geocoder_field_geocoder_to_addressfield($geocoder, $field, $display, $instance);
 
           $context = array(
