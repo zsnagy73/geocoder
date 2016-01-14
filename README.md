@@ -17,11 +17,15 @@ This is the Geocoder module for Drupal 7 rewritten using the Geocoder PHP librar
 
 ## Get a list of available Provider plugins
 
-```\Drupal\geocoder\Geocoder::getProviderPlugins()```
+```php
+\Drupal\geocoder\Geocoder::getProviderPlugins()
+```
 
 ## Get a list of available Dumper plugins
 
-```\Drupal\geocoder\Geocoder::getDumperPlugins()```
+```php
+\Drupal\geocoder\Geocoder::getDumperPlugins()
+```
 
 ## Geocode a string
 
@@ -84,7 +88,9 @@ $longitude = $addressCollection->first()->getCoordinates()->getLongitude();
 You can also convert these to different formats using the Dumper plugins.
 Get the list of available Dumper by doing:
 
-```\Drupal\geocoder\Geocoder::getDumperPlugins()```
+```php
+\Drupal\geocoder\Geocoder::getDumperPlugins()
+```
 
 Here's an example on how to use a Dumper
 
