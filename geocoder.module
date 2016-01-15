@@ -48,6 +48,9 @@ function geocoder($handler, $data, $options = array(), $cache_type = 'DEPRECATED
     return NULL;
   }
 
+  // Load the file.
+  geocoder_get_handler($handler);
+
   // Attempt to retrieve from persistent cache.
   $geometry = $cache_reset ? NULL : geocoder_cache_get($handler, $data, $options);
 
