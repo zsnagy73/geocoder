@@ -20,49 +20,25 @@ function geocoder_field_field_widget_info() {
  * Implements hook_field_widget_settings_form().
  */
 function geocoder_field_field_widget_settings_form($this_field, $instance) {
+  $valid_fields = array();
   $settings = $instance['widget']['settings'];
 
   $entity_fields = field_info_instances($instance['entity_type'], $instance['bundle']);
   $all_fields = field_info_fields();
-  $valid_fields = array();
-  $available_handlers = \Drupal\geocoder\Geocoder::getProviderPlugins();
 
-  // Add in the title/name
-  //@@TODO Do this programatically by getting entity_info
-  switch ($instance['entity_type']) {
-    case 'node':
-      $all_fields['title'] = array(
-        'field_name' => 'title',
-        'type' => 'text',
-      );
+  $entities = entity_get_info();
 
-      $entity_fields['title']['label'] = t('Title');
-      break;
-
-    case 'taxonomy_term':
-      $all_fields['name'] = array(
-        'field_name' => 'name',
-        'type' => 'text',
-      );
-
-      $entity_fields['name']['label'] = t('Name');
-      break;
-
-    case 'country':
-      $all_fields['name'] = array(
-        'field_name' => 'name',
-        'type' => 'text',
-      );
-
-      $entity_fields['name']['label'] = t('Name');
-      break;
-
-  }
+  $title_field = $entities[$instance['entity_type']]['entity keys']['label'];
+  $all_fields[$title_field] = array(
+    'field_name' => $title_field,
+    'type' => 'text',
+  );
+  $entity_fields['title']['label'] = t(drupal_ucfirst($title_field));
 
   // Get a list of all valid fields that we both support and are part of this entity
   foreach ($all_fields as $field) {
     if (array_key_exists($field['field_name'], $entity_fields)) {
-      $valid_fields[$field['field_name']] = $entity_fields[$field['field_name']]['label'];
+      $valid_fields[$field['field_name']] = sprintf('%s (%s)', $entity_fields[$field['field_name']]['label'], $field['field_name']);
     }
   }
 
@@ -71,7 +47,7 @@ function geocoder_field_field_widget_settings_form($this_field, $instance) {
   foreach ($info as $property_name => $property) {
     if (isset($property['type']) && in_array($property['type'], array('location', 'text'))) {
       if (!isset($valid_fields[$property_name])) {
-        $valid_fields[$property_name] = $property['label'];
+        $valid_fields[$property_name] = sprintf('%s (%s)', $property['label'], $property_name);
       }
     }
   }
@@ -93,7 +69,8 @@ function geocoder_field_field_widget_settings_form($this_field, $instance) {
   }
 
   $geocoder_plugins = (array) $settings['geocoder_handlers'];
-  $plugins = array_combine(array_values(\Drupal\geocoder\Geocoder::getProviderPlugins()), array_values(\Drupal\geocoder\Geocoder::getProviderPlugins()));
+  $providers = \Drupal\geocoder\Geocoder::getPlugins('Provider');
+  $plugins = array_combine(array_values($providers), array_values($providers));
   $plugins_array = array();
 
   $i = 0;
@@ -603,7 +580,7 @@ function geocoder_field_field_formatter_settings_form($field, $instance, $view_m
   $settings = $display['settings'];
 
   $geocoder_plugins = (array) $settings['geocoder_handlers'];
-  $plugins = array_combine(array_values(\Drupal\geocoder\Geocoder::getProviderPlugins()), array_values(\Drupal\geocoder\Geocoder::getProviderPlugins()));
+  $plugins = array_combine(array_values(\Drupal\geocoder\Geocoder::getPlugins('Provider')), array_values(\Drupal\geocoder\Geocoder::getPlugins('Provider')));
   $plugins_array = array();
 
   $i = 0;

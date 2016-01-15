@@ -6,24 +6,25 @@ use Drupal\geocoder\GeocoderProvider;
 use Geocoder\Exception\InvalidCredentials;
 
 class Geocoder {
-
-  /* @var GeocoderProviderInterface $plugin */
-  protected static $plugin;
-
   /**
-   * @param string|array $plugins
-   * @param $data
-   * @param array $options
+   * Geocode a string.
    *
-   * @return \Geocoder\Model\AddressCollection
+   * @param string|string[] $plugins
+   *   The name of the plugin to use or a list of plugins names to use.
+   * @param $data
+   *   The string to geocode.
+   * @param array $options (optional)
+   *   The plugin options.
+   *
+   * @return \Geocoder\Model\AddressCollection|FALSE
    */
   public static function geocode($plugins = array('GoogleMaps'), $data, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
-      $options += array($plugin => array());
-      self::setPlugin($plugin, $options);
+      $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
+      $plugin = self::getPlugin($plugin, $plugin_options);
 
       try {
-        return self::getPlugin()->geocode($data);
+        return $plugin->geocode($data);
       } catch (InvalidCredentials $e) {
         self::log($e->getMessage(), 'error');
       } catch (\Exception $e) {
@@ -31,26 +32,33 @@ class Geocoder {
       }
     }
 
-   $exception = new \Exception(sprintf('No plugin could geocode: "%s".', $data));
+    $exception = new \Exception(sprintf('No plugin could geocode: "%s".', $data));
     self::log($exception->getMessage(), 'error');
 
     return FALSE;
   }
 
   /**
-   * @param string|string[] $plugins
-   * @param $data
-   * @param array $options
+   * Reverse geocode coordinates.
    *
-   * @return \Geocoder\Model\AddressCollection
+   * @param string|string[] $plugins
+   *   The name of the plugin to use or a list of plugins names to use.
+   * @param double $latitude
+   *   The latitude.
+   * @param double $longitude
+   *   The longitude.
+   * @param array $options (optional)
+   *   The plugin options.
+   *
+   * @return \Geocoder\Model\AddressCollection|FALSE
    */
   public static function reverse($plugins = 'GoogleMaps', $latitude, $longitude, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
-      self::setPlugin($plugin, $plugin_options);
+      $plugin = self::getPlugin($plugin, $plugin_options);
 
       try {
-        return self::getPlugin()->reverse($latitude, $longitude);
+        return $plugin->reverse($latitude, $longitude);
       } catch (InvalidCredentials $e) {
         self::log($e->getMessage(), 'error');
       } catch (\Exception $e) {
@@ -65,63 +73,50 @@ class Geocoder {
   }
 
   /**
-   * Set the Geocoder Provider plugin to use.
+   * Return a Geocoder plugin object.
    *
+   * @param string $type
+   *   The type of plugin to return.
    * @param string $plugin
-   *   The Plugin ID to use.
-   */
-  public static function setPlugin($plugin = 'GoogleMaps', array $configuration = array()) {
-    self::$plugin = \Drupal::service('geocoder.Provider')->createInstance($plugin, $configuration);
-  }
-
-  /**
-   * Return the Geocoder Provider plugin object.
+   *   The plugin id to return.
+   * @param array $options (optional)
+   *   The plugin options.
    *
-   * @return GeocoderProvider
-   *   The Geocoder Provider plugin object.
+   * @return GeocoderProviderInterface|GeocoderDumperInterface
+   *   The Geocoder plugin object.
    */
-  public static function getPlugin() {
-    return self::$plugin;
+  public static function getPlugin($type, $plugin, array $options = array()) {
+    $type = 'geocoder.' . drupal_ucfirst($plugin);
+    return \Drupal::service($type)->createInstance($plugin, $options);
   }
 
   /**
-   * Gets a list of available Provider plugins.
+   * Gets a list of available plugins.
+   *
+   * @param string $type
+   *   The plugin type.
    *
    * @return string[]
-   *   The Geocoder plugins Provider available.
+   *   The Geocoder plugin type.
    */
-  public static function getProviderPlugins() {
+  public static function getPlugins($type) {
     $options = array();
-    foreach (\Drupal::service('geocoder.Provider')->getDefinitions() as $data) {
+    $type = 'geocoder.' . drupal_ucfirst($type);
+    foreach (\Drupal::service($type)->getDefinitions() as $data) {
       $name = isset($data['label']) ? $data['label'] : $data['id'];
       $options[drupal_strtolower($data['id'])] = $name;
     }
     asort($options);
-    return $options;
-  }
 
-  /**
-   * Gets a list of available Dumper plugins.
-   *
-   * @return string[]
-   *   The Geocoder Dumper plugins available.
-   */
-  public static function getDumperPlugins() {
-    $options = array();
-    foreach (\Drupal::service('geocoder.Dumper')->getDefinitions() as $data) {
-      $name = isset($data['label']) ? $data['label'] : $data['id'];
-      $options[drupal_strtolower($data['id'])] = $name;
-    }
-    asort($options);
     return $options;
   }
 
   /**
    * Log a message in the Drupal watchdog and on screen.
    *
-   * @param $message
+   * @param string $message
    *   The message
-   * @param $type
+   * @param string $type
    *   The type of message
    */
   public static function log($message, $type) {

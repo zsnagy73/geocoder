@@ -7,8 +7,8 @@
  */
 function geocoder_services_services_capabilities() {
   $object = new stdClass();
-  $object->plugins = array_values(\Drupal\geocoder\Geocoder::getProviderPlugins());
-  $object->output = array_values(\Drupal\geocoder\Geocoder::getDumperPlugins());
+  $object->plugins = array_values(\Drupal\geocoder\Geocoder::getPlugins('Provider'));
+  $object->output = array_values(\Drupal\geocoder\Geocoder::getPlugins('Dumper'));
   return $object;
 }
 

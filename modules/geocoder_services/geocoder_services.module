@@ -20,7 +20,7 @@ function geocoder_services_permission() {
     ),
   );
 
-  foreach (\Drupal\geocoder\Geocoder::getProviderPlugins() as $plugin_id) {
+  foreach (\Drupal\geocoder\Geocoder::getPlugins('Provider') as $plugin_id) {
     $perms['geocoder_services_plugin_' . $plugin_id] = array(
       'title' => t('Can geocode using @plugin_id through AJAX / service', array('@plugin_id' => $plugin_id)),
     );

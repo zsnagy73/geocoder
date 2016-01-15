@@ -13,18 +13,18 @@ class Image extends AbstractProvider implements Provider {
    * {@inheritDoc}
    */
   public function geocode($filename) {
-    $exif = @exif_read_data($filename);
+    if ($exif = exif_read_data($filename)) {
+      if (isset($exif['GPSLatitude']) && isset($exif['GPSLatitudeRef']) && $exif['GPSLongitude'] && $exif['GPSLongitudeRef']) {
+        $latitude = $this->getGPSExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
+        $longitude = $this->getGPSExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
 
-    if (isset($exif['GPSLatitude']) && isset($exif['GPSLatitudeRef']) && $exif['GPSLongitude'] && $exif['GPSLongitudeRef']) {
-      $latitude = $this->getGPSExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
-      $longitude = $this->getGPSExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
-
-      return $this->returnResults([
-        array_merge($this->getDefaults(), [
-          'latitude' => $latitude,
-          'longitude' => $longitude,
-        ])
-      ]);
+        return $this->returnResults([
+          array_merge($this->getDefaults(), [
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+          ])
+        ]);
+      }
     }
 
     throw new NoResult(sprintf('Could not find geo data in image: "%s".', basename($filename)));
