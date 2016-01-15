@@ -142,6 +142,9 @@ function geocoder_field_widget_settings_form($this_field, $instance) {
       }
 
       if (isset($handler['settings_callback'])) {
+        // Load the file.
+        geocoder_get_handler($handler);
+
         $settings_callback = $handler['settings_callback'];
         $form['handler_settings'][$handler_id] = array_merge($form['handler_settings'][$handler_id], $settings_callback($default_values));
       }
