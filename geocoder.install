@@ -4,22 +4,3 @@
  * @file
  * Install, update and uninstall functions for the Geocoder module.
  */
-
-/**
- * Implements hook_schema().
- */
-function geocoder_schema() {
-  $schema['cache_geocoder'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_geocoder']['description'] = 'Cache table for the geocoder module to store geocoded locations.';
-
-  return $schema;
-}
-
-/**
- * Implements hook_uninstall().
- */
-function geocoder_uninstall() {
-  variable_del('geocoder_settings');
-  variable_del('geocoder_cache_empty_results');
-  variable_del('geocoder_cache_ttl');
-}
