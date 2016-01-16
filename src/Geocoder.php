@@ -21,7 +21,7 @@ class Geocoder {
   public static function geocode($plugins = array('GoogleMaps'), $data, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
-      $plugin = self::getPlugin($plugin, $plugin_options);
+      $plugin = self::getPlugin('Provider', $plugin, $plugin_options);
 
       try {
         return $plugin->geocode($data);
@@ -55,7 +55,7 @@ class Geocoder {
   public static function reverse($plugins = 'GoogleMaps', $latitude, $longitude, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
-      $plugin = self::getPlugin($plugin, $plugin_options);
+      $plugin = self::getPlugin('Provider', $plugin, $plugin_options);
 
       try {
         return $plugin->reverse($latitude, $longitude);
@@ -86,8 +86,7 @@ class Geocoder {
    *   The Geocoder plugin object.
    */
   public static function getPlugin($type, $plugin, array $options = array()) {
-    $type = 'geocoder.' . drupal_ucfirst($plugin);
-    return \Drupal::service($type)->createInstance($plugin, $options);
+    return \Drupal::service('geocoder.' . drupal_ucfirst($type))->createInstance($plugin, $options);
   }
 
   /**
