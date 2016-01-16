@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class HostIp.
  *
  * @GeocoderProviderPlugin(
- *  id = "HostIp",
+ *  id = "hostip",
+ *  name = "HostIp",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

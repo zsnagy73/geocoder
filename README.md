@@ -40,12 +40,12 @@ Please, read carefully the documentation, make sure you have all the requirement
 ## Geocode a string
 
 ```php
-$plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
+$plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 $options = array(
-  'Geonames' => array(), // array of options
-  'GoogleMaps' => array(), // array of options
-  'BingMaps' => array(), // array of options
+  'geonames' => array(), // array of options
+  'googlemaps' => array(), // array of options
+  'bingmaps' => array(), // array of options
 );
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
@@ -56,13 +56,13 @@ $addressCollection = geocode($plugins, $address, $options);
 ## Reverse geocode coordinates
 
 ```php
-$plugins = array('FreeGeoIp', 'Geonames', 'GoogleMaps', 'Bingmaps');
+$plugins = array('freegeoip', 'geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 $options = array(
-  'FreeGeoIp' => array(), // array of options
-  'Geonames' => array(), // array of options
-  'GoogleMaps' => array(), // array of options
-  'BingMaps' => array(), // array of options
+  'freegeoip' => array(), // array of options
+  'geonames' => array(), // array of options
+  'googlemaps' => array(), // array of options
+  'bingmaps' => array(), // array of options
 );
 
 $addressCollection = \Drupal\geocoder\Geocoder::reverse($plugins, $address, $options);
@@ -77,12 +77,12 @@ Both ```Geocoder::geocode()``` and ```Geocoder::reverse()``` and both ```reverse
 You can transform those objects into arrays. Example:
 
 ```php
-$plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
+$plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 $options = array(
-  'Geonames' => array(), // array of options
-  'GoogleMaps' => array(), // array of options
-  'BingMaps' => array(), // array of options
+  'geonames' => array(), // array of options
+  'googlemaps' => array(), // array of options
+  'bingmaps' => array(), // array of options
 );
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
@@ -105,19 +105,19 @@ Get the list of available Dumper by doing:
 Here's an example on how to use a Dumper
 
 ```php
-$plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
+$plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
-$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address);
 $geojson = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geojson')->dump($addressCollection->first());
 ```
 
 There's also a dumper for GeoPHP, here's how to use it
 
 ```php
-$plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
+$plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
-$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
+$addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address);
 $geometry = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geometry')->dump($addressCollection->first());
 ```

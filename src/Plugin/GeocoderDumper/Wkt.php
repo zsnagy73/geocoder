@@ -15,6 +15,7 @@ use Geocoder\Model\Address;
  *
  * @GeocoderDumperPlugin(
  *  id = "wkt",
+ *  name = "WKT"
  * )
  */
 class Wkt extends GeocoderDumper implements GeocoderDumperInterface {

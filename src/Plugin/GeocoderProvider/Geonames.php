@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class Geonames.
  *
  * @GeocoderProviderPlugin(
- *  id = "Geonames",
+ *  id = "geonames",
+ *  name = "Geonames",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class MaxMind.
  *
  * @GeocoderProviderPlugin(
- *  id = "MaxMind",
+ *  id = "maxmind",
+ *  name = "MaxMind",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

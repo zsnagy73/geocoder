@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class IpInfoDb.
  *
  * @GeocoderProviderPlugin(
- *  id = "IpInfoDb",
+ *  id = "ipinfodb",
+ *  name = "IpInfoDb",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class BingMaps.
  *
  * @GeocoderProviderPlugin(
- *  id = "BingMaps",
+ *  id = "bingmaps",
+ *  name = "BingMaps",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

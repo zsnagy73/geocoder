@@ -15,6 +15,7 @@ use Geocoder\Model\Address;
  *
  * @GeocoderDumperPlugin(
  *  id = "geojson",
+ *  name = "GeoJson"
  * )
  */
 class GeoJson extends GeocoderDumper implements GeocoderDumperInterface {

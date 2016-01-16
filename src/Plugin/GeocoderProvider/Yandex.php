@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class Yandex.
  *
  * @GeocoderProviderPlugin(
- *  id = "Yandex",
+ *  id = "yandex",
+ *  name = "Yandex",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

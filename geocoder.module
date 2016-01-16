@@ -20,8 +20,8 @@
  * @return \Geocoder\Model\AddressCollection|FALSE
  *
  * @example:
- *    geocoder('GoogleMaps', '1600 Amphitheatre Parkway Mountain View, CA 94043');
- *    geocoder(array('FreeGeoIp', 'GoogleMaps'), '8.8.8.8');
+ *    geocoder('googlemaps', '1600 Amphitheatre Parkway Mountain View, CA 94043');
+ *    geocoder(array('freegeoip', 'googlemaps'), '8.8.8.8');
  */
 function geocoder($plugin_ids, $data, array $options = array()) {
   if ($value = \Drupal\geocoder\Geocoder::geocode($plugin_ids, $data, $options)) {
@@ -48,9 +48,9 @@ function geocoder($plugin_ids, $data, array $options = array()) {
  * @return \Geocoder\Model\AddressCollection|FALSE
  *
  * @example:
- *    reverse('GoogleMaps', '37.4224504', '-122.0840859');
+ *    reverse('googlemaps', '37.4224504', '-122.0840859');
  */
-function reverse($plugin_ids = 'GoogleMaps', $latitude, $longitude, array $options = array()) {
+function reverse($plugin_ids = 'googlemaps', $latitude, $longitude, array $options = array()) {
   if ($value = \Drupal\geocoder\Geocoder::reverse($plugin_ids, $latitude, $longitude, $options)) {
     return $value;
   }
