@@ -1,6 +1,0 @@
-name = Geocoder Services
-description = Provides a Geocoding service using contrib module Services.
-core = 7.x
-
-dependencies[] = services
-dependencies[] = geocoder

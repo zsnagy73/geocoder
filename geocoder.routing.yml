@@ -1,0 +1,7 @@
+geocoder.main_page_controller:
+  path: '/geocoder'
+  defaults:
+    _controller: '\Drupal\geocoder\Controller\MainPageController::mainPage'
+    _title: 'Main Page'
+  requirements:
+    _permission: 'access content'

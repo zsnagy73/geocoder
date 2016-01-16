@@ -86,8 +86,8 @@ class Geocoder {
    *   The Geocoder plugin object.
    */
   public static function getPlugin($type, $plugin, array $options = array()) {
-    $plugin = drupal_strtolower($plugin);
-    return \Drupal::service('geocoder.' . drupal_ucfirst($type))->createInstance($plugin, $options);
+    $plugin = strtolower($plugin);
+    return \Drupal::service('geocoder.' . ucfirst($type))->createInstance($plugin, $options);
   }
 
   /**
@@ -101,7 +101,7 @@ class Geocoder {
    */
   public static function getPlugins($type) {
     $options = array();
-    $type = 'geocoder.' . drupal_ucfirst($type);
+    $type = 'geocoder.' . ucfirst($type);
 
     foreach (\Drupal::service($type)->getDefinitions() as $data) {
       $name = isset($data['name']) ? $data['name'] : $data['id'];
