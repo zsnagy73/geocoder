@@ -4,26 +4,20 @@
  * The FreeGeoIp plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class FreeGeoIp.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "freegeoip",
- *  name = "FreeGeoIp",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "FreeGeoIp"
  * )
  */
-class FreeGeoIp extends GeocoderProvider {
+class FreeGeoIp extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

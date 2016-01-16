@@ -4,31 +4,25 @@
  * The GeoPlugin plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class GeoPlugin.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "geoplugin",
- *  name = "GeoPlugin",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "GeoPlugin"
  * )
  */
-class GeoPlugin extends GeocoderProvider {
+class GeoPlugin extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\GeoPlugin());
+    $this->setHandler(new \Geocoder\Provider\GeoPlugin($this->getAdapter()));
 
     return parent::init();
   }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains Drupal\geocoder\Component\Annotation\GeocoderDumperPlugin.
+ * Contains Drupal\geocoder\Component\Annotation\GeocoderPlugin.
  */
 
-namespace Drupal\geocoder\Component\Annotation;
+namespace Drupal\geocoder\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
@@ -16,6 +16,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  */
-class GeocoderDumperPlugin extends Plugin {
+class GeocoderPlugin extends Plugin {
+
+  public $type;
 
 }

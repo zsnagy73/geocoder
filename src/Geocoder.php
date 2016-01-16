@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\geocoder\Geocoder.
+ */
+
 namespace Drupal\geocoder;
 
-use Drupal\geocoder\GeocoderProvider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 use Geocoder\Exception\InvalidCredentials;
+use Symfony\Component\DependencyInjection\Dumper\DumperInterface;
 
 class Geocoder {
   /**
@@ -20,8 +26,9 @@ class Geocoder {
    */
   public static function geocode($plugins = array('googlemaps'), $data, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
+      $plugin = strtolower($plugin);
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
-      $plugin = self::getPlugin('Provider', $plugin, $plugin_options);
+      $plugin = self::getPlugin('provider', $plugin, $plugin_options);
 
       try {
         return $plugin->geocode($data);
@@ -55,7 +62,7 @@ class Geocoder {
   public static function reverse($plugins = 'googlemaps', $latitude, $longitude, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
-      $plugin = self::getPlugin('Provider', $plugin, $plugin_options);
+      $plugin = self::getPlugin('provider', $plugin, $plugin_options);
 
       try {
         return $plugin->reverse($latitude, $longitude);
@@ -82,12 +89,12 @@ class Geocoder {
    * @param array $options (optional)
    *   The plugin options.
    *
-   * @return GeocoderProviderInterface|GeocoderDumperInterface
+   * @return ProviderInterface|DumperInterface
    *   The Geocoder plugin object.
    */
   public static function getPlugin($type, $plugin, array $options = array()) {
     $plugin = strtolower($plugin);
-    return \Drupal::service('geocoder.' . ucfirst($type))->createInstance($plugin, $options);
+    return \Drupal::service('plugin.manager.geocoder.' . strtolower($type))->createInstance($plugin, $options);
   }
 
   /**
@@ -101,15 +108,14 @@ class Geocoder {
    */
   public static function getPlugins($type) {
     $options = array();
-    $type = 'geocoder.' . ucfirst($type);
 
-    foreach (\Drupal::service($type)->getDefinitions() as $data) {
+    foreach (\Drupal::service('plugin.manager.geocoder.' . strtolower($type))->getDefinitions() as $data) {
       $name = isset($data['name']) ? $data['name'] : $data['id'];
-      $options[$data['id']] = $name;
+      $options[$data['type']][$data['id']] = $name;
     }
     asort($options);
 
-    return $options;
+    return isset($options[$type]) ? $options[$type] : $options;
   }
 
   /**
@@ -121,8 +127,8 @@ class Geocoder {
    *   The type of message
    */
   public static function log($message, $type) {
-    \Drupal::service('logger.dblog')->log($type, $message, array('channel' => 'geocoder'));
-    \Drupal::service('messenger')->addMessage($message, $type);
+    \Drupal::logger('geocoder')->error($message);
+    drupal_set_message($message, $type);
   }
 
 }

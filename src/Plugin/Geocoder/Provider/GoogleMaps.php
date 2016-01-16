@@ -4,24 +4,20 @@
  * The GoogleMaps plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class GoogleMaps.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "googlemaps",
- *  name = "GoogleMaps",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "GoogleMaps"
  * )
  */
-class GoogleMaps extends GeocoderProvider {
+class GoogleMaps extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

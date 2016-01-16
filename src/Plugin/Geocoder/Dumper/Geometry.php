@@ -4,21 +4,21 @@
  * The Geometry plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Dumper;
+namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\GeocoderDumper;
-use Drupal\geocoder\GeocoderDumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
 use Geocoder\Model\Address;
 
 /**
  * Class Geometry.
  *
- * @GeocoderDumperPlugin(
+ * @GeocoderPlugin(
  *  id = "geometry",
  *  name = "Geometry"
  * )
  */
-class Geometry extends GeocoderDumper implements GeocoderDumperInterface {
+class Geometry extends Dumper implements DumperInterface {
   /**
    * @inheritdoc
    */

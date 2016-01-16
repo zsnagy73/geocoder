@@ -4,26 +4,20 @@
  * The OpenCage plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class OpenCage.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "opencage",
- *  name = "OpenCage",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "OpenCage"
  * )
  */
-class OpenCage extends GeocoderProvider {
+class OpenCage extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

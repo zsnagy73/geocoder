@@ -4,26 +4,20 @@
  * The ArcGISOnline plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class ArcGISOnline.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "arcgisonline",
- *  name = "ArcGISOnline",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "ArcGISOnline"
  * )
  */
-class ArcGISOnline extends GeocoderProvider {
+class ArcGISOnline extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

@@ -4,26 +4,20 @@
  * The Yandex plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class Yandex.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "yandex",
- *  name = "Yandex",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "Yandex"
  * )
  */
-class Yandex extends GeocoderProvider {
+class Yandex extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

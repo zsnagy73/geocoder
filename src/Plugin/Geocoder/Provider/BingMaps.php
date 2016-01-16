@@ -4,26 +4,20 @@
  * The BingMaps plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class BingMaps.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "bingmaps",
- *  name = "BingMaps",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "BingMaps"
  * )
  */
-class BingMaps extends GeocoderProvider {
+class BingMaps extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

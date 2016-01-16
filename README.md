@@ -1,13 +1,12 @@
 # Geocoder
 
-This is the Geocoder module for Drupal 7 rewritten using the Geocoder PHP library.
+This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP library.
 
 # Requirements
 * [Composer](https://getcomposer.org/)
 * [Drush](http://drush.org)
 
 # Installation
-* Install the contrib module [Service Container](https://www.drupal.org/project/service_container) which is now a requirement.
 * Install the contrib module [Composer Manager](https://www.drupal.org/project/composer_manager).
 * Read the documentation of Composer Manager to install dependencies. Basically with drush: drush dl composer-8.x, drush composer-json-rebuild, drush composer-manager install.
 * Enable the module.
@@ -17,7 +16,6 @@ Composer manager will install all those libraries in 'sites/all/libraries/compos
 Please, read carefully the documentation, make sure you have all the requirements on your system and everything should be ok.
 
 # Links
-* [Service container module](https://www.drupal.org/project/service_container)
 * [Geocoder module](https://www.drupal.org/project/geocoder)
 * [Geocoder PHP](http://geocoder-php.org/)
 * [Composer](https://getcomposer.org/)
@@ -28,13 +26,13 @@ Please, read carefully the documentation, make sure you have all the requirement
 ## Get a list of available Provider plugins
 
 ```php
-\Drupal\geocoder\Geocoder::getPlugins('Provider')
+\Drupal\geocoder\Geocoder::getPlugins('provider')
 ```
 
 ## Get a list of available Dumper plugins
 
 ```php
-\Drupal\geocoder\Geocoder::getPlugins('Dumper')
+\Drupal\geocoder\Geocoder::getPlugins('dumper')
 ```
 
 ## Geocode a string
@@ -99,7 +97,7 @@ You can also convert these to different formats using the Dumper plugins.
 Get the list of available Dumper by doing:
 
 ```php
-\Drupal\geocoder\Geocoder::getPlugins('Dumper')
+\Drupal\geocoder\Geocoder::getPlugins('dumper')
 ```
 
 Here's an example on how to use a Dumper
@@ -109,7 +107,7 @@ $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address);
-$geojson = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geojson')->dump($addressCollection->first());
+$geojson = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'geojson')->dump($addressCollection->first());
 ```
 
 There's also a dumper for GeoPHP, here's how to use it
@@ -119,5 +117,5 @@ $plugins = array('geonames', 'googlemaps', 'bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address);
-$geometry = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geometry')->dump($addressCollection->first());
+$geometry = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'geometry')->dump($addressCollection->first());
 ```

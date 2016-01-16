@@ -4,30 +4,21 @@
  * The TomTom plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Model\Address;
-use Geocoder\Model\AddressCollection;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 use Geocoder\Model\AddressFactory;
-use Geocoder\Model\Coordinates;
-use Geocoder\Provider\Provider;
 
 /**
  * Class Random.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "random",
- *  name = "Random",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "Random"
  * )
  */
-class Random extends GeocoderProvider {
+class Random extends Provider implements ProviderInterface {
   /**
    * @var AddressFactory
    */

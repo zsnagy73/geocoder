@@ -4,26 +4,20 @@
  * The Nominatim plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class Nominatim.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "nominatim",
- *  name = "Nominatim",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "Nominatim"
  * )
  */
-class Nominatim extends GeocoderProvider {
+class Nominatim extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

@@ -4,21 +4,21 @@
  * The Wkb plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Dumper;
+namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\GeocoderDumper;
-use Drupal\geocoder\GeocoderDumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
 use Geocoder\Model\Address;
 
 /**
  * Class Wkb.
  *
- * @GeocoderDumperPlugin(
+ * @GeocoderPlugin(
  *  id = "wkb",
  *  name = "WKB"
  * )
  */
-class Wkb extends GeocoderDumper implements GeocoderDumperInterface {
+class Wkb extends Dumper implements DumperInterface {
   /**
    * @inheritdoc
    */

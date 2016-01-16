@@ -4,26 +4,20 @@
  * The IpInfoDb plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class IpInfoDb.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "ipinfodb",
- *  name = "IpInfoDb",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "IpInfoDb"
  * )
  */
-class IpInfoDb extends GeocoderProvider {
+class IpInfoDb extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */

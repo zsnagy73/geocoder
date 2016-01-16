@@ -4,21 +4,21 @@
  * The Wkt plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Dumper;
+namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\GeocoderDumper;
-use Drupal\geocoder\GeocoderDumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
 use Geocoder\Model\Address;
 
 /**
  * Class Wkt.
  *
- * @GeocoderDumperPlugin(
+ * @GeocoderPlugin(
  *  id = "wkt",
  *  name = "WKT"
  * )
  */
-class Wkt extends GeocoderDumper implements GeocoderDumperInterface {
+class Wkt extends Dumper implements DumperInterface {
   /**
    * @inheritdoc
    */

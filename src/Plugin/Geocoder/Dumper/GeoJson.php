@@ -4,21 +4,21 @@
  * The GeoJson plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Dumper;
+namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\GeocoderDumper;
-use Drupal\geocoder\GeocoderDumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\Dumper;
 use Geocoder\Model\Address;
 
 /**
  * Class GeoJson.
  *
- * @GeocoderDumperPlugin(
+ * @GeocoderPlugin(
  *  id = "geojson",
  *  name = "GeoJson"
  * )
  */
-class GeoJson extends GeocoderDumper implements GeocoderDumperInterface {
+class GeoJson extends Dumper implements DumperInterface {
   /**
    * @inheritdoc
    */

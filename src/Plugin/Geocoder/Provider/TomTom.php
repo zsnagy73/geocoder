@@ -4,26 +4,20 @@
  * The TomTom plugin.
  */
 
-namespace Drupal\geocoder\Plugin\Provider;
+namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\GeocoderProvider;
-use Geocoder\Geocoder;
-use Geocoder\Provider\Provider;
+use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
  * Class TomTom.
  *
- * @GeocoderProviderPlugin(
+ * @GeocoderPlugin(
  *  id = "tomtom",
- *  name = "TomTom",
- *  arguments = {
- *   "@geocoder.http_adapter",
- *   "@logger.channel.default",
- *   "@messenger"
- *  }
+ *  name = "TomTom"
  * )
  */
-class TomTom extends GeocoderProvider {
+class TomTom extends Provider implements ProviderInterface {
   /**
    * @inheritdoc
    */
