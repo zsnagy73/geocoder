@@ -7,8 +7,8 @@
  */
 function geocoder_services_services_capabilities() {
   $object = new stdClass();
-  $object->plugins = array_values(\Drupal\geocoder\Geocoder::getPlugins('Provider'));
-  $object->output = array_values(\Drupal\geocoder\Geocoder::getPlugins('Dumper'));
+  $object->provider = array_keys(\Drupal\geocoder\Geocoder::getPlugins('Provider'));
+  $object->dumper = array_keys(\Drupal\geocoder\Geocoder::getPlugins('Dumper'));
   return $object;
 }
 
@@ -107,6 +107,8 @@ function geocoder_services_services_capabilities_ac() {
  * also checks permission
  */
 function geocoder_services_check_request($plugin_id, $output) {
+  $plugin_id = drupal_strtolower($plugin_id);
+
   if (!geocoder_services_check_perms($plugin_id)) {
     drupal_access_denied();
     drupal_exit();

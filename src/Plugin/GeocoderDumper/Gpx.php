@@ -15,6 +15,7 @@ use Geocoder\Model\Address;
  *
  * @GeocoderDumperPlugin(
  *  id = "gpx",
+ *  name = "GPX"
  * )
  */
 class Gpx extends GeocoderDumper implements GeocoderDumperInterface {

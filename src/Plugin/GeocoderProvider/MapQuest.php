@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class MapQuest.
  *
  * @GeocoderProviderPlugin(
- *  id = "MapQuest",
+ *  id = "mapquest",
+ *  name = "MapQuest",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

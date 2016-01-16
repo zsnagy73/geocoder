@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class OpenStreetMap.
  *
  * @GeocoderProviderPlugin(
- *  id = "OpenStreetMap",
+ *  id = "openstreetmap",
+ *  name = "OpenStreetMap",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

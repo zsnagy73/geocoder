@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class ArcGISOnline.
  *
  * @GeocoderProviderPlugin(
- *  id = "ArcGISOnline",
+ *  id = "arcgisonline",
+ *  name = "ArcGISOnline",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

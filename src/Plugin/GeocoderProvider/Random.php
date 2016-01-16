@@ -18,7 +18,8 @@ use Geocoder\Provider\Provider;
  * Class Random.
  *
  * @GeocoderProviderPlugin(
- *  id = "Random",
+ *  id = "random",
+ *  name = "Random",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",
@@ -45,13 +46,13 @@ class Random extends GeocoderProvider {
 
     try {
       $value = $this->factory->createFromArray(array($this->getRandomResult()));
-      $this->cache_set($cid, $value);
     } catch (\Exception $e) {
       $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
       $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
       $value = FALSE;
     }
 
+    $this->cache_set($cid, $value);
     return $value;
   }
 

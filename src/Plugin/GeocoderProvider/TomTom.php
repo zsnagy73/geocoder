@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class TomTom.
  *
  * @GeocoderProviderPlugin(
- *  id = "TomTom",
+ *  id = "tomtom",
+ *  name = "TomTom",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class FreeGeoIp.
  *
  * @GeocoderProviderPlugin(
- *  id = "FreeGeoIp",
+ *  id = "freegeoip",
+ *  name = "FreeGeoIp",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

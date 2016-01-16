@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * The HostIp plugin.
+ * The File plugin.
  */
 
 namespace Drupal\geocoder\Plugin\GeocoderProvider;
@@ -11,10 +11,11 @@ use Geocoder\Geocoder;
 use Geocoder\Provider\Provider;
 
 /**
- * Class Image.
+ * Class File.
  *
  * @GeocoderProviderPlugin(
- *  id = "Image",
+ *  id = "file",
+ *  name = "File",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",
@@ -22,12 +23,12 @@ use Geocoder\Provider\Provider;
  *  }
  * )
  */
-class Image extends GeocoderProvider {
+class File extends GeocoderProvider {
   /**
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\Image());
+    $this->setHandler(new \Geocoder\Provider\File());
 
     return parent::init();
   }

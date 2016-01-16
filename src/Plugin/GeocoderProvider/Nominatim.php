@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class Nominatim.
  *
  * @GeocoderProviderPlugin(
- *  id = "Nominatim",
+ *  id = "nominatim",
+ *  name = "Nominatim",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

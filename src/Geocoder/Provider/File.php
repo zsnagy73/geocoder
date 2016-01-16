@@ -8,7 +8,7 @@ use Geocoder\Exception\UnsupportedOperation;
 /**
  * @author Pol Dellaiera <pol.dellaiera@gmail.com>
  */
-class Image extends AbstractProvider implements Provider {
+class File extends AbstractProvider implements Provider {
   /**
    * {@inheritDoc}
    */
@@ -27,7 +27,7 @@ class Image extends AbstractProvider implements Provider {
       }
     }
 
-    throw new NoResult(sprintf('Could not find geo data in image: "%s".', basename($filename)));
+    throw new NoResult(sprintf('Could not find geo data in file: "%s".', basename($filename)));
   }
 
   /**
@@ -69,7 +69,7 @@ class Image extends AbstractProvider implements Provider {
    * {@inheritDoc}
    */
   public function getName() {
-    return 'image';
+    return 'file';
   }
 
 }

@@ -14,7 +14,8 @@ use Geocoder\Provider\Provider;
  * Class OpenCage.
  *
  * @GeocoderProviderPlugin(
- *  id = "OpenCage",
+ *  id = "opencage",
+ *  name = "OpenCage",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",

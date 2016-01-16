@@ -15,6 +15,7 @@ use Geocoder\Model\Address;
  *
  * @GeocoderDumperPlugin(
  *  id = "kml",
+ *  name = "KML"
  * )
  */
 class Kml extends GeocoderDumper implements GeocoderDumperInterface {

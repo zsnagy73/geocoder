@@ -12,7 +12,8 @@ use Drupal\geocoder\GeocoderProvider;
  * Class GoogleMaps.
  *
  * @GeocoderProviderPlugin(
- *  id = "GoogleMaps",
+ *  id = "googlemaps",
+ *  name = "GoogleMaps",
  *  arguments = {
  *   "@geocoder.http_adapter",
  *   "@logger.channel.default",
