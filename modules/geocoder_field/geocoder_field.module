@@ -379,12 +379,11 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
         }
 
         if ($addressCollection = geocoder($geocoder_handlers, $item['value'])) {
-          $geojson = \Drupal::service('geocoder.Dumper')->createInstance('geojson')->dump($addressCollection->first());
-          $geometry = \geoPHP::load($geojson, 'geojson');
-        }
+          $geometry = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geometry')->dump($addressCollection->first());
 
-        if ($geometry instanceof \Geometry) {
-          $geometries[] = $geometry;
+          if ($geometry instanceof \Geometry) {
+            $geometries[] = $geometry;
+          }
         }
       }
 

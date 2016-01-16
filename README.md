@@ -107,10 +107,9 @@ Here's an example on how to use a Dumper
 ```php
 $plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-$dumper = \Drupal::service('geocoder.Dumper')->createInstance('geojson');
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
-$geojson = $dumper->dump($addressCollection->first());
+$geojson = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geojson')->dump($addressCollection->first());
 ```
 
 There's also a dumper for GeoPHP, here's how to use it
@@ -118,8 +117,7 @@ There's also a dumper for GeoPHP, here's how to use it
 ```php
 $plugins = array('Geonames', 'GoogleMaps', 'Bingmaps');
 $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
-$dumper = \Drupal::service('geocoder.Dumper')->createInstance('geometry');
 
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address, $options);
-$geometry = $dumper->dump($addressCollection->first());
+$geometry = \Drupal\geocoder\Geocoder::getPlugin('Dumper', 'geometry')->dump($addressCollection->first());
 ```

@@ -32,7 +32,7 @@ function geocoder_services_geocoder_geocode_callback($plugin_id, $data, $output)
     foreach($addressCollection as $address) {
       $data['collection'][] = array(
         'raw' => $address->toArray(),
-        'formatted' => \Drupal::service('geocoder.Dumper')->createInstance($output)->dump($address),
+        'formatted' => \Drupal\geocoder\Geocoder::getPlugin('Dumper', $output)->dump($address),
       );
     }
   } else {
@@ -65,7 +65,7 @@ function geocoder_services_geocoder_reverse_callback($plugin_id, $data, $output)
     foreach($addressCollection as $address) {
       $data['collection'][] = array(
         'raw' => $address->toArray(),
-        'formatted' => \Drupal::service('geocoder.Dumper')->createInstance($output)->dump($address),
+        'formatted' => \Drupal\geocoder\Geocoder::getPlugin('Dumper', $output)->dump($address),
       );
     }
   } else {
