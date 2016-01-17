@@ -6,9 +6,12 @@
  * @return \stdClass
  */
 function geocoder_services_services_capabilities() {
-  $object = new stdClass();
-  $object->provider = array_keys(\Drupal\geocoder\Geocoder::getPlugins('Provider'));
-  $object->dumper = array_keys(\Drupal\geocoder\Geocoder::getPlugins('Dumper'));
+  $object = array();
+
+  foreach(\Drupal\geocoder\Geocoder::getPlugins() as $type => $plugin) {
+    $object[$type] = array_keys($plugin);
+  }
+
   return $object;
 }
 
@@ -114,13 +117,13 @@ function geocoder_services_check_request($plugin_id, $output) {
     drupal_exit();
   }
 
-  if (!(\Drupal::service('geocoder.Provider')->hasDefinition($plugin_id))) {
+  if (!(\Drupal\geocoder\Geocoder::getPluginManager()->hasDefinition($plugin_id))) {
     drupal_set_message(t('Could not find provider plugin @plugin_id', array('@plugin_id' => $plugin_id)), 'error');
     drupal_not_found();
     drupal_exit();
   }
 
-  if (!(\Drupal::service('geocoder.Dumper')->hasDefinition($output))) {
+  if (!(\Drupal\geocoder\Geocoder::getPluginManager()->hasDefinition($output))) {
     drupal_set_message(t('Could not find dumper plugin @plugin_id', array('@plugin_id' => $output)), 'error');
     drupal_not_found();
     drupal_exit();

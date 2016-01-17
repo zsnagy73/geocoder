@@ -1,10 +1,21 @@
 # Geocoder
 
-This is the Geocoder module for Drupal 7 rewritten using the Geocoder PHP library.
+This is the Geocoder module for Drupal 7.
+This is a complete rewrite of the code, based on the [Geocoder PHP library](http://geocoder-php.org).
+
+# Features
+* Solid API based on [Geocoder PHP library](http://geocoder-php.org),
+* Geocode and Reverse Geocode using one or multiple providers,
+* Results can be dumped into multiple formats,
+* Submodule Geocoder Field: provides Drupal fields widgets and formatters, with even more options,
+* Submodule Geocoder Services: provides a Geocoding and reverse geocoding service through the contrib module Services,
+* File geocoding, Addressfield integration, caching enabled by default.
 
 # Requirements
 * [Composer](https://getcomposer.org/)
 * [Drush](http://drush.org)
+* Contrib module [Service Container](https://www.drupal.org/project/service_container)
+* Contrib module [Composer Manager](https://www.drupal.org/project/composer_manager)
 
 # Installation
 * Install the contrib module [Service Container](https://www.drupal.org/project/service_container) which is now a requirement.
@@ -25,16 +36,22 @@ Please, read carefully the documentation, make sure you have all the requirement
 
 # API
 
-## Get a list of available Provider plugins
+## Get a list of all available plugins
 
 ```php
-\Drupal\geocoder\Geocoder::getPlugins('Provider')
+$plugins = \Drupal\geocoder\Geocoder::getPlugins();
 ```
 
-## Get a list of available Dumper plugins
+## Get a list of available Provider plugins only
 
 ```php
-\Drupal\geocoder\Geocoder::getPlugins('Dumper')
+$providers = \Drupal\geocoder\Geocoder::getPlugins('Provider');
+```
+
+## Get a list of available Dumper plugins only
+
+```php
+$dumpers = \Drupal\geocoder\Geocoder::getPlugins('Dumper');
 ```
 
 ## Geocode a string

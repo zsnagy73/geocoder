@@ -3,6 +3,8 @@ description = An API and widget to geocode various known data into other GIS dat
 core = 7.x
 
 dependencies[] = composer_manager
+dependencies[] = service_container
+dependencies[] = service_container:service_container_symfony
 dependencies[] = service_container:service_container_annotation_discovery
 
 registry_autoload[] = PSR-4

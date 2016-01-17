@@ -1,8 +1,7 @@
-parameters:
-  annotated_plugins_auto_discovery.geocoder:
-    - { owner: 'geocoder', type: 'Provider', directory: 'Plugin/GeocoderProvider', class: 'Drupal\geocoder\Component\Annotation\GeocoderProviderPlugin'}
-    - { owner: 'geocoder', type: 'Dumper', directory: 'Plugin/GeocoderDumper', class: 'Drupal\geocoder\Component\Annotation\GeocoderDumperPlugin'}
-
 services:
   geocoder.http_adapter:
     class: \Ivory\HttpAdapter\CurlHttpAdapter
+
+parameters:
+  annotated_plugins_auto_discovery.geocoder:
+    - { plugin_manager_name: 'plugin.manager.geocoder', directory: 'Plugin/Geocoder', class: 'Drupal\geocoder\Annotation\GeocoderPlugin' }

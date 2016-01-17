@@ -2,10 +2,18 @@
 
 namespace Drupal\geocoder;
 
-use Drupal\geocoder\GeocoderProvider;
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
+use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\service_container\Plugin\ContainerAwarePluginManager;
 use Geocoder\Exception\InvalidCredentials;
 
 class Geocoder {
+  /**
+   * @var ContainerAwarePluginManager;
+   */
+  private static $manager;
+
   /**
    * Geocode a string.
    *
@@ -20,6 +28,7 @@ class Geocoder {
    */
   public static function geocode($plugins = array('googlemaps'), $data, array $options = array()) {
     foreach ((array) $plugins as $plugin) {
+      $plugin = drupal_strtolower($plugin);
       $plugin_options = isset($options[$plugin]) ? $options[$plugin] : array();
       $plugin = self::getPlugin('Provider', $plugin, $plugin_options);
 
@@ -82,12 +91,48 @@ class Geocoder {
    * @param array $options (optional)
    *   The plugin options.
    *
-   * @return GeocoderProviderInterface|GeocoderDumperInterface
+   * @return DumperInterface|ProviderInterface
    *   The Geocoder plugin object.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public static function getPlugin($type, $plugin, array $options = array()) {
-    $plugin = drupal_strtolower($plugin);
-    return \Drupal::service('geocoder.' . drupal_ucfirst($type))->createInstance($plugin, $options);
+    $manager = self::getPluginManager();
+
+    if ($manager->hasDefinition($plugin)) {
+      if ($definition = $manager->getDefinition($plugin)) {
+        if ($definition['type'] == $type) {
+          return $manager->createInstance($plugin, $options);
+        } else {
+          throw new PluginException(t('Geocoder plugin type not found. (@type, @plugin_id)', array('@type' => $type, '@plugin_id' => $plugin)));
+        }
+      }
+    }
+  }
+
+  /**
+   * Return the plugin manager.
+   *
+   * @return ContainerAwarePluginManager
+   *   The plugin manager.
+   */
+  public static function getPluginManager() {
+    if (self::$manager) {
+      return self::$manager;
+    }
+    self::setPluginManager(\Drupal::service('plugin.manager.geocoder'));
+
+    return self::getPluginManager();
+  }
+
+  /**
+   * Return the plugin manager.
+   *
+   * @param ContainerAwarePluginManager $manager
+   *   The container plugin manager.
+   */
+  public static function setPluginManager(ContainerAwarePluginManager $manager) {
+    self::$manager = $manager;
   }
 
   /**
@@ -99,17 +144,16 @@ class Geocoder {
    * @return string[]
    *   The Geocoder plugin type.
    */
-  public static function getPlugins($type) {
+  public static function getPlugins($type = NULL) {
     $options = array();
-    $type = 'geocoder.' . drupal_ucfirst($type);
 
-    foreach (\Drupal::service($type)->getDefinitions() as $data) {
+    foreach (self::getPluginManager()->getDefinitions() as $data) {
       $name = isset($data['name']) ? $data['name'] : $data['id'];
-      $options[$data['id']] = $name;
+      $options[$data['type']][$data['id']] = $name;
     }
     asort($options);
 
-    return $options;
+    return isset($options[$type]) ? $options[$type] : $options;
   }
 
   /**
