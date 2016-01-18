@@ -111,11 +111,11 @@ class Geocoder {
 
     foreach (\Drupal::service('plugin.manager.geocoder.' . strtolower($type))->getDefinitions() as $data) {
       $name = isset($data['name']) ? $data['name'] : $data['id'];
-      $options[$data['type']][$data['id']] = $name;
+      $options[$data['id']] = $name;
     }
     asort($options);
 
-    return isset($options[$type]) ? $options[$type] : $options;
+    return $options;
   }
 
   /**
