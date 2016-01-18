@@ -1,0 +1,5 @@
+name: Geocoder Field
+description: Widgets and formatters for the Geocoder module.
+core: 7.x
+dependencies:
+ - geocoder

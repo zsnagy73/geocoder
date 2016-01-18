@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder\Plugin\Field\FieldWidget\GeocoderWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocoderWidget.
  */
 
-namespace Drupal\geocoder\Plugin\Field\FieldWidget;
+namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
