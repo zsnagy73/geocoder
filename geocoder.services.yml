@@ -1,9 +1,9 @@
 services:
   plugin.manager.geocoder.provider:
     class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [provider, '@container.namespaces', '@cache.discovery', '@module_handler', '@geocoder.http_adapter']
+    arguments: [provider, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [dumper, '@container.namespaces', '@cache.discovery', '@module_handler', '@geocoder.http_adapter']
+    arguments: [dumper, '@container.namespaces', '@cache.discovery', '@module_handler']
   geocoder.http_adapter:
     class: \Ivory\HttpAdapter\CurlHttpAdapter

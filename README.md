@@ -8,18 +8,15 @@ This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP librar
 
 # Installation
 * Install the contrib module [Composer Manager](https://www.drupal.org/project/composer_manager).
-* Read the documentation of Composer Manager to install dependencies. Basically with drush: drush dl composer-8.x, drush composer-json-rebuild, drush composer-manager install.
-* Enable the module.
-
-This modules needs external libraries to work. Those libraries can be installed anywhere but to avoid messing with files and duplicates we're using the module Composer Manager.
-Composer manager will install all those libraries in 'sites/all/libraries/composer' and they will be available in Drupal without the need to include a the autoload.php file, it's automatically done for you.
-Please, read carefully the documentation, make sure you have all the requirements on your system and everything should be ok.
+* Read the installation documentation of Composer Manager. (See [[#2405811]](https://www.drupal.org/node/2405811))
+* Run ```composer drupal-rebuild``` then ```composer drupal-update``` on the root of your site.
+* Enable the module: ```drush en geocoder```
 
 # Links
-* [Geocoder module](https://www.drupal.org/project/geocoder)
-* [Geocoder PHP](http://geocoder-php.org/)
 * [Composer](https://getcomposer.org/)
 * [Drush](http://drush.org)
+* [Geocoder PHP library](http://geocoder-php.org/)
+* [Geocoder module](https://www.drupal.org/project/geocoder)
 
 # API
 

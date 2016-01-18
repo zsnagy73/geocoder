@@ -31,7 +31,7 @@ class GeocoderPluginManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, HttpAdapterInterface $adapter) {
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\geocoder\Annotation\GeocoderPlugin';
     parent::__construct('Plugin/Geocoder/'. Container::camelize($type), $namespaces, $module_handler, 'Drupal\geocoder\Plugin\GeocoderPluginInterface', $plugin_definition_annotation_name);
 
