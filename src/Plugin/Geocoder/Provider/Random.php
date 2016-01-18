@@ -6,6 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
+use Drupal\Core\Locale\CountryManager;
 use Drupal\geocoder\Plugin\Geocoder\Provider;
 use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 use Geocoder\Model\AddressFactory;
@@ -72,7 +73,8 @@ class Random extends Provider implements ProviderInterface {
 
   private function getRandomCountryInfo($type = NULL) {
     include_once DRUPAL_ROOT . '/includes/locale.inc';
-    $countries = country_get_list();
+    $manager = new CountryManager($this->getModuleHandler());
+    $countries = $manager->getList();
     uksort($countries, function() { return rand() > rand(); });
     $country = array_slice($countries, 0, 1);
 
