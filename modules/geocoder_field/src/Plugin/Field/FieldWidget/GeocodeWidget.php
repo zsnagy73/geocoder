@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocoderWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidget.
  */
 
 namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
@@ -14,24 +14,26 @@ use Drupal\geocoder\Geocoder;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Plugin implementation of the 'geocoder_default' widget.
+ * Geocode widget implementation for the Geocoder Field module.
  *
  * @FieldWidget(
- *   id = "geocoder_widget",
- *   label = @Translation("Geocoder"),
+ *   id = "geocoder_geocode_widget",
+ *   label = @Translation("Geocode from/to an existing field"),
  *   field_types = {
- *     "string"
+ *     "string",
+ *     "file"
  *   },
  * )
  */
-class GeocoderWidget extends WidgetBase {
+class GeocodeWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return array(
-      'destination_field' => '',
-      'geocoder_plugins' => array(),
+      'mode' => 'from',
+      'field' => '',
+      'provider_plugins' => array(),
       'dumper_plugin' => 'wkt',
     ) + parent::defaultSettings();
   }
@@ -42,26 +44,38 @@ class GeocoderWidget extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
+    $elements['mode'] = array(
+      '#type' => 'select',
+      '#weight' => 5,
+      '#title' => $this->t('Operating mode'),
+      '#description' => $this->t('Select the operating mode. <em>From</em> or <em>To</em>.'),
+      '#default_value' => $this->getSetting('mode'),
+      '#required' => TRUE,
+      '#options' => array('from' => $this->t('From'), 'to' => $this->t('To')),
+    );
+
     $entityFieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
 
     $options = array();
     foreach ($entityFieldDefinitions as $id => $definition) {
-      if (in_array($definition->getType(), array('string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+      if (in_array($definition->getType(), array('file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
         $options[$id] = sprintf('%s (%s)', $definition->getLabel(), $definition->getType());
       }
     }
 
-    $elements['destination_field'] = array(
+    $elements['field'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Destination field'),
-      '#default_value' => $this->getSetting('destination_field'),
+      '#weight' => 10,
+      '#title' => $this->t('Field to use'),
+      '#description' => $this->t('Select which field you would like to use.'),
+      '#default_value' => $this->getSetting('field'),
       '#required' => TRUE,
       '#options' => $options,
     );
 
     $enabled_plugins = array();
     $i = 0;
-    foreach($this->getSetting('geocoder_plugins') as $plugin_id => $plugin) {
+    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
@@ -70,12 +84,14 @@ class GeocoderWidget extends WidgetBase {
 
     $elements['geocoder_plugins_title'] = array(
       '#type' => 'item',
+      '#weight' => 15,
       '#title' => t('Geocoder plugin(s)'),
       '#description' => t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
     );
 
-    $elements['geocoder_plugins'] = array(
+    $elements['provider_plugins'] = array(
       '#type' => 'table',
+      '#weight' => 20,
       '#header' => array(
         array('data' => $this->t('Enabled')),
         array('data' => $this->t('Weight')),
@@ -85,7 +101,7 @@ class GeocoderWidget extends WidgetBase {
         array(
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => 'geocoder_plugins-order-weight',
+          'group' => 'provider_plugins-order-weight',
         ),
       ),
     );
@@ -113,7 +129,7 @@ class GeocoderWidget extends WidgetBase {
           '#title' => t('Weight for @title', array('@title' => $plugin_id)),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#attributes' => array('class' => array('geocoder_plugins-order-weight')),
+          '#attributes' => array('class' => array('provider_plugins-order-weight')),
         ),
         'name' => array(
           '#plain_text' => $plugin_name,
@@ -126,11 +142,12 @@ class GeocoderWidget extends WidgetBase {
     });
 
     foreach($rows as $plugin_id => $row) {
-      $elements['geocoder_plugins'][$plugin_id] = $row;
+      $elements['provider_plugins'][$plugin_id] = $row;
     }
 
     $elements['dumper_plugin'] = array(
       '#type' => 'select',
+      '#weight' => 15,
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => Geocoder::getPlugins('dumper'),
@@ -147,21 +164,22 @@ class GeocoderWidget extends WidgetBase {
     $summary = array();
     $dumper_plugin = $this->getSetting('dumper_plugin');
 
-    $summary[] = $this->t('Destination Geofield: !destination', array('!destination' => $this->getSetting('destination_field')));
+    $summary[] = $this->t('Operating mode: !mode', array('!mode' => $this->getSetting('mode')));
+    $summary[] = $this->t('Field: !field', array('!field' => $this->getSetting('field')));
 
     $geocoder_plugins = Geocoder::getPlugins('Provider');
     $dumper_plugins = Geocoder::getPlugins('Dumper');
 
     // Find the enabled geocoder plugins.
-    $geocoder_plugin_ids = array();
-    foreach($this->getSetting('geocoder_plugins') as $plugin_id => $plugin) {
+    $provider_plugin_ids = array();
+    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
-        $geocoder_plugin_ids[] = $geocoder_plugins[$plugin_id];
+        $provider_plugin_ids[] = $geocoder_plugins[$plugin_id];
       }
     }
 
-    if (!empty($geocoder_plugin_ids)) {
-      $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $geocoder_plugin_ids)));
+    if (!empty($provider_plugin_ids)) {
+      $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $provider_plugin_ids)));
     }
     if (!empty($dumper_plugin)) {
       $summary[] = t('Output format plugin: @format', array('@format' => $dumper_plugins[$dumper_plugin]));
@@ -183,6 +201,7 @@ class GeocoderWidget extends WidgetBase {
 
     return $element;
   }
+
 
   /**
    * {@inheritdoc}

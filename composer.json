@@ -7,5 +7,10 @@
     "require": {
         "willdurand/geocoder": "^3.3",
         "phayes/geophp": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Geocoder\\": "src/Geocoder",
+        }
     }
 }
