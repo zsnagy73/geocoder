@@ -31,8 +31,8 @@ class GeocoderWidget extends WidgetBase {
   public static function defaultSettings() {
     return array(
       'destination_field' => '',
-      'placeholder' => '',
-      'geocoder_engine' => array('googlemaps'),
+      'geocoder_plugins' => array(),
+      'dumper_plugin' => 'wkt',
     ) + parent::defaultSettings();
   }
 
@@ -46,24 +46,17 @@ class GeocoderWidget extends WidgetBase {
 
     $options = array();
     foreach ($entityFieldDefinitions as $id => $definition) {
-      if ($definition->getType() == 'geofield') {
-        $options[$id] = $definition->getLabel();
+      if (in_array($definition->getType(), array('string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+        $options[$id] = sprintf('%s (%s)', $definition->getLabel(), $definition->getType());
       }
     }
 
     $elements['destination_field'] = array(
       '#type' => 'select',
-      '#title' => $this->t('Destination Geo Field'),
+      '#title' => $this->t('Destination field'),
       '#default_value' => $this->getSetting('destination_field'),
       '#required' => TRUE,
       '#options' => $options,
-    );
-
-    $elements['placeholder'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Placeholder'),
-      '#default_value' => $this->getSetting('placeholder'),
-      '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     );
 
     $enabled_plugins = array();
@@ -75,8 +68,13 @@ class GeocoderWidget extends WidgetBase {
       }
     }
 
-    $elements['geocoder_engine'] = array(
-      '#title' => t('Geocoder engine'),
+    $elements['geocoder_plugins_title'] = array(
+      '#type' => 'item',
+      '#title' => t('Geocoder plugin(s)'),
+      '#description' => t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
+    );
+
+    $elements['geocoder_plugins'] = array(
       '#type' => 'table',
       '#header' => array(
         array('data' => $this->t('Enabled')),
@@ -87,7 +85,7 @@ class GeocoderWidget extends WidgetBase {
         array(
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => 'engine-order-weight',
+          'group' => 'geocoder_plugins-order-weight',
         ),
       ),
     );
@@ -106,8 +104,6 @@ class GeocoderWidget extends WidgetBase {
           'class' => array('draggable'),
         ),
         '#weight' => $weight,
-        '#enabled' => isset($enabled_plugins[$plugin_id]) ? 1 : 0,
-        //'#name' => $plugin_id,
         'checked' => array(
           '#type' => 'checkbox',
           '#default_value' => isset($enabled_plugins[$plugin_id]) ? 1 : 0,
@@ -130,8 +126,16 @@ class GeocoderWidget extends WidgetBase {
     });
 
     foreach($rows as $plugin_id => $row) {
-      $elements['geocoder_engine'][$plugin_id] = $row;
+      $elements['geocoder_plugins'][$plugin_id] = $row;
     }
+
+    $elements['dumper_plugin'] = array(
+      '#type' => 'select',
+      '#title' => 'Output format',
+      '#default_value' => $this->getSetting('dumper_plugin'),
+      '#options' => Geocoder::getPlugins('dumper'),
+      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.')
+    );
 
     return $elements;
   }
@@ -141,24 +145,26 @@ class GeocoderWidget extends WidgetBase {
    */
   public function settingsSummary() {
     $summary = array();
+    $dumper_plugin = $this->getSetting('dumper_plugin');
+
     $summary[] = $this->t('Destination Geofield: !destination', array('!destination' => $this->getSetting('destination_field')));
 
-    $geocoder_engines = Geocoder::getPlugins('Provider');
-    $geocoder_engine_value = array_combine($this->getSetting('geocoder_engine'), $this->getSetting('geocoder_engine'));
+    $geocoder_plugins = Geocoder::getPlugins('Provider');
+    $dumper_plugins = Geocoder::getPlugins('Dumper');
 
-    $enabled_plugins = array();
-    foreach($this->getSetting('geocoder_engine') as $plugin_id => $plugin) {
+    // Find the enabled geocoder plugins.
+    $geocoder_plugin_ids = array();
+    foreach($this->getSetting('geocoder_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
-        $enabled_plugins[] = $geocoder_engines[$plugin_id];
+        $geocoder_plugin_ids[] = $geocoder_plugins[$plugin_id];
       }
     }
 
-    $placeholder = $this->getSetting('placeholder');
-    if (!empty($placeholder)) {
-      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    if (!empty($geocoder_plugin_ids)) {
+      $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $geocoder_plugin_ids)));
     }
-    if (!empty($enabled_plugins)) {
-      $summary[] = t('Geocoder engine(s): @placeholder', array('@placeholder' => implode(',', $enabled_plugins)));
+    if (!empty($dumper_plugin)) {
+      $summary[] = t('Output format plugin: @format', array('@format' => $dumper_plugins[$dumper_plugin]));
     }
 
     return $summary;
@@ -171,8 +177,6 @@ class GeocoderWidget extends WidgetBase {
     $main_widget = $element + array(
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-        '#placeholder' => $this->getSetting('placeholder'),
-        '#attributes' => array('class' => array('geocoder-source')),
       );
 
     $element['value'] = $main_widget;
@@ -191,4 +195,5 @@ class GeocoderWidget extends WidgetBase {
     }
     return $element;
   }
+
 }

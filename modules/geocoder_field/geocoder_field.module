@@ -12,7 +12,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
         $settings = $component['settings'];
 
         // Find the enabled geocoder plugins.
-        $geocoder_plugins = array_filter($settings['geocoder_engine'], function($v, $k) {
+        $geocoder_plugins = array_filter($settings['geocoder_plugins'], function($v, $k) {
           return (bool) $v['checked'];
         }, ARRAY_FILTER_USE_BOTH);
         $geocoder_plugins = array_keys($geocoder_plugins);
