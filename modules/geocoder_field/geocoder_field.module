@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Implements hook_entity_presave().
+ */
+function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof \Drupal\Core\Entity\ContentEntityInterface) {
+    $id = $entity->getEntityTypeId() . '.' . $entity->bundle() . '.default';
+    foreach (\Drupal\Core\Entity\Entity\EntityFormDisplay::load($id)->getComponents() as $field_id => $component) {
+      // Find all the fields with the 'geocoder_widget' widget.
+      if ($component['type'] == 'geocoder_widget') {
+        $settings = $component['settings'];
+
+        // Find the enabled geocoder plugins.
+        $geocoder_plugins = array_filter($settings['geocoder_engine'], function($v, $k) {
+          return (bool) $v['checked'];
+        }, ARRAY_FILTER_USE_BOTH);
+        $geocoder_plugins = array_keys($geocoder_plugins);
+
+        // Set the geo data in WKT to the field defined in the widget configuration.
+        foreach($entity->get($field_id)->getValue() as $value) {
+          if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($geocoder_plugins, $value['value'])) {
+            $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'wkt');
+            $entity->set($settings['destination_field'], $dumper->dump($addressCollection->first()));
+          }
+        }
+      }
+    }
+  }
+}
