@@ -20,7 +20,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
         // Set the geo data in WKT to the field defined in the widget configuration.
         foreach($entity->get($field_id)->getValue() as $value) {
           if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($geocoder_plugins, $value['value'])) {
-            $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'wkt');
+            $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
             $entity->set($settings['destination_field'], $dumper->dump($addressCollection->first()));
           }
         }

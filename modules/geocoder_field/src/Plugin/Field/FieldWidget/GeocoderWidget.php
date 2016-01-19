@@ -61,7 +61,7 @@ class GeocoderWidget extends WidgetBase {
 
     $enabled_plugins = array();
     $i = 0;
-    foreach($this->getSetting('geocoder_engine') as $plugin_id => $plugin) {
+    foreach($this->getSetting('geocoder_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
