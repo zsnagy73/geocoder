@@ -25,7 +25,6 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * )
  */
 class GeocoderWidget extends WidgetBase {
-
   /**
    * {@inheritdoc}
    */
@@ -33,7 +32,7 @@ class GeocoderWidget extends WidgetBase {
     return array(
       'destination_field' => '',
       'placeholder' => '',
-      'geocoder_engine' => '',
+      'geocoder_engine' => array('googlemaps'),
     ) + parent::defaultSettings();
   }
 
@@ -43,7 +42,7 @@ class GeocoderWidget extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $entityFieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->fieldDefinition->entity_type, $this->fieldDefinition->bundle);
+    $entityFieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
 
     $options = array();
     foreach ($entityFieldDefinitions as $id => $definition) {
@@ -67,11 +66,72 @@ class GeocoderWidget extends WidgetBase {
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     );
 
+    $enabled_plugins = array();
+    $i = 0;
+    foreach($this->getSetting('geocoder_engine') as $plugin_id => $plugin) {
+      if ($plugin['checked']) {
+        $plugin['weight'] = intval($i++);
+        $enabled_plugins[$plugin_id] = $plugin;
+      }
+    }
+
     $elements['geocoder_engine'] = array(
-      '#type' => 'select',
-      '#title' => t('geocoder_engine'),
-      '#default_value' => Geocoder::getPlugins('Provider'),
+      '#title' => t('Geocoder engine'),
+      '#type' => 'table',
+      '#header' => array(
+        array('data' => $this->t('Enabled')),
+        array('data' => $this->t('Weight')),
+        array('data' => $this->t('Name')),
+      ),
+      '#tabledrag' => array(
+        array(
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'engine-order-weight',
+        ),
+      ),
     );
+
+    $rows = array();
+    $count = count($enabled_plugins);
+    foreach (Geocoder::getPlugins('Provider') as $plugin_id => $plugin_name) {
+      if (isset($enabled_plugins[$plugin_id])) {
+        $weight = $enabled_plugins[$plugin_id]['weight'];
+      } else {
+        $weight = $count++;
+      }
+
+      $rows[$plugin_id] = array(
+        '#attributes' => array(
+          'class' => array('draggable'),
+        ),
+        '#weight' => $weight,
+        '#enabled' => isset($enabled_plugins[$plugin_id]) ? 1 : 0,
+        //'#name' => $plugin_id,
+        'checked' => array(
+          '#type' => 'checkbox',
+          '#default_value' => isset($enabled_plugins[$plugin_id]) ? 1 : 0,
+        ),
+        'weight' => array(
+          '#type' => 'weight',
+          '#title' => t('Weight for @title', array('@title' => $plugin_id)),
+          '#title_display' => 'invisible',
+          '#default_value' => $weight,
+          '#attributes' => array('class' => array('engine-order-weight')),
+        ),
+        'name' => array(
+          '#plain_text' => $plugin_name,
+        ),
+      );
+    }
+
+    uasort($rows, function($a, $b) {
+      return strcmp($a['#weight'], $b['#weight']);
+    });
+
+    foreach($rows as $plugin_id => $row) {
+      $elements['geocoder_engine'][$plugin_id] = $row;
+    }
 
     return $elements;
   }
@@ -82,9 +142,23 @@ class GeocoderWidget extends WidgetBase {
   public function settingsSummary() {
     $summary = array();
     $summary[] = $this->t('Destination Geofield: !destination', array('!destination' => $this->getSetting('destination_field')));
+
+    $geocoder_engines = Geocoder::getPlugins('Provider');
+    $geocoder_engine_value = array_combine($this->getSetting('geocoder_engine'), $this->getSetting('geocoder_engine'));
+
+    $enabled_plugins = array();
+    foreach($this->getSetting('geocoder_engine') as $plugin_id => $plugin) {
+      if ($plugin['checked']) {
+        $enabled_plugins[] = $geocoder_engines[$plugin_id];
+      }
+    }
+
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
       $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    if (!empty($enabled_plugins)) {
+      $summary[] = t('Geocoder engine(s): @placeholder', array('@placeholder' => implode(',', $enabled_plugins)));
     }
 
     return $summary;
@@ -102,36 +176,6 @@ class GeocoderWidget extends WidgetBase {
       );
 
     $element['value'] = $main_widget;
-
-    $source_field_id = 'edit-' . str_replace('_', '-', $items->getFieldDefinition()->getName()) . '-' . $delta . '-value';
-    $destination_field_id = 'edit-' . str_replace('_', '-', $this->getSetting('destination_field')) . '-wrapper';
-    $google_api_key = \Drupal::config('geocoder.google')->get('api_key');
-
-    $element['#attached'] = array(
-      'library' => array(
-        array('system', 'jquery.ui.autocomplete'),
-      ),
-      'js' => array(
-        'sites/all/libraries/geocoder-js/dist/geocoder.js',
-        drupal_get_path('module', 'geocoder') . '/js/geocoderWidget.js',
-        array(
-          'data' => array(
-            'geocoder' => array(
-              'engine' => 'google',
-              'api_key' => $google_api_key,
-              'fields' => array(
-                array(
-                  'sourceField' => $source_field_id,
-                  'destinationField' => $destination_field_id,
-                  'sourceType' => 'geofield',
-                )
-              ),
-            ),
-          ),
-          'type' => 'setting',
-        ),
-      ),
-    );
 
     return $element;
   }
