@@ -113,7 +113,7 @@ class GeocoderWidget extends WidgetBase {
           '#title' => t('Weight for @title', array('@title' => $plugin_id)),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#attributes' => array('class' => array('engine-order-weight')),
+          '#attributes' => array('class' => array('geocoder_plugins-order-weight')),
         ),
         'name' => array(
           '#plain_text' => $plugin_name,
