@@ -1,4 +1,4 @@
-# Geocoder
+# Geocoder 8.x-2.x
 
 This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP library.
 
@@ -13,7 +13,7 @@ This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP librar
 * Enable the module: ```drush en geocoder```
 
 # Features
-* Provides a widget to geocode field from a string into a geographic data format such as WKT, GeoJson, etc etc...
+* Provides a widget to geocode a field from a string into a geographic data format such as WKT, GeoJson, etc etc...
 * The Provider and Dumper plugins are extendable through a custom module,
 * All successful requests are cached by default.
 
