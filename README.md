@@ -12,11 +12,10 @@ This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP librar
 * Run ```composer drupal-rebuild``` then ```composer drupal-update``` on the root of your site.
 * Enable the module: ```drush en geocoder```
 
-# Links
-* [Composer](https://getcomposer.org/)
-* [Drush](http://drush.org)
-* [Geocoder PHP library](http://geocoder-php.org/)
-* [Geocoder module](https://www.drupal.org/project/geocoder)
+# Features
+* Provides a widget to geocode field from a string into a geographic data format such as WKT, GeoJson, etc etc...
+* The Provider and Dumper plugins are extendable through a custom module,
+* All successful requests are cached by default.
 
 # API
 
@@ -116,3 +115,10 @@ $address = '1600 Amphitheatre Parkway Mountain View, CA 94043';
 $addressCollection = \Drupal\geocoder\Geocoder::geocode($plugins, $address);
 $geometry = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'geometry')->dump($addressCollection->first());
 ```
+
+# Links
+* [Composer](https://getcomposer.org/)
+* [Drush](http://drush.org)
+* [Geocoder PHP library](http://geocoder-php.org/)
+* [Geocoder module](https://www.drupal.org/project/geocoder)
+
