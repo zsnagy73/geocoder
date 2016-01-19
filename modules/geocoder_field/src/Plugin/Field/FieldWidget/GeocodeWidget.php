@@ -21,7 +21,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   label = @Translation("Geocode from/to an existing field"),
  *   field_types = {
  *     "string",
- *     "file"
+ *     "file",
+ *     "geofield"
  *   },
  * )
  */
@@ -147,7 +148,7 @@ class GeocodeWidget extends WidgetBase {
 
     $elements['dumper_plugin'] = array(
       '#type' => 'select',
-      '#weight' => 15,
+      '#weight' => 25,
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => Geocoder::getPlugins('dumper'),
