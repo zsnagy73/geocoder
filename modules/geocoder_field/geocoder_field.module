@@ -12,7 +12,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
           $settings = _geocoder_field_prepare_widget_settings($component['settings'], $field_id);
 
           if ($settings['field_from'] && $settings['field_to']) {
-            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings);
+            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings, $component['type']);
 
             $result = array();
             foreach($values as $value) {
@@ -34,7 +34,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
           $settings = _geocoder_field_prepare_widget_settings($component['settings'], $field_id);
 
           if ($settings['field_from'] && $settings['field_to']) {
-            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings);
+            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings, $component['type']);
 
             $result = array();
             foreach($values as $value) {
@@ -94,10 +94,18 @@ function _geocoder_field_prepare_widget_settings(array $settings, $field_id) {
  *
  * @return array
  */
-function _geocoder_field_prepare_from_values(array $values, array $settings) {
+function _geocoder_field_prepare_from_values(array $values, array $settings, $type) {
   switch ($settings['delta_handling']) {
     case 'default':
-      // @todo
+      if ($type == 'geocoder_reverse_geocode_widget') {
+        foreach ($values as $index => $value) {
+          list($lat, $lon) = explode(',', $value['value'], 2);
+          $values[$index] += array(
+            'lat' => $lat,
+            'lon' => $lon,
+          );
+        }
+      }
       break;
     case 'm_to_s':
       // @todo

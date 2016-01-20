@@ -28,7 +28,9 @@ class ReverseGeocodeWidget extends GeocodeWidget {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return parent::defaultSettings();
+    return array(
+      'input_format' => 'latlon',
+    ) + parent::defaultSettings();
   }
 
   /**
@@ -96,32 +98,6 @@ class ReverseGeocodeWidget extends GeocodeWidget {
     }
 
     return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This method is only useful if you use the mode 'To' because we need to
-   * rewrite the values of the source field and transform them in
-   * latitude longitude.
-   * This method is useless when using the mode 'From' because we cannot
-   * access to the values of the source (the from) field.
-   */
-  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    $values = parent::massageFormValues($values, $form, $form_state);
-
-    foreach ($values as $delta => $value) {
-      switch($this->getSetting('input_format')) {
-        case 'latlon':
-          list($lat, $lon) = explode(',', $value['value']);
-          $values[$delta] += array(
-            'lat' => $lat,
-            'lon' => $lon,
-          );
-      }
-    }
-
-    return $values;
   }
 
 }
