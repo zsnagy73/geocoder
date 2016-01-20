@@ -9,40 +9,145 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
     if ($entityFormDisplay = \Drupal\Core\Entity\Entity\EntityFormDisplay::load($id)) {
       foreach ($entityFormDisplay->getComponents() as $field_id => $component) {
         if ($component['type'] == 'geocoder_geocode_widget') {
-          $settings = $component['settings'];
+          $settings = _geocoder_field_prepare_widget_settings($component['settings'], $field_id);
 
-          // Find the enabled geocoder plugins.
-          $provider_plugins = array_filter($settings['provider_plugins'], function($v, $k) {
-            return (bool) $v['checked'];
-          }, ARRAY_FILTER_USE_BOTH);
-          $provider_plugins = array_keys($provider_plugins);
+          if ($settings['field_from'] && $settings['field_to']) {
+            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings);
 
-          $mode = $settings['mode'];
-          $field_a = $field_b = NULL;
-
-          if ($mode == 'from') {
-            $field_a = $entity->get($settings['field']);
-            $field_b = $entity->get($field_id);
-          }
-          if ($mode == 'to') {
-            $field_a = $entity->get($field_id);
-            $field_b = $entity->get($settings['field']);
-          }
-
-          if ($field_a && $field_b) {
-            foreach($field_a->getValue() as $value) {
+            $result = array();
+            foreach($values as $value) {
               if ($value['target_id']) {
                 $value['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
               }
 
-              if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($provider_plugins, $value['value'])) {
-                $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
-                $entity->set($field_b->getName(), $dumper->dump($addressCollection->first()));
+              if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($settings['provider_plugins'], $value['value'])) {
+                $result[] = $addressCollection;
               }
             }
+
+            $result = _geocoder_field_prepare_to_values($result, $settings);
+            $entity->set($entity->get($settings['field_to'])->getName(), $result);
+          }
+        }
+
+        if ($component['type'] == 'geocoder_reverse_geocode_widget') {
+          $settings = _geocoder_field_prepare_widget_settings($component['settings'], $field_id);
+
+          if ($settings['field_from'] && $settings['field_to']) {
+            $values = _geocoder_field_prepare_from_values($entity->get($settings['field_from'])->getValue(), $settings);
+
+            $result = array();
+            foreach($values as $value) {
+              if ($addressCollection = \Drupal\geocoder\Geocoder::reverse($settings['provider_plugins'], $value['lat'], $value['lon'])) {
+                $result[] = $addressCollection;
+              }
+            }
+
+            $result = _geocoder_field_prepare_to_values($result, $settings);
+            $entity->set($entity->get($settings['field_to'])->getName(), $result);
           }
         }
       }
     }
   }
+}
+
+/**
+ * Helper function to prepare the settings array of the widget.
+ *
+ * @param array $settings
+ *   The settings array of the widget.
+ * @param string $field_id
+ *   The field id we are currently processing.
+ *
+ * @return array
+ *   The settings array with updated settings.
+ */
+function _geocoder_field_prepare_widget_settings(array $settings, $field_id) {
+  // Find the enabled geocoder plugins.
+  $provider_plugins = array_filter($settings['provider_plugins'], function($v, $k) {
+    return (bool) $v['checked'];
+  }, ARRAY_FILTER_USE_BOTH);
+  $settings['provider_plugins'] = array_keys($provider_plugins);
+
+  $mode = $settings['mode'];
+
+  if ($mode == 'from') {
+    $settings['field_from'] = $settings['field'];
+    $settings['field_to'] = $field_id;
+  }
+  if ($mode == 'to') {
+    $settings['field_from'] = $field_id;
+    $settings['field_to'] = $settings['field'];
+  }
+
+  return $settings;
+}
+
+/**
+ * Helper function to prepare the results before they get converted.
+ *
+ * @param array $values
+ *   The values
+ * @param array $settings
+ *   The widget settings array.
+ *
+ * @return array
+ */
+function _geocoder_field_prepare_from_values(array $values, array $settings) {
+  switch ($settings['delta_handling']) {
+    case 'default':
+      // @todo
+      break;
+    case 'm_to_s':
+      // @todo
+      break;
+    case 's_to_m':
+      // @todo
+      break;
+    case 'c_to_s':
+      // @todo
+      break;
+    case 'c_to_m':
+      // @todo
+      break;
+  }
+
+  return $values;
+}
+
+/**
+ * Helper function to encode the result.
+ *
+ * @param \Geocoder\Model\AddressCollection[] $values
+ *   The values, as AddressCollection.
+ * @param array $settings
+ *   The widget settings array.
+ *
+ * @return array
+ */
+function _geocoder_field_prepare_to_values(array $values, array $settings) {
+  $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
+
+  switch ($settings['delta_handling']) {
+    case 'default':
+      foreach ($values as $index => $value) {
+        $values[$index] = $dumper->dump($value->first());
+      }
+      break;
+    case 'm_to_s':
+      // @todo
+      break;
+    case 's_to_m':
+      // @todo
+      break;
+    case 'c_to_s':
+      // @todo
+      break;
+    case 'c_to_m':
+      // @todo
+      break;
+  }
+
+  return $values;
 }

@@ -36,7 +36,62 @@ class GeocodeWidget extends WidgetBase {
       'field' => '',
       'provider_plugins' => array(),
       'dumper_plugin' => 'wkt',
+      'delta_handling' => 'default',
     ) + parent::defaultSettings();
+  }
+
+  /**
+   * Get the list of enabled Provider plugins.
+   *
+   * @return array
+   */
+  public function getEnabledProviderPlugins() {
+    $provider_plugin_ids = array();
+    $geocoder_plugins = Geocoder::getPlugins('Provider');
+
+    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+      if ($plugin['checked']) {
+        $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
+      }
+    }
+
+    return $provider_plugin_ids;
+  }
+
+  /**
+   * Get the list of options for the delta handling select box.
+   *
+   * @return array
+   */
+  public function getDeltaHandling() {
+    return array(
+      'default' => $this->t('Match Multiples (default)'),
+      'm_to_s' =>  $this->t('Multiple to Single'),
+      's_to_m' =>  $this->t('Single to Multiple'),
+      'c_to_s' =>  $this->t('Concatenate to Single'),
+      'c_to_m' =>  $this->t('Concatenate to Multiple'),
+    );
+  }
+
+  /**
+   * Get the list of available fields.
+   *
+   * @return array
+   */
+  public function getAvailableFields() {
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+    $entity_field_manager = \Drupal::service('entity_field.manager');
+    $entity_field_definitions = $entity_field_manager->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
+
+    $options = array();
+
+    foreach ($entity_field_definitions as $id => $definition) {
+      if (in_array($definition->getType(), array('file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+        $options[$id] = sprintf('%s (%s)(%s)', $definition->getLabel(), $definition->getName(), $definition->getType());
+      }
+    }
+
+    return $options;
   }
 
   /**
@@ -55,15 +110,6 @@ class GeocodeWidget extends WidgetBase {
       '#options' => array('from' => $this->t('From'), 'to' => $this->t('To')),
     );
 
-    $entityFieldDefinitions = \Drupal::entityManager()->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
-
-    $options = array();
-    foreach ($entityFieldDefinitions as $id => $definition) {
-      if (in_array($definition->getType(), array('file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
-        $options[$id] = sprintf('%s (%s)', $definition->getLabel(), $definition->getType());
-      }
-    }
-
     $elements['field'] = array(
       '#type' => 'select',
       '#weight' => 10,
@@ -71,7 +117,7 @@ class GeocodeWidget extends WidgetBase {
       '#description' => $this->t('Select which field you would like to use.'),
       '#default_value' => $this->getSetting('field'),
       '#required' => TRUE,
-      '#options' => $options,
+      '#options' => $this->getAvailableFields(),
     );
 
     $enabled_plugins = array();
@@ -155,6 +201,16 @@ class GeocodeWidget extends WidgetBase {
       '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.')
     );
 
+    $elements['delta_handling'] = array(
+      '#type' => 'select',
+      '#weight' => 30,
+      '#title' => $this->t('Multi-value input handling'),
+      '#description' => $this->t('Should geometries from multiple inputs be: <ul><li>Matched with each input (e.g. One POINT for each address field)</li><li>Aggregated into a single MULTIPOINT geofield (e.g. One MULTIPOINT polygon from multiple address fields)</li><li>Broken up into multiple geometries (e.g. One MULTIPOINT to multiple POINTs.)</li></ul>'),
+      '#default_value' => $this->getSetting('delta_handling'),
+      '#options' => $this->getDeltaHandling(),
+      '#required' => TRUE,
+    );
+
     return $elements;
   }
 
@@ -163,27 +219,27 @@ class GeocodeWidget extends WidgetBase {
    */
   public function settingsSummary() {
     $summary = array();
+    $available_fields = $this->getAvailableFields();
+    $provider_plugin_ids = $this->getEnabledProviderPlugins();
+    $delta_handling_options = $this->getDeltaHandling();
+    $dumper_plugins = Geocoder::getPlugins('Dumper');
     $dumper_plugin = $this->getSetting('dumper_plugin');
+    $field = $this->getSetting('field');
+    $delta_handling = $this->getSetting('delta_handling');
 
     $summary[] = $this->t('Operating mode: !mode', array('!mode' => $this->getSetting('mode')));
-    $summary[] = $this->t('Field: !field', array('!field' => $this->getSetting('field')));
 
-    $geocoder_plugins = Geocoder::getPlugins('Provider');
-    $dumper_plugins = Geocoder::getPlugins('Dumper');
-
-    // Find the enabled geocoder plugins.
-    $provider_plugin_ids = array();
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
-      if ($plugin['checked']) {
-        $provider_plugin_ids[] = $geocoder_plugins[$plugin_id];
-      }
+    if (!empty($field)) {
+      $summary[] = $this->t('Field: !field', array('!field' => $available_fields[$field]));
     }
-
     if (!empty($provider_plugin_ids)) {
       $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $provider_plugin_ids)));
     }
     if (!empty($dumper_plugin)) {
       $summary[] = t('Output format plugin: @format', array('@format' => $dumper_plugins[$dumper_plugin]));
+    }
+    if (!empty($delta_handling)) {
+      $summary[] = t('Delta handling: @delta', array('@delta' => $delta_handling_options[$delta_handling]));
     }
 
     return $summary;
@@ -202,7 +258,6 @@ class GeocodeWidget extends WidgetBase {
 
     return $element;
   }
-
 
   /**
    * {@inheritdoc}
