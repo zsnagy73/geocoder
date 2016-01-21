@@ -97,15 +97,6 @@ function _geocoder_field_prepare_widget_settings(array $settings, $field_id) {
 function _geocoder_field_prepare_from_values(array $values, array $settings, $type) {
   switch ($settings['delta_handling']) {
     case 'default':
-      if ($type == 'geocoder_reverse_geocode_widget') {
-        foreach ($values as $index => $value) {
-          list($lat, $lon) = explode(',', $value['value'], 2);
-          $values[$index] += array(
-            'lat' => $lat,
-            'lon' => $lon,
-          );
-        }
-      }
       break;
     case 'm_to_s':
       // @todo

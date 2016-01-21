@@ -39,6 +39,7 @@ class ReverseGeocodeWidget extends GeocodeWidget {
    * @return array
    */
   public function getInputFormat() {
+    //TODO: Create a special plugins for this and get this array from the plugin manager.
     return array(
       'latlon' => $this->t('Latitude,longitude'),
     );
@@ -98,6 +99,28 @@ class ReverseGeocodeWidget extends GeocodeWidget {
     }
 
     return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    //TODO: Create a special plugins for this and get this array from the plugin manager.
+    if ($this->getSetting('mode') == 'to') {
+      switch ($this->getSetting('input_format')) {
+        case 'latlon':
+          foreach ($values as $index => $value) {
+            list($lat, $lon) = explode(',', $value['value'], 2);
+            $values[$index] += array(
+              'lat' => trim($lat),
+              'lon' => trim($lon),
+            );
+          }
+          break;
+      }
+    }
+
+    return $values;
   }
 
 }
