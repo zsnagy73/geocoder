@@ -10,11 +10,22 @@ use Geocoder\Model\Address;
  */
 class Geometry implements Dumper {
   /**
+   * @var \Geocoder\Dumper\Dumper
+   */
+  private $dumper;
+
+  /**
    * @inheritdoc
    */
   public function dump(Address $address) {
-    $dumper = new \Geocoder\Dumper\GeoJson();
-    return \geoPHP::load($dumper->dump($address), 'geojson');
+    return \geoPHP::load($this->dumper->dump($address), 'geojson');
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function __construct(Dumper $dumper) {
+    $this->dumper = $dumper;
   }
 
 }

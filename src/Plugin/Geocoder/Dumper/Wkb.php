@@ -8,7 +8,7 @@ namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\Plugin\Geocoder\Dumper;
 use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Geocoder\Model\Address;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class Wkb.
@@ -22,9 +22,13 @@ class Wkb extends Dumper implements DumperInterface {
   /**
    * @inheritdoc
    */
-  public function dump(Address $address) {
-    $handler = new \Geocoder\Dumper\Wkb();
-    return $handler->dump($address);
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('geocoder.dumper.wkb')
+    );
   }
 
 }
