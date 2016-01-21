@@ -1,6 +1,8 @@
 <?php
 
 namespace Drupal\geocoder\Geocoder\Dumper;
+
+use Geocoder\Dumper\Dumper;
 use Geocoder\Model\Address;
 
 /**
