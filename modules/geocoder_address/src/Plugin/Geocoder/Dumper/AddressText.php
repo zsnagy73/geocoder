@@ -23,7 +23,7 @@ class AddressText extends Dumper implements DumperInterface {
    * @inheritdoc
    */
   public function dump(Address $address) {
-    $handler = new \Geocoder\Dumper\AddressText();
+    $handler = new \Drupal\geocoder_address\Geocoder\Dumper\AddressText();
     return $handler->dump($address);
   }
 

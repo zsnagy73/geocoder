@@ -22,7 +22,7 @@ class File extends Provider implements ProviderInterface {
    * @inheritdoc
    */
   public function init() {
-    $this->setHandler(new \Geocoder\Provider\File());
+    $this->setHandler(new \Drupal\geocoder\Geocoder\Provider\File());
 
     return parent::init();
   }

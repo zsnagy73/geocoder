@@ -4,7 +4,8 @@
  * The AddressText plugin.
  */
 
-namespace Geocoder\Dumper;
+namespace Drupal\geocoder_address\Geocoder\Dumper;
+use Geocoder\Dumper\Dumper;
 use Geocoder\Model\Address;
 
 /**

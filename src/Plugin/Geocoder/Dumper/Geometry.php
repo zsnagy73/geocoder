@@ -23,7 +23,7 @@ class Geometry extends Dumper implements DumperInterface {
    * @inheritdoc
    */
   public function dump(Address $address) {
-    $handler = new \Geocoder\Dumper\Geometry();
+    $handler = new \Drupal\geocoder\Geocoder\Dumper\Geometry();
     return $handler->dump($address);
   }
 

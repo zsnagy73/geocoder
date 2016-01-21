@@ -1,9 +1,11 @@
 <?php
 
-namespace Geocoder\Provider;
+namespace Drupal\geocoder\Geocoder\Provider;
 
 use Geocoder\Exception\NoResult;
 use Geocoder\Exception\UnsupportedOperation;
+use Geocoder\Provider\AbstractProvider;
+use Geocoder\Provider\Provider;
 
 /**
  * @author Pol Dellaiera <pol.dellaiera@gmail.com>
