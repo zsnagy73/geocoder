@@ -342,7 +342,7 @@ function geocoder_cache_get($handler, $data, $options) {
  */
 function geocoder_cache_set($geometry, $handler, $data, $options) {
   // Don't cache no-results, to live geocode the same data again next time.
-  if (!$geometry && variable_get('geocoder_cache_empty_results', TRUE)) {
+  if (!$geometry && !variable_get('geocoder_cache_empty_results', TRUE)) {
     return;
   }
 
