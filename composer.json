@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Geocoder\\": "src/Geocoder"
+            "Geocoder\\": ["src/Geocoder", "modules/geocoder_address/src/Geocoder"]
         }
     }
 }
