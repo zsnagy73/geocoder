@@ -103,6 +103,13 @@ function geocoder_admin_settings($form, &$form_state) {
     '#size' => 10,
   );
 
+  $form['geocoder_cache_empty_results'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache empty results'),
+    '#default_value' => variable_get('geocoder_cache_empty_results', TRUE),
+    '#description' => t('Geocoder caches all queries by default. Do you want that to include the ones with no results? If not, it will be checked every time, probably with the same no-result.'),
+  );
+
   $form['#submit'][] = 'geocoder_admin_settings_submit';
   return system_settings_form($form);
 }
