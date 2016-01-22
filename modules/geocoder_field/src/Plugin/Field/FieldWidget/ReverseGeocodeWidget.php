@@ -62,7 +62,7 @@ class ReverseGeocodeWidget extends GeocodeWidget {
     $provider_plugin_ids = $this->getEnabledProviderPlugins();
     $delta_handling_options = $this->getDeltaHandling();
     $dumper_plugins = Geocoder::getPlugins('Dumper');
-    $input_formats = $this->getInputFormat();
+    $input_formats = Geocoder::getPlugins('input_format');
     $dumper_plugin = $this->getSetting('dumper_plugin');
     $input_format = $this->getSetting('input_format');
     $field = $this->getSetting('field');

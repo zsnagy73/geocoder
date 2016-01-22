@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * The LatLon plugin.
+ * The Geohash plugin.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\InputFormat;
@@ -11,23 +11,23 @@ use Drupal\geocoder\Plugin\Geocoder\InputFormat;
 use Drupal\geocoder\Plugin\Geocoder\InputFormatInterface;
 
 /**
- * Class LatLon.
+ * Class Geohash.
  *
  * @GeocoderPlugin(
- *  id = "latlon",
- *  name = "Latitude,Longitude"
+ *  id = "geohash",
+ *  name = "Geohash"
  * )
  */
-class LatLon extends InputFormat implements InputFormatInterface {
+class Geohash extends InputFormat implements InputFormatInterface {
   /**
    * @inheritdoc
    */
   public function massageFormValues(array $values = array(), array $form, FormStateInterface $form_state) {
     foreach ($values as $index => $value) {
-      list($lat, $lon) = explode(',', $value['value'], 2);
+      $geometry = \geoPHP::load($value['value'], 'geohash');
       $values[$index] += array(
-        'lat' => trim($lat),
-        'lon' => trim($lon),
+        'lat' => $geometry->y(),
+        'lon' => $geometry->x(),
       );
     }
 
