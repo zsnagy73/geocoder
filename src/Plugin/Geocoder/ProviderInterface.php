@@ -7,12 +7,11 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 use Geocoder\Model\AddressCollection;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 
-interface ProviderInterface extends GeocoderPluginInterface, ContainerFactoryPluginInterface {
+interface ProviderInterface extends GeocoderPluginInterface {
   /**
    * Geocode data
    *

@@ -8,10 +8,10 @@
 namespace Drupal\geocoder\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class GeocoderPlugin extends Pluginbase implements GeocoderPluginInterface, PluginInspectionInterface {
+abstract class GeocoderPlugin extends Pluginbase implements GeocoderPluginInterface {
   /**
    * @var ModuleHandlerInterface
    */
@@ -29,6 +29,17 @@ class GeocoderPlugin extends Pluginbase implements GeocoderPluginInterface, Plug
 
     $this->module_handler = \Drupal::service('module_handler');
     $this->init();
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
   }
 
   /**

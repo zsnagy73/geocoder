@@ -9,6 +9,7 @@ namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\geocoder\Geocoder;
+use Drupal\geocoder\Plugin\Geocoder\InputFormatInterface;
 
 /**
  * Reverse geocode widget implementation for the Geocoder Field module.
@@ -34,18 +35,6 @@ class ReverseGeocodeWidget extends GeocodeWidget {
   }
 
   /**
-   * Get a list of input format, specific to this widget.
-   *
-   * @return array
-   */
-  public function getInputFormat() {
-    //TODO: Create a special plugins for this and get this array from the plugin manager.
-    return array(
-      'latlon' => $this->t('Latitude,longitude'),
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
@@ -58,8 +47,7 @@ class ReverseGeocodeWidget extends GeocodeWidget {
       '#description' => $this->t('Select the input format.'),
       '#default_value' => $this->getSetting('input_format'),
       '#required' => TRUE,
-      // These options could be extended.
-      '#options' => $this->getInputFormat(),
+      '#options' => Geocoder::getPlugins('input_format'),
     );
 
     return $elements;
@@ -105,20 +93,11 @@ class ReverseGeocodeWidget extends GeocodeWidget {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    //TODO: Create a special plugins for this and get this array from the plugin manager.
     if ($this->getSetting('mode') == 'to') {
-      switch ($this->getSetting('input_format')) {
-        case 'latlon':
-          foreach ($values as $index => $value) {
-            list($lat, $lon) = explode(',', $value['value'], 2);
-            $values[$index] += array(
-              'lat' => trim($lat),
-              'lon' => trim($lon),
-            );
-          }
-          break;
-      }
-    }
+      /** @var InputFormatInterface $input_format */
+      $input_format = Geocoder::getPlugin('input_format', $this->getSetting('input_format'));
+      $values = $input_format->massageFormValues($values, $form, $form_state);
+     }
 
     return $values;
   }

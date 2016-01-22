@@ -7,11 +7,10 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 use Geocoder\Model\Address;
 
-interface DumperInterface extends GeocoderPluginInterface, ContainerFactoryPluginInterface {
+interface DumperInterface extends GeocoderPluginInterface {
   /**
    * Dump the argument into a specific format.
    */
