@@ -24,11 +24,12 @@ class Geohash extends InputFormat implements InputFormatInterface {
    */
   public function massageFormValues(array $values = array(), array $form, FormStateInterface $form_state) {
     foreach ($values as $index => $value) {
-      $geometry = \geoPHP::load($value['value'], 'geohash');
-      $values[$index] += array(
-        'lat' => $geometry->y(),
-        'lon' => $geometry->x(),
-      );
+      if ($geometry = \geoPHP::load($value['value'], 'geohash')) {
+        $values[$index] += array(
+          'lat' => $geometry->getCentroid()->y(),
+          'lon' => $geometry->getCentroid()->x(),
+        );
+      }
     }
 
     return $values;
