@@ -16,10 +16,6 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
 
             $result = array();
             foreach($values as $value) {
-              if ($value['target_id']) {
-                $value['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
-              }
-
               if ($addressCollection = \Drupal\geocoder\Geocoder::geocode($settings['provider_plugins'], $value['value'])) {
                 $result[] = $addressCollection;
               }
@@ -95,6 +91,12 @@ function _geocoder_field_prepare_widget_settings(array $settings, $field_id) {
  * @return array
  */
 function _geocoder_field_prepare_from_values(array $values, array $settings, $type) {
+  foreach ($values as $index => $value) {
+    if ($value['target_id']) {
+      $values[$index]['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
+    }
+  }
+
   switch ($settings['delta_handling']) {
     case 'default':
       break;
