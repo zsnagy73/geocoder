@@ -1,0 +1,4 @@
+services:
+  geocoder.dumper.geometry:
+    class: Drupal\geocoder\Geocoder\Dumper\Geometry
+    arguments: ['@geophp.geophp', '@geocoder.dumper.geojson']

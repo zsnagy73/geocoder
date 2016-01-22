@@ -22,6 +22,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *   field_types = {
  *     "string",
  *     "file",
+ *     "image",
  *     "geofield"
  *   },
  * )
@@ -86,7 +87,7 @@ class GeocodeWidget extends WidgetBase {
     $options = array();
 
     foreach ($entity_field_definitions as $id => $definition) {
-      if (in_array($definition->getType(), array('file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+      if (in_array($definition->getType(), array('image', 'file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
         $options[$id] = sprintf('%s (%s)(%s)', $definition->getLabel(), $definition->getName(), $definition->getType());
       }
     }

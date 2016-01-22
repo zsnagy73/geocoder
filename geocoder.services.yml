@@ -12,9 +12,6 @@ services:
   geocoder.http_adapter:
     class: \Ivory\HttpAdapter\CurlHttpAdapter
 
-  geocoder.dumper.geometry:
-    class: Drupal\geocoder\Geocoder\Dumper\Geometry
-    arguments: ['@geocoder.dumper.geojson']
   geocoder.dumper.geojson:
     class: \Geocoder\Dumper\GeoJson
   geocoder.dumper.gpx:
