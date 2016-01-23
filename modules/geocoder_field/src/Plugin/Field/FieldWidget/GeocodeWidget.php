@@ -24,7 +24,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *     "file",
  *     "image",
  *     "geofield"
- *   },
+ *   }
  * )
  */
 class GeocodeWidget extends WidgetBase {
@@ -227,19 +227,21 @@ class GeocodeWidget extends WidgetBase {
     $dumper_plugin = $this->getSetting('dumper_plugin');
     $field = $this->getSetting('field');
     $delta_handling = $this->getSetting('delta_handling');
+    $mode = $this->getSetting('mode');
 
-    $summary[] = $this->t('Operating mode: !mode', array('!mode' => $this->getSetting('mode')));
-
-    if (!empty($field)) {
-      $summary[] = $this->t('Field: !field', array('!field' => $available_fields[$field]));
+    if (!empty($mode)) {
+      $summary[] = $this->t('Operating mode: @mode', array('@mode' => $mode));
+    }
+    if (!empty($available_fields[$field])) {
+      $summary[] = $this->t('Field: @field', array('@field' => $available_fields[$field]));
     }
     if (!empty($provider_plugin_ids)) {
       $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $provider_plugin_ids)));
     }
-    if (!empty($dumper_plugin)) {
+    if (!empty($dumper_plugins[$dumper_plugin])) {
       $summary[] = t('Output format plugin: @format', array('@format' => $dumper_plugins[$dumper_plugin]));
     }
-    if (!empty($delta_handling)) {
+    if (!empty($delta_handling_options[$delta_handling])) {
       $summary[] = t('Delta handling: @delta', array('@delta' => $delta_handling_options[$delta_handling]));
     }
 

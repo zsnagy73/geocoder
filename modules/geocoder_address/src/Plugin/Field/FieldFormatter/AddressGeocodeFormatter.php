@@ -7,9 +7,7 @@
 
 namespace Drupal\geocoder_address\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\geocoder\Geocoder;
 use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
 
@@ -17,7 +15,7 @@ use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
  * Plugin implementation of the Geocode formatter.
  *
  * @FieldFormatter(
- *   id = "geocoder_address_geocode",
+ *   id = "geocoder_address_geocode_formatter",
  *   label = @Translation("Geocode address"),
  *   field_types = {
  *     "address",

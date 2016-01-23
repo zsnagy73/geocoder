@@ -67,14 +67,16 @@ class ReverseGeocodeWidget extends GeocodeWidget {
     $input_format = $this->getSetting('input_format');
     $field = $this->getSetting('field');
     $delta_handling = $this->getSetting('delta_handling');
+    $mode = $this->getSetting('mode');
 
-    $summary[] = $this->t('Operating mode: !mode', array('!mode' => $this->getSetting('mode')));
-
+    if (!empty($mode)) {
+      $summary[] = $this->t('Operating mode: @mode', array('@mode' => $mode));
+    }
     if (!empty($input_format)) {
       $summary[] = t('Input format: @format', array('@format' => $input_formats[$input_format]));
     }
     if (!empty($field)) {
-      $summary[] = $this->t('Field: !field', array('!field' => $available_fields[$field]));
+      $summary[] = $this->t('Field: @field', array('@field' => $available_fields[$field]));
     }
     if (!empty($provider_plugin_ids)) {
       $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $provider_plugin_ids)));
