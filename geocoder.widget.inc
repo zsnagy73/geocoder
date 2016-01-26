@@ -331,20 +331,23 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
           // Geocode any value from our source field.
           try {
             $geometry = call_user_func($handler['field_callback'], $field_info, $item, $handler_settings);
-
-            // Save result persistently.
-            geocoder_cache_set($geometry, $handler['name'], $item, $handler_settings);
           }
+          // No-results or errors throw exceptions, which affects 1 field item, not all.
           catch (Exception $e) {
+            $geometry = FALSE;
+
             $uri_info = entity_uri($entity_type, $entity);
-            watchdog_exception('geocoder', $e, NULL, array(), WATCHDOG_ERROR,
-              l(t('View offending entity (@entity_type: @bundle).', array(
-                '@entity_type' => $entity_info['label'],
-                '@bundle' => isset($entity->type) ? $entity->type : '',
-              )), $uri_info['path'])
-            );
-            return FALSE;
+            list($id, , $bundle) = entity_extract_ids($entity_type, $entity);
+            $label = t('View offending @entity_type (@bundle # @id)', array(
+              '@entity_type' => $entity_type,
+              '@bundle' => $bundle,
+              '@id' => $id,
+            ));
+            watchdog_exception('geocoder', $e, NULL, array(), WATCHDOG_WARNING, l($label, $uri_info['path'], $uri_info));
           }
+
+          // Save result persistently.
+          geocoder_cache_set($geometry, $handler['name'], $item, $handler_settings);
         }
 
         if ($geometry instanceof Geometry) {
