@@ -323,8 +323,11 @@ function geocoder_widget_get_field_value($entity_type, $field_instance, $entity 
       // Geocode geometries.
       $geometries = array();
       foreach ($source_field_values as $delta => $item) {
-        // Attempt to retrieve from persistent cache.
-        $geometry = geocoder_cache_get($handler['name'], $item, $handler_settings);
+        $geometry = NULL;
+        if (!variable_get('geocoder_recode', 0)) {
+          // Attempt to retrieve from persistent cache.
+          $geometry = geocoder_cache_get($handler['name'], $item, $handler_settings);
+        }
 
         // No cache record, so fetch live.
         if ($geometry === NULL) {
