@@ -478,7 +478,9 @@ function geocoder_widget_values_from_geometry($geometry, $target_info) {
 function geocoder_widget_parse_addressfield($field_item) {
   $address = array();
 
+  $address[] = !empty($field_item['organization']) ? $field_item['organization'] : NULL;
   $address[] = !empty($field_item['premise']) ? $field_item['premise'] : NULL;
+  $address[] = !empty($field_item['sub_premise']) ? $field_item['sub_premise'] : NULL;
   $address[] = !empty($field_item['thoroughfare']) ? $field_item['thoroughfare'] : NULL;
   $address[] = !empty($field_item['locality']) ? $field_item['locality'] : NULL;
   $address[] = !empty($field_item['administrative_area']) ? $field_item['administrative_area'] : NULL;
