@@ -5,9 +5,6 @@ services:
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\Plugin\GeocoderPluginManager
     arguments: [dumper, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.geocoder.input_format:
-    class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [input_format, '@container.namespaces', '@cache.discovery', '@module_handler']
   plugin.manager.geocoder.data_prepare:
     class: Drupal\geocoder\Plugin\GeocoderPluginManager
     arguments: [data_prepare, '@container.namespaces', '@cache.discovery', '@module_handler']
