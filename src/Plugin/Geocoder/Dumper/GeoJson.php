@@ -7,7 +7,7 @@
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  name = "GeoJson"
  * )
  */
-class GeoJson extends Dumper implements DumperInterface {
+class GeoJson extends DumperBase implements DumperInterface {
   /**
    * @inheritdoc
    */

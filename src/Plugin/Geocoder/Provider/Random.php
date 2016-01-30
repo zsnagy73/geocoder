@@ -7,7 +7,7 @@
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
 use Drupal\Core\Locale\CountryManager;
-use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
 use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 use Geocoder\Model\AddressFactory;
 
@@ -19,16 +19,22 @@ use Geocoder\Model\AddressFactory;
  *  name = "Random"
  * )
  */
-class Random extends Provider implements ProviderInterface {
+class Random extends ProviderBase implements ProviderInterface {
   /**
    * @var AddressFactory
    */
   private $factory;
 
+  /**
+   *
+   */
   public function init() {
     $this->factory = new AddressFactory();
   }
 
+  /**
+   *
+   */
   public function geocode($data) {
     $cid = $this->getCacheCid($data);
 
@@ -38,7 +44,8 @@ class Random extends Provider implements ProviderInterface {
 
     try {
       $value = $this->factory->createFromArray(array($this->getRandomResult()));
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
       $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
       $value = FALSE;
@@ -48,6 +55,9 @@ class Random extends Provider implements ProviderInterface {
     return $value;
   }
 
+  /**
+   *
+   */
   public function reverse($latitude, $longitude) {
     $cid = $this->getCacheCid($latitude, $longitude);
 
@@ -62,7 +72,8 @@ class Random extends Provider implements ProviderInterface {
 
       $value = $this->factory->createFromArray(array($result));
       $this->cache_set($cid, $value);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
       $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
       $value = FALSE;
@@ -71,11 +82,16 @@ class Random extends Provider implements ProviderInterface {
     return $value;
   }
 
+  /**
+   *
+   */
   private function getRandomCountryInfo($type = NULL) {
     include_once DRUPAL_ROOT . '/includes/locale.inc';
     $manager = new CountryManager($this->getModuleHandler());
     $countries = $manager->getList();
-    uksort($countries, function() { return rand() > rand(); });
+    uksort($countries, function() {
+      return rand() > rand();
+    });
     $country = array_slice($countries, 0, 1);
 
     $value = array(
@@ -102,11 +118,11 @@ class Random extends Provider implements ProviderInterface {
     return array(
       'latitude' => mt_rand(0, 90) + mt_rand() / mt_getrandmax(),
       'longitude' => mt_rand(-180, 180) + mt_rand() / mt_getrandmax(),
-      'streetName' => $this->getRandomCountryInfo('name') . ' ' . $streetTypes[mt_rand(0, count($streetTypes) -1)],
+      'streetName' => $this->getRandomCountryInfo('name') . ' ' . $streetTypes[mt_rand(0, count($streetTypes) - 1)],
       'streetNumber' => mt_rand(1, 1000),
       'postalCode' => mt_rand(1, 1000),
-      'locality' => sha1(mt_rand()/mt_getrandmax()),
-      'country' =>  $country['name'],
+      'locality' => sha1(mt_rand() / mt_getrandmax()),
+      'country' => $country['name'],
       'countryCode' => $country['code'],
     );
   }

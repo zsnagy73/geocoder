@@ -9,7 +9,9 @@ namespace Drupal\geocoder\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-
+/**
+ *
+ */
 interface GeocoderPluginInterface extends PluginInspectionInterface, ContainerFactoryPluginInterface {
   /**
    * Init method launched after object initialization.

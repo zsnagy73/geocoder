@@ -7,10 +7,10 @@
 
 namespace Drupal\geocoder;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 use Geocoder\Exception\InvalidCredentials;
-use Symfony\Component\DependencyInjection\Dumper\DumperInterface;
-
+/**
+ *
+ */
 class Geocoder {
   /**
    * Geocode a string.
@@ -19,7 +19,8 @@ class Geocoder {
    *   The name of the plugin to use or a list of plugins names to use.
    * @param $data
    *   The string to geocode.
-   * @param array $options (optional)
+   * @param array $options
+   *   (optional)
    *   The plugin options.
    *
    * @return \Geocoder\Model\AddressCollection|FALSE
@@ -32,7 +33,8 @@ class Geocoder {
 
       try {
         return $plugin->geocode($data);
-      } catch (InvalidCredentials $e) {
+      }
+      catch (InvalidCredentials $e) {
         self::log($e->getMessage(), 'error');
       } catch (\Exception $e) {
         self::log($e->getMessage(), 'error');
@@ -54,7 +56,8 @@ class Geocoder {
    *   The latitude.
    * @param double $longitude
    *   The longitude.
-   * @param array $options (optional)
+   * @param array $options
+   *   (optional)
    *   The plugin options.
    *
    * @return \Geocoder\Model\AddressCollection|FALSE
@@ -66,7 +69,8 @@ class Geocoder {
 
       try {
         return $plugin->reverse($latitude, $longitude);
-      } catch (InvalidCredentials $e) {
+      }
+      catch (InvalidCredentials $e) {
         self::log($e->getMessage(), 'error');
       } catch (\Exception $e) {
         self::log($e->getMessage(), 'error');
@@ -86,7 +90,8 @@ class Geocoder {
    *   The type of plugin to return.
    * @param string $plugin
    *   The plugin id to return.
-   * @param array $options (optional)
+   * @param array $options
+   *   (optional)
    *   The plugin options.
    *
    * @return ProviderInterface|DumperInterface

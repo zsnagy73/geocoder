@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperBase;
 use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  name = "WKT"
  * )
  */
-class Wkt extends Dumper implements DumperInterface {
+class Wkt extends DumperBase implements DumperInterface {
   /**
    * @inheritdoc
    */

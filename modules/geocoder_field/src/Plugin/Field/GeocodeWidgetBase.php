@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidgetBase.
  */
 
-namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
+namespace Drupal\geocoder_field\Plugin\Field;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -14,26 +14,14 @@ use Drupal\geocoder\Geocoder;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Geocode widget implementation for the Geocoder Field module.
- *
- * @FieldWidget(
- *   id = "geocoder_geocode_widget",
- *   label = @Translation("Geocode from/to an existing field"),
- *   field_types = {
- *     "string",
- *     "file",
- *     "image",
- *     "geofield"
- *   }
- * )
+ * Base Geocode Widget implementation for the Geocoder Field module.
  */
-class GeocodeWidget extends WidgetBase {
+abstract class GeocodeWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return array(
-      'mode' => 'from',
       'field' => '',
       'provider_plugins' => array(),
       'dumper_plugin' => 'wkt',
@@ -50,7 +38,7 @@ class GeocodeWidget extends WidgetBase {
     $provider_plugin_ids = array();
     $geocoder_plugins = Geocoder::getPlugins('Provider');
 
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
       }
@@ -67,10 +55,10 @@ class GeocodeWidget extends WidgetBase {
   public function getDeltaHandling() {
     return array(
       'default' => $this->t('Match Multiples (default)'),
-      'm_to_s' =>  $this->t('Multiple to Single'),
-      's_to_m' =>  $this->t('Single to Multiple'),
-      'c_to_s' =>  $this->t('Concatenate to Single'),
-      'c_to_m' =>  $this->t('Concatenate to Multiple'),
+      'm_to_s' => $this->t('Multiple to Single'),
+      's_to_m' => $this->t('Single to Multiple'),
+      'c_to_s' => $this->t('Concatenate to Single'),
+      'c_to_m' => $this->t('Concatenate to Multiple'),
     );
   }
 
@@ -80,14 +68,21 @@ class GeocodeWidget extends WidgetBase {
    * @return array
    */
   public function getAvailableFields() {
+    $types = array();
+    $options = array();
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
     $entity_field_manager = \Drupal::service('entity_field.manager');
+
+    $definitions = \Drupal::service('plugin.manager.geocoder.data_prepare')->getDefinitions();
+    foreach ($definitions as $definition) {
+      foreach ($definition['field_types'] as $field_type) {
+        $types[$field_type] = $field_type;
+      }
+    }
+
     $entity_field_definitions = $entity_field_manager->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
-
-    $options = array();
-
     foreach ($entity_field_definitions as $id => $definition) {
-      if (in_array($definition->getType(), array('image', 'file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+      if (in_array($definition->getType(), array_values($types)) && ($definition->getName() != $this->fieldDefinition->getName())) {
         $options[$id] = sprintf('%s (%s)(%s)', $definition->getLabel(), $definition->getName(), $definition->getType());
       }
     }
@@ -101,16 +96,6 @@ class GeocodeWidget extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $elements['mode'] = array(
-      '#type' => 'select',
-      '#weight' => 5,
-      '#title' => $this->t('Operating mode'),
-      '#description' => $this->t('Select the operating mode. <em>From</em> or <em>To</em>.'),
-      '#default_value' => $this->getSetting('mode'),
-      '#required' => TRUE,
-      '#options' => array('from' => $this->t('From'), 'to' => $this->t('To')),
-    );
-
     $elements['field'] = array(
       '#type' => 'select',
       '#weight' => 10,
@@ -123,7 +108,7 @@ class GeocodeWidget extends WidgetBase {
 
     $enabled_plugins = array();
     $i = 0;
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
@@ -159,7 +144,8 @@ class GeocodeWidget extends WidgetBase {
     foreach (Geocoder::getPlugins('Provider') as $plugin_id => $plugin_name) {
       if (isset($enabled_plugins[$plugin_id])) {
         $weight = $enabled_plugins[$plugin_id]['weight'];
-      } else {
+      }
+      else {
         $weight = $count++;
       }
 
@@ -189,7 +175,7 @@ class GeocodeWidget extends WidgetBase {
       return strcmp($a['#weight'], $b['#weight']);
     });
 
-    foreach($rows as $plugin_id => $row) {
+    foreach ($rows as $plugin_id => $row) {
       $elements['provider_plugins'][$plugin_id] = $row;
     }
 
@@ -199,7 +185,7 @@ class GeocodeWidget extends WidgetBase {
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => Geocoder::getPlugins('dumper'),
-      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.')
+      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     );
 
     $elements['delta_handling'] = array(
@@ -229,9 +215,6 @@ class GeocodeWidget extends WidgetBase {
     $delta_handling = $this->getSetting('delta_handling');
     $mode = $this->getSetting('mode');
 
-    if (!empty($mode)) {
-      $summary[] = $this->t('Operating mode: @mode', array('@mode' => $mode));
-    }
     if (!empty($available_fields[$field])) {
       $summary[] = $this->t('Field: @field', array('@field' => $available_fields[$field]));
     }
@@ -252,10 +235,11 @@ class GeocodeWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    // See if we can use VALUE.
     $main_widget = $element + array(
-        '#type' => 'textfield',
-        '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-      );
+      '#type' => 'hidden',
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+    );
 
     $element['value'] = $main_widget;
 

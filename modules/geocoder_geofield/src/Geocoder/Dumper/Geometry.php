@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\geocoder_geofield\Geocoder\Dumper;
 
 use Geocoder\Dumper\Dumper;
@@ -24,7 +28,7 @@ class Geometry implements Dumper {
    * @inheritdoc
    */
   public function dump(Address $address) {
-    return $this->geophp->load($this->dumper->dump($address, 'geojson'));
+    return $this->geophp->load($this->dumper->dump($address), 'json');
   }
 
   /**

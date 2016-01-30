@@ -8,12 +8,12 @@
 namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
-use Geocoder\Model\AddressCollection;
-use Ivory\HttpAdapter\HttpAdapterInterface;
-
+/**
+ *
+ */
 interface ProviderInterface extends GeocoderPluginInterface {
   /**
-   * Geocode data
+   * Geocode data.
    *
    * @param string $data
    *   The data to geocode.

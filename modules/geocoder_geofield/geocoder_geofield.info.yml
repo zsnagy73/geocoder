@@ -3,5 +3,5 @@ description: Providers Geocoder integration with contrib Geofield module.
 core: 8.x
 type: module
 dependencies:
- - geocoder
- - geophp
+  - geocoder_field
+  - geophp
