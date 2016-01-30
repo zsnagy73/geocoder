@@ -20,11 +20,11 @@ function geocoder_geofield_entity_presave(\Drupal\Core\Entity\EntityInterface $e
           );
 
           if ($component['settings']['geocoder_type'] == 'from') {
-            $settings['field_from'] = $field_id;
-            $settings['field_to'] = $settings['field'];
-          } else {
             $settings['field_from'] = $settings['field'];
             $settings['field_to'] = $field_id;
+          } else {
+            $settings['field_from'] = $field_id;
+            $settings['field_to'] = $settings['field'];
           }
 
           $type = $entity->get($settings['field_from'])->getFieldDefinition()->getType();
@@ -39,8 +39,6 @@ function geocoder_geofield_entity_presave(\Drupal\Core\Entity\EntityInterface $e
           $values = $entity->get($settings['field_from'])->getValue();
 
           if (in_array($component['type'], array('geocoder_geofield_geocode_from_widget', 'geocoder_geofield_geocode_to_widget'))) {
-            $settings['field_from'] = $settings['field'];
-            $settings['field_to'] = $field_id;
             $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
 
             foreach ($definitions as $definition) {
