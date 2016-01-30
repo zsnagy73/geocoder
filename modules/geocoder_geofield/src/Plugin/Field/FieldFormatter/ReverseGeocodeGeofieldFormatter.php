@@ -9,7 +9,6 @@ namespace Drupal\geocoder_geofield\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\geocoder\Geocoder;
-use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
 use Drupal\geocoder_field\Plugin\Field\GeocodeFormatterBase;
 
 /**

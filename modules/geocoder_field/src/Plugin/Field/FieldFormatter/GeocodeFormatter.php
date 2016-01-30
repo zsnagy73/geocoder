@@ -7,7 +7,6 @@
 
 namespace Drupal\geocoder_field\Plugin\Field\FieldFormatter;
 
-use Drupal\geocoder\Geocoder;
 use Drupal\geocoder_field\Plugin\Field\GeocodeFormatterBase;
 
 /**
