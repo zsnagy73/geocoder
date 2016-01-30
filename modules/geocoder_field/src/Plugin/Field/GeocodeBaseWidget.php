@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeBaseWidget.
  */
 
-namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
+namespace Drupal\geocoder_field\Plugin\Field;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -14,26 +14,14 @@ use Drupal\geocoder\Geocoder;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
- * Geocode widget implementation for the Geocoder Field module.
- *
- * @FieldWidget(
- *   id = "geocoder_geocode_widget",
- *   label = @Translation("Geocode from/to an existing field"),
- *   field_types = {
- *     "string",
- *     "file",
- *     "image",
- *     "geofield"
- *   }
- * )
+ * Base Geocode Widget implementation for the Geocoder Field module.
  */
-class GeocodeWidget extends WidgetBase {
+abstract class GeocodeBaseWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return array(
-      'mode' => 'from',
       'field' => '',
       'provider_plugins' => array(),
       'dumper_plugin' => 'wkt',
@@ -80,14 +68,21 @@ class GeocodeWidget extends WidgetBase {
    * @return array
    */
   public function getAvailableFields() {
+    $types = array();
+    $options = array();
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
     $entity_field_manager = \Drupal::service('entity_field.manager');
+
+    $definitions = \Drupal::service('plugin.manager.geocoder.data_prepare')->getDefinitions();
+    foreach ($definitions as $definition) {
+      foreach ($definition['field_types'] as $field_type) {
+        $types[$field_type] = $field_type;
+      }
+    }
+
     $entity_field_definitions = $entity_field_manager->getFieldDefinitions($this->fieldDefinition->getTargetEntityTypeId(), $this->fieldDefinition->getTargetBundle());
-
-    $options = array();
-
     foreach ($entity_field_definitions as $id => $definition) {
-      if (in_array($definition->getType(), array('image', 'file', 'string', 'geofield')) && ($definition->getName() != $this->fieldDefinition->getName())) {
+      if (in_array($definition->getType(), array_values($types)) && ($definition->getName() != $this->fieldDefinition->getName())) {
         $options[$id] = sprintf('%s (%s)(%s)', $definition->getLabel(), $definition->getName(), $definition->getType());
       }
     }
@@ -100,16 +95,6 @@ class GeocodeWidget extends WidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
-
-    $elements['mode'] = array(
-      '#type' => 'select',
-      '#weight' => 5,
-      '#title' => $this->t('Operating mode'),
-      '#description' => $this->t('Select the operating mode. <em>From</em> or <em>To</em>.'),
-      '#default_value' => $this->getSetting('mode'),
-      '#required' => TRUE,
-      '#options' => array('from' => $this->t('From'), 'to' => $this->t('To')),
-    );
 
     $elements['field'] = array(
       '#type' => 'select',
@@ -229,9 +214,6 @@ class GeocodeWidget extends WidgetBase {
     $delta_handling = $this->getSetting('delta_handling');
     $mode = $this->getSetting('mode');
 
-    if (!empty($mode)) {
-      $summary[] = $this->t('Operating mode: @mode', array('@mode' => $mode));
-    }
     if (!empty($available_fields[$field])) {
       $summary[] = $this->t('Field: @field', array('@field' => $available_fields[$field]));
     }
@@ -252,8 +234,9 @@ class GeocodeWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    // See if we can use VALUE.
     $main_widget = $element + array(
-        '#type' => 'textfield',
+        '#type' => 'hidden',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
       );
 
