@@ -8,7 +8,6 @@
 namespace Drupal\geocoder_field\Plugin\Field;
 
 use Drupal\geocoder\Geocoder;
-use Drupal\geocoder\Plugin\Geocoder\InputFormatInterface;
 use Drupal\geocoder_field\Plugin\Field\GeocodeBaseWidget;
 
 /**

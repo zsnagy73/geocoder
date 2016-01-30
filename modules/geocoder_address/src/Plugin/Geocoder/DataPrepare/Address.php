@@ -7,8 +7,6 @@
 namespace Drupal\geocoder_address\Plugin\Geocoder\DataPrepare;
 
 use Drupal\geocoder\Plugin\Geocoder\DataPrepare;
-use Drupal\geocoder\Plugin\Geocoder\InputFormat;
-use Drupal\geocoder\Plugin\Geocoder\InputFormatInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 
 /**
