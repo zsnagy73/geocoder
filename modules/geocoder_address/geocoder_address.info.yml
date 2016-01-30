@@ -3,5 +3,5 @@ description: Providers Geocoder integration with contrib Address module.
 core: 8.x
 type: module
 dependencies:
- - geocoder
- - address
+  - geocoder
+  - address
