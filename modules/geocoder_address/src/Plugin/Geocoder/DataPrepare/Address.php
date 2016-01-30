@@ -24,9 +24,7 @@ class Address extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * @inheritDoc
    */
-  public function getPreparedValues() {
-    $values = $this->getValues();
-
+  public function getPreparedGeocodeValues(array $values = array()) {
     foreach ($values as $index => $value) {
       $address = array();
       $address[] = isset($value['address_line1']) ? $value['address_line1'] : NULL;

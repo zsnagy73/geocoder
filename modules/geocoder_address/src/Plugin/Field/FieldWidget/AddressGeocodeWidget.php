@@ -14,7 +14,7 @@ use Drupal\geocoder_field\Plugin\Field\GeocodeWidgetBase;
  *
  * @FieldWidget(
  *   id = "geocoder_address_geocode_widget",
- *   label = @Translation("Geocode from/to an existing field"),
+ *   label = @Translation("Geocode from an existing field"),
  *   field_types = {
  *     "address"
  *   }
