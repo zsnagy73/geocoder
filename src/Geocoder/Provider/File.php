@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\geocoder\Geocoder\Provider;
 
 use Geocoder\Exception\NoResult;
@@ -12,7 +16,7 @@ use Geocoder\Provider\Provider;
  */
 class File extends AbstractProvider implements Provider {
   /**
-   * {@inheritDoc}
+   * {@inheritDoc}.
    */
   public function geocode($filename) {
     if ($exif = exif_read_data($filename)) {
@@ -24,7 +28,7 @@ class File extends AbstractProvider implements Provider {
           array_merge($this->getDefaults(), [
             'latitude' => $latitude,
             'longitude' => $longitude,
-          ])
+          ]),
         ]);
       }
     }
@@ -46,29 +50,31 @@ class File extends AbstractProvider implements Provider {
 
       if (count($part) == 1) {
         $coordinate[$i] = $part[0];
-      } else if (count($part) == 2) {
-        $coordinate[$i] = floatval($part[0])/floatval($part[1]);
-      } else {
+      }
+      elseif (count($part) == 2) {
+        $coordinate[$i] = floatval($part[0]) / floatval($part[1]);
+      }
+      else {
         $coordinate[$i] = 0;
       }
     }
 
     list($degrees, $minutes, $seconds) = $coordinate;
     $sign = ($hemisphere == 'W' || $hemisphere == 'S') ? -1 : 1;
-    $value = $sign * ($degrees + $minutes/60 + $seconds/3600);
+    $value = $sign * ($degrees + $minutes / 60 + $seconds / 3600);
 
     return $value;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritDoc}.
    */
   public function reverse($latitude, $longitude) {
     throw new UnsupportedOperation('The Image plugin is not able to do reverse geocoding.');
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritDoc}.
    */
   public function getName() {
     return 'file';

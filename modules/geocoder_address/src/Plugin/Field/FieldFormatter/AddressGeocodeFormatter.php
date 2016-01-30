@@ -42,7 +42,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
 
       if ($addressCollection = Geocoder::geocode($this->getEnabledProviderPlugins(), implode(',', array_filter($address)))) {
         $elements[$delta] = array(
-          '#plain_text' => $dumper->dump($addressCollection->first())
+          '#plain_text' => $dumper->dump($addressCollection->first()),
         );
       }
     }

@@ -2,15 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder\Plugin\Geocoder\Dumper.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\DumperBase.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder;
 
-use Drupal\geocoder\Plugin\GeocoderPlugin;
+use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Geocoder\Model\Address;
-
-abstract class Dumper extends GeocoderPlugin implements DumperInterface {
+/**
+ *
+ */
+abstract class DumperBase extends GeocoderPluginBase implements DumperInterface {
   /**
    * The Geocoder Dumper object.
    *

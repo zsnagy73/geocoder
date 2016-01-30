@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeBaseWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidgetBase.
  */
 
 namespace Drupal\geocoder_field\Plugin\Field;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * Base Geocode Widget implementation for the Geocoder Field module.
  */
-abstract class GeocodeBaseWidget extends WidgetBase {
+abstract class GeocodeWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
@@ -38,7 +38,7 @@ abstract class GeocodeBaseWidget extends WidgetBase {
     $provider_plugin_ids = array();
     $geocoder_plugins = Geocoder::getPlugins('Provider');
 
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
       }
@@ -55,10 +55,10 @@ abstract class GeocodeBaseWidget extends WidgetBase {
   public function getDeltaHandling() {
     return array(
       'default' => $this->t('Match Multiples (default)'),
-      'm_to_s' =>  $this->t('Multiple to Single'),
-      's_to_m' =>  $this->t('Single to Multiple'),
-      'c_to_s' =>  $this->t('Concatenate to Single'),
-      'c_to_m' =>  $this->t('Concatenate to Multiple'),
+      'm_to_s' => $this->t('Multiple to Single'),
+      's_to_m' => $this->t('Single to Multiple'),
+      'c_to_s' => $this->t('Concatenate to Single'),
+      'c_to_m' => $this->t('Concatenate to Multiple'),
     );
   }
 
@@ -108,7 +108,7 @@ abstract class GeocodeBaseWidget extends WidgetBase {
 
     $enabled_plugins = array();
     $i = 0;
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
@@ -144,7 +144,8 @@ abstract class GeocodeBaseWidget extends WidgetBase {
     foreach (Geocoder::getPlugins('Provider') as $plugin_id => $plugin_name) {
       if (isset($enabled_plugins[$plugin_id])) {
         $weight = $enabled_plugins[$plugin_id]['weight'];
-      } else {
+      }
+      else {
         $weight = $count++;
       }
 
@@ -174,7 +175,7 @@ abstract class GeocodeBaseWidget extends WidgetBase {
       return strcmp($a['#weight'], $b['#weight']);
     });
 
-    foreach($rows as $plugin_id => $row) {
+    foreach ($rows as $plugin_id => $row) {
       $elements['provider_plugins'][$plugin_id] = $row;
     }
 
@@ -184,7 +185,7 @@ abstract class GeocodeBaseWidget extends WidgetBase {
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => Geocoder::getPlugins('dumper'),
-      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.')
+      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     );
 
     $elements['delta_handling'] = array(
@@ -236,9 +237,9 @@ abstract class GeocodeBaseWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     // See if we can use VALUE.
     $main_widget = $element + array(
-        '#type' => 'hidden',
-        '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-      );
+      '#type' => 'hidden',
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
+    );
 
     $element['value'] = $main_widget;
 

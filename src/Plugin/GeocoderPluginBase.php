@@ -2,16 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder\Plugin\GeocoderPlugin.
+ * Contains \Drupal\geocoder\Plugin\GeocoderPluginBase.
  */
 
 namespace Drupal\geocoder\Plugin;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-abstract class GeocoderPlugin extends Pluginbase implements GeocoderPluginInterface {
+/**
+ *
+ */
+abstract class GeocoderPluginBase extends PluginBase implements GeocoderPluginInterface {
   /**
    * @var ModuleHandlerInterface
    */

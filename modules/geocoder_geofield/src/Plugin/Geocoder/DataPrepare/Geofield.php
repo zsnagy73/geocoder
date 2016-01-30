@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\DataPrepare;
 
-use Drupal\geocoder\Plugin\Geocoder\DataPrepare;
+use Drupal\geocoder\Plugin\Geocoder\DataPrepareBase;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  *   }
  * )
  */
-class Geofield extends DataPrepare implements GeocoderPluginInterface {
+class Geofield extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * @inheritDoc
    */
@@ -34,6 +34,5 @@ class Geofield extends DataPrepare implements GeocoderPluginInterface {
   public function getPreparedReverseGeocodeValues(array $values = array()) {
     return parent::getPreparedReverseGeocodeValues($values);
   }
-
 
 }

@@ -7,9 +7,7 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Field\FieldWidget;
 
-use Drupal\geocoder\Geocoder;
-use Drupal\geocoder\Plugin\GeocoderPluginInterface;
-use Drupal\geocoder_field\Plugin\Field\GeocodeFromBaseWidget;
+use Drupal\geocoder_field\Plugin\Field\GeocodeFromWidgetBase;
 
 /**
  * Geocode 'from' widget implementation for the Geocoder Geofield module.
@@ -22,6 +20,6 @@ use Drupal\geocoder_field\Plugin\Field\GeocodeFromBaseWidget;
  *   }
  * )
  */
-class GeofieldFromWidget extends GeocodeFromBaseWidget {
+class GeofieldFromWidget extends GeocodeFromWidgetBase {
 
 }

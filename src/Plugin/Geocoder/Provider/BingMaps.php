@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
 use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  *  name = "BingMaps"
  * )
  */
-class BingMaps extends Provider implements ProviderInterface {
+class BingMaps extends ProviderBase implements ProviderInterface {
   /**
    * @inheritdoc
    */

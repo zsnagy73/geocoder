@@ -121,4 +121,3 @@ $geometry = \Drupal\geocoder\Geocoder::getPlugin('dumper', 'geometry')->dump($ad
 * [Drush](http://drush.org)
 * [Geocoder PHP library](http://geocoder-php.org/)
 * [Geocoder module](https://www.drupal.org/project/geocoder)
-

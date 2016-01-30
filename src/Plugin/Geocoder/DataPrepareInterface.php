@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
  */
 interface DataPrepareInterface extends PluginInspectionInterface, ContainerFactoryPluginInterface {
   /**
-   * Set the input values
+   * Set the input values.
    *
    * @param array $values
    *

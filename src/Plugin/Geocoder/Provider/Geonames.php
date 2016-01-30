@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
 use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  *  name = "Geonames"
  * )
  */
-class Geonames extends Provider implements ProviderInterface {
+class Geonames extends ProviderBase implements ProviderInterface {
   /**
    * @inheritdoc
    */

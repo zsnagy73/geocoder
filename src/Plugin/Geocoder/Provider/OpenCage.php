@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\Provider;
+use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
 use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  *  name = "OpenCage"
  * )
  */
-class OpenCage extends Provider implements ProviderInterface {
+class OpenCage extends ProviderBase implements ProviderInterface {
   /**
    * @inheritdoc
    */

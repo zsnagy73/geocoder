@@ -2,17 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder\Plugin\Geocoder\Provider.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\ProviderBase.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\geocoder\Plugin\GeocoderPlugin;
+use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-abstract class Provider extends GeocoderPlugin implements ProviderInterface {
+/**
+ *
+ */
+abstract class ProviderBase extends GeocoderPluginBase implements ProviderInterface {
   /**
    * @var HttpAdapterInterface
    */
@@ -78,7 +80,8 @@ abstract class Provider extends GeocoderPlugin implements ProviderInterface {
 
     try {
       $value = $this->getHandler()->geocode($data);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       throw $e;
     } catch (\InvalidCredentials $e) {
       throw $e;
@@ -101,7 +104,8 @@ abstract class Provider extends GeocoderPlugin implements ProviderInterface {
 
     try {
       $value = $this->getHandler()->reverse($latitude, $longitude);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       throw $e;
     }
 
@@ -145,4 +149,5 @@ abstract class Provider extends GeocoderPlugin implements ProviderInterface {
 
     return sha1(serialize(array_filter($args)));
   }
+
 }

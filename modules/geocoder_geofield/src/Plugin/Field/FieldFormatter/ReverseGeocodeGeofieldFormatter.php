@@ -36,9 +36,9 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatter {
       /** @var \Geometry $geom */
       $geom = $geophp->load($item->value);
       $centroid = $geom->getCentroid();
-      if ($addressCollection = Geocoder::reverse($provider_plugins, $centroid->y(),$centroid->x())) {
+      if ($addressCollection = Geocoder::reverse($provider_plugins, $centroid->y(), $centroid->x())) {
         $elements[$delta] = array(
-          '#markup' => $dumper->dump($addressCollection->first())
+          '#markup' => $dumper->dump($addressCollection->first()),
         );
       }
     }

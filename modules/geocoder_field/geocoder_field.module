@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @file
+ */
+
+/**
  * Implements hook_entity_presave().
  */
 function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
@@ -11,7 +15,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
       foreach ($entityFormDisplay->getComponents() as $field_id => $component) {
         $settings = $component['settings'];
 
-        if (in_array($component['type'], array('geocoder_geocode_from_widget', 'geocoder_geocode_to_widget','geocoder_reverse_geocode_from_widget', 'geocoder_reverse_geocode_to_widget'))) {
+        if (in_array($component['type'], array('geocoder_geocode_from_widget', 'geocoder_reverse_geocode_from_widget'))) {
           // Find the enabled geocoder plugins.
           $settings['provider_plugins'] = array_keys(
             array_filter($settings['provider_plugins'], function($v, $k) {
@@ -19,13 +23,8 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
             }, ARRAY_FILTER_USE_BOTH)
           );
 
-          if ($component['settings']['geocoder_type'] == 'from') {
-            $settings['field_from'] = $settings['field'];
-            $settings['field_to'] = $field_id;
-          } else {
-            $settings['field_from'] = $field_id;
-            $settings['field_to'] = $settings['field'];
-          }
+          $settings['field_from'] = $settings['field'];
+          $settings['field_to'] = $field_id;
 
           $type = $entity->get($settings['field_from'])->getFieldDefinition()->getType();
 
@@ -39,7 +38,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
           $values = $entity->get($settings['field_from'])->getValue();
           $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
 
-          if (in_array($component['type'], array('geocoder_geocode_from_widget', 'geocoder_geocode_to_widget'))) {
+          if (in_array($component['type'], array('geocoder_geocode_from_widget'))) {
             foreach ($definitions as $definition) {
               /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $object */
               $object = \Drupal::service('plugin.manager.geocoder.data_prepare')->createInstance($definition['id']);
@@ -56,7 +55,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
             }
           }
 
-          if (in_array($component['type'], array('geocoder_reverse_geocode_from_widget', 'geocoder_reverse_geocode_to_widget'))) {
+          if (in_array($component['type'], array('geocoder_reverse_geocode_from_widget'))) {
             foreach ($definitions as $definition) {
               /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $object */
               $object = \Drupal::service('plugin.manager.geocoder.data_prepare')->createInstance($definition['id']);

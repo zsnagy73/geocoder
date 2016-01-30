@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\geocoder_geofield\Geocoder\Dumper;
 
 use Geocoder\Dumper\Dumper;

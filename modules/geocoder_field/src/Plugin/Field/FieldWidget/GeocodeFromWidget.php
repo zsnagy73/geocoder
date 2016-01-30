@@ -2,14 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeWidget.
+ * Contains \Drupal\geocoder_field\Plugin\Field\FieldWidget\GeocodeFromWidget.
  */
 
 namespace Drupal\geocoder_field\Plugin\Field\FieldWidget;
 
-use Drupal\geocoder\Geocoder;
-use Drupal\geocoder\Plugin\GeocoderPluginInterface;
-use Drupal\geocoder_field\Plugin\Field\GeocodeFromBaseWidget;
+use Drupal\geocoder_field\Plugin\Field\GeocodeFromWidgetBase;
 
 /**
  * Geocode widget implementation for the Geocoder Field module.
@@ -24,6 +22,6 @@ use Drupal\geocoder_field\Plugin\Field\GeocodeFromBaseWidget;
  *   }
  * )
  */
-class GeocodeFromWidget extends GeocodeFromBaseWidget {
+class GeocodeFromWidget extends GeocodeFromWidgetBase {
 
 }

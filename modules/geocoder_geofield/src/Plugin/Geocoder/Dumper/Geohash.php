@@ -7,7 +7,7 @@
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Drupal\geocoder\Plugin\Geocoder\Dumper;
+use Drupal\geocoder\Plugin\Geocoder\DumperBase;
 use Drupal\geophp\GeoPHPInterface;
 use Geocoder\Model\Address;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,7 +44,7 @@ class Geohash extends Dumper\GeoJson implements DumperInterface {
       $plugin_id,
       $plugin_definition,
       $container->get('geocoder.dumper.geojson'),
-      $container->get('geophp.geophp')
+      $container->get('geophp.geophp'),
     );
   }
 

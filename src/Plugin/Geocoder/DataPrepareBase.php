@@ -8,13 +8,13 @@ namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface;
-use Drupal\geocoder\Plugin\GeocoderPlugin;
+use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class DataPrepare.
  */
-abstract class DataPrepare extends GeocoderPlugin implements DataPrepareInterface {
+abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepareInterface {
   /**
    * @var EntityInterface
    */
@@ -67,6 +67,9 @@ abstract class DataPrepare extends GeocoderPlugin implements DataPrepareInterfac
     return $this;
   }
 
+  /**
+   *
+   */
   public function getWidgetIds() {
     return $this->widget_ids;
   }
@@ -82,6 +85,9 @@ abstract class DataPrepare extends GeocoderPlugin implements DataPrepareInterfac
     return $this;
   }
 
+  /**
+   *
+   */
   public function getValues() {
     return $this->values;
   }
@@ -137,11 +143,11 @@ abstract class DataPrepare extends GeocoderPlugin implements DataPrepareInterfac
    * @return array
    */
   public function getPreparedReverseGeocodeValues(array $values = array()) {
-    foreach($values as $index => $value) {
+    foreach ($values as $index => $value) {
       list($lat, $lon) = explode(',', trim($value['value']));
       $values[$index] += array(
         'lat' => trim($lat),
-        'lon' => trim($lon)
+        'lon' => trim($lon),
       );
     }
 

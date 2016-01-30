@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder_address\Plugin\Geocoder\DataPrepare;
 
-use Drupal\geocoder\Plugin\Geocoder\DataPrepare;
+use Drupal\geocoder\Plugin\Geocoder\DataPrepareBase;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 
 /**
@@ -20,14 +20,14 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  *   }
  * )
  */
-class Address extends DataPrepare implements GeocoderPluginInterface {
+class Address extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * @inheritDoc
    */
   public function getPreparedValues() {
     $values = $this->getValues();
 
-    foreach($values as $index => $value) {
+    foreach ($values as $index => $value) {
       $address = array();
       $address[] = isset($value['address_line1']) ? $value['address_line1'] : NULL;
       $address[] = isset($value['address_line2']) ? $value['address_line2'] : NULL;

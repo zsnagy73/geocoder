@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder_field\Plugin\Geocoder\DataPrepare;
 
-use Drupal\geocoder\Plugin\Geocoder\DataPrepare;
+use Drupal\geocoder\Plugin\Geocoder\DataPrepareBase;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 
 /**
@@ -20,6 +20,6 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  *   }
  * )
  */
-class Text extends DataPrepare implements GeocoderPluginInterface {
+class Text extends DataPrepareBase implements GeocoderPluginInterface {
 
 }

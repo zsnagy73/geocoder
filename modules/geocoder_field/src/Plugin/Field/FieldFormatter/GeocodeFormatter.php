@@ -42,7 +42,7 @@ class GeocodeFormatter extends FormatterBase {
 
     $enabled_plugins = array();
     $i = 0;
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
@@ -78,7 +78,8 @@ class GeocodeFormatter extends FormatterBase {
     foreach (Geocoder::getPlugins('Provider') as $plugin_id => $plugin_name) {
       if (isset($enabled_plugins[$plugin_id])) {
         $weight = $enabled_plugins[$plugin_id]['weight'];
-      } else {
+      }
+      else {
         $weight = $count++;
       }
 
@@ -108,7 +109,7 @@ class GeocodeFormatter extends FormatterBase {
       return strcmp($a['#weight'], $b['#weight']);
     });
 
-    foreach($rows as $plugin_id => $row) {
+    foreach ($rows as $plugin_id => $row) {
       $elements['provider_plugins'][$plugin_id] = $row;
     }
 
@@ -118,7 +119,7 @@ class GeocodeFormatter extends FormatterBase {
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => Geocoder::getPlugins('dumper'),
-      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.')
+      '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     );
 
     return $elements;
@@ -154,7 +155,7 @@ class GeocodeFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       if ($addressCollection = Geocoder::geocode($provider_plugins, $item->value)) {
         $elements[$delta] = array(
-          '#plain_text' => $dumper->dump($addressCollection->first())
+          '#plain_text' => $dumper->dump($addressCollection->first()),
         );
       }
     }
@@ -171,7 +172,7 @@ class GeocodeFormatter extends FormatterBase {
     $provider_plugin_ids = array();
     $geocoder_plugins = Geocoder::getPlugins('Provider');
 
-    foreach($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
       }

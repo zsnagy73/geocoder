@@ -7,8 +7,7 @@
 
 namespace Drupal\geocoder_address\Plugin\Field\FieldWidget;
 
-use Drupal\geocoder\Geocoder;
-use Drupal\geocoder_field\Plugin\Field\GeocodeBaseWidget;
+use Drupal\geocoder_field\Plugin\Field\GeocodeWidgetBase;
 
 /**
  * Geocode widget implementation for the Geocoder Field module.
@@ -21,6 +20,6 @@ use Drupal\geocoder_field\Plugin\Field\GeocodeBaseWidget;
  *   }
  * )
  */
-class AddressGeocodeWidget extends GeocodeBaseWidget {
+class AddressGeocodeWidget extends GeocodeWidgetBase {
 
 }

@@ -7,10 +7,7 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Field\FieldWidget;
 
-use Drupal\geocoder\Geocoder;
-use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 use Drupal\geocoder_field\Plugin\Field\FieldWidget\ReverseGeocodeFromWidget;
-use Drupal\geocoder_field\Plugin\Field\GeocodeFromBaseWidget;
 
 /**
  * Reverse geocode 'from' widget implementation for the Geocoder Geofield module.

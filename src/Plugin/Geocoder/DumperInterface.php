@@ -9,7 +9,9 @@ namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 use Geocoder\Model\Address;
-
+/**
+ *
+ */
 interface DumperInterface extends GeocoderPluginInterface {
   /**
    * Dump the argument into a specific format.

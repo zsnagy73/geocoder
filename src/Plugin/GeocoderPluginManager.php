@@ -21,7 +21,7 @@ class GeocoderPluginManager extends DefaultPluginManager {
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\geocoder\Annotation\GeocoderPlugin';
-    parent::__construct('Plugin/Geocoder/'. Container::camelize($type), $namespaces, $module_handler, 'Drupal\geocoder\Plugin\GeocoderPluginInterface', $plugin_definition_annotation_name);
+    parent::__construct('Plugin/Geocoder/' . Container::camelize($type), $namespaces, $module_handler, 'Drupal\geocoder\Plugin\GeocoderPluginInterface', $plugin_definition_annotation_name);
 
     $this->defaults += array(
       'plugin_type' => strtolower($type),

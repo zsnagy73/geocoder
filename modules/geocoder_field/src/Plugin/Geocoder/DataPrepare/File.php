@@ -6,7 +6,7 @@
 
 namespace Drupal\geocoder_field\Plugin\Geocoder\DataPrepare;
 
-use Drupal\geocoder\Plugin\Geocoder\DataPrepare;
+use Drupal\geocoder\Plugin\Geocoder\DataPrepareBase;
 use Drupal\geocoder\Plugin\GeocoderPluginInterface;
 
 /**
@@ -21,12 +21,12 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  *   }
  * )
  */
-class File extends DataPrepare implements GeocoderPluginInterface {
+class File extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * @inheritDoc
    */
   public function getPreparedGeocodeValues(array $values = array()) {
-    foreach($values as $index => $value) {
+    foreach ($values as $index => $value) {
       if ($value['target_id']) {
         $values[$index]['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
       }
