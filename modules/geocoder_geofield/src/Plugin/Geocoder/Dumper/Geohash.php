@@ -8,8 +8,6 @@ namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\Plugin\Geocoder\Dumper\GeoJson;
 use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Drupal\geophp\GeoPHPInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
