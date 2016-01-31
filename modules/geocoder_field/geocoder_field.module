@@ -37,7 +37,6 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
 
           $values = $entity->get($settings['field_from'])->getValue();
           $dumper = \Drupal\geocoder\Geocoder::getPlugin('dumper', $settings['dumper_plugin']);
-
           if (in_array($component['type'], array('geocoder_geocode_from_widget'))) {
             foreach ($definitions as $definition) {
               /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $object */
