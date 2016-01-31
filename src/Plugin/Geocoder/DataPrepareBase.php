@@ -57,9 +57,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @param array $widgets
-   *
-   * @return $this
+   * @inheritDoc
    */
   public function setWidgetIds(array $widgets = array()) {
     $this->widget_ids = $widgets;
@@ -68,16 +66,14 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   *
+   * @inheritDoc
    */
   public function getWidgetIds() {
     return $this->widget_ids;
   }
 
   /**
-   * @param array $widgets
-   *
-   * @return $this
+   * @inheritDoc
    */
   public function setValues(array $values = array()) {
     $this->values = $values;
@@ -86,16 +82,14 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   *
+   * @inheritDoc
    */
   public function getValues() {
     return $this->values;
   }
 
   /**
-   * @param array $settings
-   *
-   * @return $this
+   * @inheritDoc
    */
   public function setWidgetConfiguration(array $settings = array()) {
     $this->widget_configuration = $settings;
@@ -104,16 +98,14 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @return mixed
+   * @inheritDoc
    */
   public function getWidgetConfiguration() {
     return $this->widget_configuration;
   }
 
   /**
-   * @param $field_id
-   *
-   * @return $this
+   * @inheritDoc
    */
   public function setCurrentField($field_id) {
     $this->field_id = $field_id;
@@ -122,36 +114,24 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @return string
+   * @inheritDoc
    */
   public function getCurrentField() {
     return $this->field_id;
   }
 
   /**
-   * @param array $values
-   *
-   * @return array
+   * @inheritDoc
    */
   public function getPreparedGeocodeValues(array $values = array()) {
     return $this->setValues($values)->getValues();
   }
 
   /**
-   * @param array $values
-   *
-   * @return array
+   * @inheritDoc
    */
   public function getPreparedReverseGeocodeValues(array $values = array()) {
-    foreach ($values as $index => $value) {
-      list($lat, $lon) = explode(',', trim($value['value']));
-      $values[$index] += array(
-        'lat' => trim($lat),
-        'lon' => trim($lon),
-      );
-    }
-
-    return $values;
+    return $this->setValues($values)->getValues();
   }
 
   /**

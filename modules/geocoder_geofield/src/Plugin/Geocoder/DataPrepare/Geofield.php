@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * The Text Data Prepare plugin.
+ * The Geofield Data Prepare plugin.
  */
 
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\DataPrepare;
@@ -21,18 +21,5 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  * )
  */
 class Geofield extends DataPrepareBase implements GeocoderPluginInterface {
-  /**
-   * @inheritDoc
-   */
-  public function getPreparedGeocodeValues(array $values = array()) {
-    return parent::getPreparedGeocodeValues($values);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getPreparedReverseGeocodeValues(array $values = array()) {
-    return parent::getPreparedReverseGeocodeValues($values);
-  }
 
 }
