@@ -6,8 +6,8 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -36,16 +36,17 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   private $widget_ids;
 
   /**
+   * The geocoder settings.
+   *
    * @var array
    */
-  private $widget_configuration;
+  private $geocoderSettings;
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function setEntity(EntityInterface $entity) {
+  public function setEntity(ContentEntityInterface $entity) {
     $this->entity = $entity;
-
     return $this;
   }
 
@@ -93,21 +94,18 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @param array $settings
-   *
-   * @return $this
+   * {@inheritdoc}
    */
-  public function setWidgetConfiguration(array $settings = array()) {
-    $this->widget_configuration = $settings;
-
+  public function setGeocoderSettings(array $settings) {
+    $this->geocoderSettings = $settings;
     return $this;
   }
 
   /**
    * @return mixed
    */
-  public function getWidgetConfiguration() {
-    return $this->widget_configuration;
+  public function getGeocoderSettings() {
+    return $this->geocoderSettings;
   }
 
   /**
@@ -129,12 +127,11 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @param array $values
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  public function getPreparedGeocodeValues(array $values = array()) {
-    return $this->setValues($values)->getValues();
+  public function prepareValues(array &$values) {
+    $values = $this->setValues($values)->getValues();
+    return $this;
   }
 
   /**

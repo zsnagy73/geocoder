@@ -43,8 +43,8 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
               /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $object */
               $object = \Drupal::service('plugin.manager.geocoder.data_prepare')->createInstance($definition['id']);
               $object->setEntity($entity);
-              $object->setWidgetConfiguration($component['settings']);
-              $values = $object->getPreparedGeocodeValues($values);
+              $object->setGeocoderSettings($component['settings']);
+              $values = $object->prepareValues($values);
             }
 
             $result = array();
@@ -60,7 +60,7 @@ function geocoder_field_entity_presave(\Drupal\Core\Entity\EntityInterface $enti
               /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $object */
               $object = \Drupal::service('plugin.manager.geocoder.data_prepare')->createInstance($definition['id']);
               $object->setEntity($entity);
-              $object->setWidgetConfiguration($component['settings']);
+              $object->setGeocoderSettings($component['settings']);
               $values = $object->getPreparedReverseGeocodeValues($values);
             }
 

@@ -24,8 +24,8 @@ class Geofield extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * @inheritDoc
    */
-  public function getPreparedGeocodeValues(array $values = array()) {
-    return parent::getPreparedGeocodeValues($values);
+  public function prepareValues(array &$values = array()) {
+    return parent::prepareValues($values);
   }
 
   /**

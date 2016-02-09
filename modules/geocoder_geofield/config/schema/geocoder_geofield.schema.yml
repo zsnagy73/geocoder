@@ -1,0 +1,23 @@
+# Schema for Geocoder Geofield module.
+
+field.field.*.*.*.third_party.geocoder_geofield:
+  type: mapping
+  label: 'Geocoder geofield field settings'
+  mapping:
+    method:
+      type: string
+      label: 'Geocode method'
+    field:
+      type: string
+      label: 'Field to geocode from or to'
+    plugins:
+      type: sequence
+      label: 'Geocoding plugins'
+      sequence:
+        type: string
+    dumper:
+      type: string
+      label: 'Output format'
+    delta_handling:
+      type: string
+      label: 'Multi-value input handling'

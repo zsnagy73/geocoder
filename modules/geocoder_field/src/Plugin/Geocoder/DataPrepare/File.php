@@ -23,16 +23,15 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  */
 class File extends DataPrepareBase implements GeocoderPluginInterface {
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
-  public function getPreparedGeocodeValues(array $values = array()) {
+  public function prepareValues(array &$values) {
     foreach ($values as $index => $value) {
       if ($value['target_id']) {
         $values[$index]['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
       }
     }
-
-    return $values;
+    return $this;
   }
 
 }
