@@ -10,7 +10,6 @@ namespace Drupal\Tests\geocoder_geofield\Kernel;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\geocoder\Plugin\Geocoder\Provider\GoogleMaps;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -23,7 +22,7 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['geophp', 'geofield', 'field', 'geocoder_geofield', 'geocoder_geofield_test', 'geocoder', 'entity_test', 'text', 'user', 'filter'];
+  public static $modules = ['geophp', 'geofield', 'field', 'geocoder_geofield', 'geocoder_geofield_test', 'geocoder', 'geocoder_field', 'entity_test', 'text', 'user', 'filter'];
 
   /**
    * Tests the
@@ -48,17 +47,23 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
       'type' => 'geofield',
       'field_name' => 'bar',
     ])->save();
+    /** @var \Drupal\field\FieldConfigInterface $field */
     $field = FieldConfig::create([
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'field_name' => 'bar',
       'third_party_settings' => [
-        'geocoder_geofield' => [
+        'geocoder_field' => [
           'method' => 'source',
           'field' => 'foo',
           'plugins' => ['test_provider'],
           'dumper' => 'wkt',
           'delta_handling' => 'default',
+          'failure' => [
+            'handling' => 'preserve',
+            'status_message' => FALSE,
+            'log' => FALSE,
+          ],
         ],
       ],
     ]);
@@ -69,7 +74,28 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
     $entity->foo->value = 'Gotham City';
     $entity->save();
 
+    // Check that field 'bar' contains the geo-coded value.
     $this->assertSame('POINT(40.000000 20.000000)', $entity->bar->value);
+
+    // Add an arbitrary value that 'test_provider' doesn't know to handle.
+    $entity->foo->value = 'SOME MESS';
+    $entity->save();
+
+    // Check if value has been preserved on geocoding failure.
+    $this->assertSame('POINT(40.000000 20.000000)', $entity->bar->value);
+
+    // Change the failure handling policy to 'empty'.
+    $field->setThirdPartySetting('geocoder_field', 'failure', [
+      'handling' => 'empty',
+      'status_message' => FALSE,
+      'log' => FALSE,
+    ])->save();
+    // Re-load and re-save to geo-code again.
+    $entity = EntityTest::load($entity->id());
+    $entity->save();
+
+    // Check that the target filed has been emptied.
+    $this->assertNull($entity->bar->value);
   }
 
 }

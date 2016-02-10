@@ -36,7 +36,7 @@ class TestProvider extends ProviderBase implements ProviderInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function geocode($data) {
     switch ($data) {
@@ -48,7 +48,7 @@ class TestProvider extends ProviderBase implements ProviderInterface {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function reverse($latitude, $longitude) {
     return FALSE;

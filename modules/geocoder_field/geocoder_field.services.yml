@@ -1,0 +1,5 @@
+services:
+  geocoder_field.plugin.manager.field:
+    class: Drupal\geocoder_field\GeocoderFieldPluginManager
+    parent: default_plugin_manager
+    arguments: ['@plugin.manager.geocoder.data_prepare', '@entity_field.manager']

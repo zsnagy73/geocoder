@@ -41,9 +41,6 @@ class Geocoder {
       }
     }
 
-    $exception = new \Exception(sprintf('No plugin could geocode: "%s".', $data));
-    self::log($exception->getMessage(), 'error');
-
     return FALSE;
   }
 

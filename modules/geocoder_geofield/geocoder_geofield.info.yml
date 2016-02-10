@@ -4,4 +4,4 @@ core: 8.x
 type: module
 dependencies:
   - geocoder_field
-  - geophp
+  - geofield
