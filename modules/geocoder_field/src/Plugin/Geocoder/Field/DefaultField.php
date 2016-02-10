@@ -22,7 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   id = "default",
  *   label = @Translation("Generic geofield field plugin"),
  *   field_types = {
- *     "text"
+ *     "text",
+ *     "text_long",
+ *     "string"
  *   }
  * )
  */
