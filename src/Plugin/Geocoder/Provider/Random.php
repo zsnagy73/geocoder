@@ -111,7 +111,7 @@ class Random extends ProviderBase implements ProviderInterface {
    *
    * @return array
    */
-  private function getRandomResult() {
+  protected function getRandomResult() {
     $country = $this->getRandomCountryInfo();
     $streetTypes = array('street', 'avenue', 'square', 'road', 'way', 'drive', 'lane', 'place', 'hill', 'gardens', 'park');
 

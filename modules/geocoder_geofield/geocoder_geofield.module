@@ -142,10 +142,10 @@ function geocoder_geofield_field_config_edit_form_validate(array $form,  FormSta
  * Implements hook_entity_presave().
  */
 function geocoder_geofield_entity_presave(EntityInterface $entity) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   if (!$entity instanceof ContentEntityInterface) {
     return;
   }
-  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
 
   /** @var \Drupal\Core\Entity\EntityFieldManager $entity_field_manager */
   $entity_field_manager = \Drupal::service('entity_field.manager');
@@ -167,23 +167,23 @@ function geocoder_geofield_entity_presave(EntityInterface $entity) {
     }
     /** @var \Drupal\field\FieldConfigInterface $field_config */
     $field_config = FieldConfig::load("$entity_type_id.$bundle.$field_name");
-    $geocode =& $field_config->getThirdPartySettings('geocoder_geofield');
+    $geocoder = $field_config->getThirdPartySettings('geocoder_geofield');
 
-    if (empty($geocode['method']) || $geocode['method'] === 'none') {
+    if (empty($geocoder['method']) || $geocoder['method'] === 'none') {
       // This field was not configured to geocode from/to other field.
       continue;
     }
 
     // @todo Check here for malformed $geocode and throw appropriate exceptions.
 
-    $remote_field = $entity->get($geocode['field']);
+    $remote_field = $entity->get($geocoder['field']);
     $definitions = $data_prepare_manager->getDefinitionsBasedOnType(
       $remote_field->getFieldDefinition()->getType()
     );
 
     $values = $remote_field->getValue();
     /** @var \Drupal\geocoder\Plugin\Geocoder\DumperInterface $dumper */
-    $dumper = $dumper_manager->createInstance($geocode['dumper']);
+    $dumper = $dumper_manager->createInstance($geocoder['dumper']);
 
     // Prepare data.
     foreach ($definitions as $definition) {
@@ -191,12 +191,12 @@ function geocoder_geofield_entity_presave(EntityInterface $entity) {
       $data_prepare_plugin = $data_prepare_manager->createInstance($definition['id']);
       $data_prepare_plugin
         ->setEntity($entity)
-        ->setGeocoderSettings($geocode)
+        ->setGeocoderSettings($geocoder)
         ->prepareValues($values);
     }
 
-    $result = array_filter(array_map(function ($value) use ($geocode, $dumper) {
-      if ($address_collection = Geocoder::geocode($geocode['plugins'], $value['value'])) {
+    $result = array_filter(array_map(function ($value) use ($geocoder, $dumper) {
+      if ($address_collection = Geocoder::geocode($geocoder['plugins'], $value['value'])) {
         return $dumper->dump($address_collection->first());
       }
       return NULL;
