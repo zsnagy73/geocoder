@@ -174,14 +174,8 @@ function geocoder_geofield_entity_presave(EntityInterface $entity) {
     // @todo Check here for malformed $geocode and throw appropriate exceptions.
 
     $remote_field = $entity->get($geocode['field']);
-    // Get the remote field type.
-    $type = $remote_field->getFieldDefinition()->getType();
-
-    // @todo Provide a method in manager to return definitions based on $type.
-    $definitions = array_filter($data_prepare_manager->getDefinitions(),
-      function($definition) use ($type) {
-        return in_array($type, $definition['field_types']);
-      }
+    $definitions = $data_prepare_manager->getDefinitionsBasedOnType(
+      $remote_field->getFieldDefinition()->getType()
     );
 
     $values = $remote_field->getValue();

@@ -31,4 +31,20 @@ class GeocoderPluginManager extends DefaultPluginManager {
     $this->setCacheBackend($cache_backend, 'geocoder:' . $type);
   }
 
+  /**
+   * Returns definitions based on a field type.
+   *
+   * @param string $type
+   *   The field type
+   *
+   * @return mixed
+   */
+  public function getDefinitionsBasedOnType($type) {
+    return array_filter($this->getDefinitions(),
+      function($definition) use ($type) {
+        return in_array($type, $definition['field_types']);
+      }
+    );
+  }
+
 }
