@@ -163,7 +163,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         'c_to_m' => $this->t('Concatenate to Multiple'),
       ],
     ];
-    $failure = $field->getThirdPartySetting('geocoder_field', 'failure') + [
+    $failure = (array) $field->getThirdPartySetting('geocoder_field', 'failure') + [
       'handling' => 'preserve',
       'status_message' => TRUE,
       'log' => TRUE,
@@ -173,8 +173,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#title' => $this->t('What to store if geo-coding fails?'),
       '#description' => $this->t('Is possible that the source field cannot be geo-coded. Choose what to store in this field in such case.'),
       '#options' => [
-        'preserve' => $this->t('Preserve the existing filed value'),
-        'empty' => $this->t('Empty the filed value'),
+        'preserve' => $this->t('Preserve the existing field value'),
+        'empty' => $this->t('Empty the field value'),
       ],
       '#default_value' => $failure['handling']
     ];

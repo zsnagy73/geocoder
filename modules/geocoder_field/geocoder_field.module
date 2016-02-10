@@ -25,7 +25,7 @@ function geocoder_field_form_field_config_edit_form_alter(array &$form, FormStat
   }
 
   $form['third_party_settings']['geocoder_field'] = $field_plugin->getSettingsForm($field, $form, $form_state);
-  // Temporary store th efiled plugin to be used in validation phase.
+  // Temporary store the filed plugin to be used in the validation phase.
   $form['third_party_settings']['geocoder_field']['field_plugin'] = [
     '#type' => 'value',
     '#value' => $field_plugin,
