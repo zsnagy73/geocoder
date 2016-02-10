@@ -49,18 +49,6 @@ interface DataPrepareInterface extends PluginInspectionInterface, ContainerFacto
   public function getEntity();
 
   /**
-   * @param array $widgets
-   *
-   * @return $this
-   */
-  public function setWidgetIds(array $widgets = array());
-
-  /**
-   * @return array
-   */
-  public function getWidgetIds();
-
-  /**
    * Sets the geofield field settings.
    *
    * @param array $settings
