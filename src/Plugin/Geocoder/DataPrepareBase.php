@@ -31,11 +31,6 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   private $values;
 
   /**
-   * @var string[]
-   */
-  private $widget_ids;
-
-  /**
    * The geocoder settings.
    *
    * @var array
@@ -58,25 +53,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @param array $widgets
-   *
-   * @return $this
-   */
-  public function setWidgetIds(array $widgets = array()) {
-    $this->widget_ids = $widgets;
-
-    return $this;
-  }
-
-  /**
-   *
-   */
-  public function getWidgetIds() {
-    return $this->widget_ids;
-  }
-
-  /**
-   * @param array $widgets
+   * @param array $values
    *
    * @return $this
    */
