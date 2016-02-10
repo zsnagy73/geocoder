@@ -24,7 +24,7 @@ class GeocoderField extends Plugin {
   public $id;
 
   /**
-   * The human-readable name of the geocoder filed plugin.
+   * The human-readable name of the geocoder field plugin.
    *
    * @ingroup plugin_translatable
    *

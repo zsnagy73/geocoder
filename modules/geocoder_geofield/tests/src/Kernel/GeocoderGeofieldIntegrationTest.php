@@ -94,7 +94,7 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
     $entity = EntityTest::load($entity->id());
     $entity->save();
 
-    // Check that the target filed has been emptied.
+    // Check that the target field has been emptied.
     $this->assertNull($entity->bar->value);
   }
 

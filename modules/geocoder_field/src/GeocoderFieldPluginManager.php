@@ -62,7 +62,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The type of field for which to find a plugin.
    *
    * @return \Drupal\geocoder_field\GeocoderFieldPluginInterface|null
-   *   The plugin instance or NULL, if no plugin handles this filed type.
+   *   The plugin instance or NULL, if no plugin handles this field type.
    */
   public function getPluginByFieldType($field_type) {
     foreach ($this->getDefinitions() as $definition) {
@@ -81,7 +81,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    * @param string $bundle
    *   The bundle.
    * @param string $field_name
-   *   The filed name.
+   *   The field name.
    *
    * @return array
    */

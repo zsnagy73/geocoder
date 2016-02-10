@@ -16,7 +16,7 @@ use Drupal\field\FieldConfigInterface;
 interface GeocoderFieldPluginInterface {
 
   /**
-   * Provides the third party filed settings subform.
+   * Provides the third party field settings subform.
    *
    * The returned form API element will be added in behalf of 'geocoder_field'
    * module as third party settings to the field that is storing the geocoding
