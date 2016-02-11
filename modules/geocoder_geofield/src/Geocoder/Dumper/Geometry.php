@@ -25,14 +25,14 @@ class Geometry implements Dumper {
   private $geophp;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function dump(Address $address) {
     return $this->geophp->load($this->dumper->dump($address), 'json');
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function __construct(Dumper $dumper, geoPHPInterface $geophp) {
     $this->dumper = $dumper;

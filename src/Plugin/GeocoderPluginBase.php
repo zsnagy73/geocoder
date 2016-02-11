@@ -34,7 +34,7 @@ abstract class GeocoderPluginBase extends PluginBase implements GeocoderPluginIn
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(

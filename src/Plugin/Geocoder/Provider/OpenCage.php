@@ -19,7 +19,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  */
 class OpenCage extends ProviderBase implements ProviderInterface {
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function init() {
     $configuration = $this->getConfiguration();

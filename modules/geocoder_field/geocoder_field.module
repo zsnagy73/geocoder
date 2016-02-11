@@ -41,7 +41,7 @@ function geocoder_field_form_field_config_edit_form_alter(array &$form, FormStat
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The form state object.
  */
-function geocoder_field_field_config_edit_form_validate(array $form,  FormStateInterface $form_state) {
+function geocoder_field_field_config_edit_form_validate(array $form, FormStateInterface $form_state) {
   // Clean-up and normalize the plugin list.
   $trail = ['third_party_settings', 'geocoder_field', 'plugins'];
   $plugins = array_keys(array_filter($form_state->getValue($trail),

@@ -7,7 +7,6 @@
 namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -46,7 +45,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getEntity() {
     return $this->entity;
@@ -129,7 +128,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(

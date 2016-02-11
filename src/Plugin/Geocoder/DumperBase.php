@@ -21,7 +21,7 @@ abstract class DumperBase extends GeocoderPluginBase implements DumperInterface 
   private $geocoder_dumper;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, \Geocoder\Dumper\Dumper $dumper) {
     $this->setGeocoderDumper($dumper);
@@ -29,21 +29,21 @@ abstract class DumperBase extends GeocoderPluginBase implements DumperInterface 
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function dump(Address $address) {
     return $this->getGeocoderDumper()->dump($address);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function setGeocoderDumper(\Geocoder\Dumper\Dumper $dumper) {
     $this->geocoder_dumper = $dumper;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getGeocoderDumper() {
     return $this->geocoder_dumper;

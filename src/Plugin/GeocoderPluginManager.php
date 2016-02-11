@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Container;
  */
 class GeocoderPluginManager extends DefaultPluginManager {
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\geocoder\Annotation\GeocoderPlugin';

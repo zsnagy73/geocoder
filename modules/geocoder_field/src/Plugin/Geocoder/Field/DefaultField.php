@@ -154,7 +154,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
             $this->t('Aggregated into a single MULTIPOINT geofield (e.g. One MULTIPOINT polygon from multiple address fields)'),
             $this->t('Broken up into multiple geometries (e.g. One MULTIPOINT to multiple POINTs.)'),
           ],
-        ]
+        ],
       ],
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'delta_handling', 'default'),
       '#options' => [
@@ -178,7 +178,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         'preserve' => $this->t('Preserve the existing field value'),
         'empty' => $this->t('Empty the field value'),
       ],
-      '#default_value' => $failure['handling']
+      '#default_value' => $failure['handling'],
     ];
     $element['failure']['status_message'] = [
       '#type' => 'checkbox',
@@ -197,6 +197,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
   /**
    * {@inheritdoc}
    */
-  public function validateSettingsForm(array $form, FormStateInterface &$form_state) { }
+  public function validateSettingsForm(array $form, FormStateInterface &$form_state) {}
 
 }

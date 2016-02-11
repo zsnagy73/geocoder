@@ -22,14 +22,14 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  */
 class Geofield extends DataPrepareBase implements GeocoderPluginInterface {
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function prepareValues(array &$values = array()) {
     return parent::prepareValues($values);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getPreparedReverseGeocodeValues(array $values = array()) {
     return parent::getPreparedReverseGeocodeValues($values);

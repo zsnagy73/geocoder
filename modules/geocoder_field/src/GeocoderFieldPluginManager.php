@@ -15,6 +15,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\geocoder\Plugin\GeocoderPluginManager;
 use Drupal\geocoder_field\Annotation\GeocoderField;
 
+/**
+ * The Geocoder Field Plugin manager.
+ */
 class GeocoderFieldPluginManager extends DefaultPluginManager {
 
   /**
