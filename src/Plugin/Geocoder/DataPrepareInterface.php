@@ -84,11 +84,16 @@ interface DataPrepareInterface extends PluginInspectionInterface, ContainerFacto
    *
    * @return $this
    */
-  public function prepareValues(array &$values);
+  public function prepareGeocodeValues(array &$values = array());
 
   /**
-   * @return mixed
+   * Prepare values before reverse geocoding.
+   *
+   * @param array $values
+   *   The field values passed as reference to be prepared.
+   *
+   * @return $this
    */
-  public function getPreparedReverseGeocodeValues(array $values = array());
+  public function prepareReverseGeocodeValues(array &$values = array());
 
 }

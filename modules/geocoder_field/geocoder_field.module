@@ -106,7 +106,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       $data_prepare_plugin
         ->setEntity($entity)
         ->setGeocoderSettings($geocoder)
-        ->prepareValues($values);
+        ->prepareGeocodeValues($values);
     }
 
     $default_values = $entity->get($field_name);

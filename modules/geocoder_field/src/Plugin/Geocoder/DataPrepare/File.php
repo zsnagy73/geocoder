@@ -25,7 +25,7 @@ class File extends DataPrepareBase implements GeocoderPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function prepareValues(array &$values) {
+  public function prepareGeocodeValues(array &$values) {
     foreach ($values as $index => $value) {
       if ($value['target_id']) {
         $values[$index]['value'] = \Drupal::service('file_system')->realpath(\Drupal\file\Entity\File::load($value['target_id'])->getFileUri());
