@@ -83,8 +83,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#title' => $this->t('Geocode method'),
       '#options' => [
         'none' => $this->t('No geocoding'),
-        'source' => $this->t('Geocode from an existing field'),
-        'destination' => $this->t('Reverse geocode from an existing field'),
+        'geocode' => $this->t('Geocode from an existing field. (data => geo data)'),
+        'reversegeocode' => $this->t('Reverse geocode from an existing field. (geo data => data)'),
       ],
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
     ];
