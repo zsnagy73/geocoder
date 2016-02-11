@@ -19,7 +19,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  */
 class FreeGeoIp extends ProviderBase implements ProviderInterface {
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function init() {
     $this->setHandler(new \Geocoder\Provider\FreeGeoIp($this->getAdapter()));

@@ -19,7 +19,7 @@ use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
  */
 class GeoPlugin extends ProviderBase implements ProviderInterface {
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function init() {
     $this->setHandler(new \Geocoder\Provider\GeoPlugin($this->getAdapter()));

@@ -14,7 +14,7 @@ use Geocoder\Model\Address;
  */
 class AddressText implements Dumper {
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function dump(Address $address) {
     $values = array();

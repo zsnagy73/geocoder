@@ -22,7 +22,7 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  */
 class Address extends DataPrepareBase implements GeocoderPluginInterface {
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function prepareValues(array &$values) {
     foreach ($values as $index => $value) {

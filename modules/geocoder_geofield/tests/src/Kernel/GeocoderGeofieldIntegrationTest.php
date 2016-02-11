@@ -25,7 +25,7 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
   public static $modules = ['geophp', 'geofield', 'field', 'geocoder_geofield', 'geocoder_geofield_test', 'geocoder', 'geocoder_field', 'entity_test', 'text', 'user', 'filter'];
 
   /**
-   * Tests the
+   * Tests the geocoding on Geofield field type.
    */
   public function testGeofield() {
     $this->installEntitySchema('entity_test');

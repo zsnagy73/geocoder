@@ -42,6 +42,7 @@ class TestProvider extends ProviderBase implements ProviderInterface {
     switch ($data) {
       case 'Gotham City':
         return $this->addressFactory->createFromArray([['latitude' => 20, 'longitude' => 40]]);
+
       default:
         return FALSE;
     }
