@@ -86,7 +86,6 @@ class Random extends ProviderBase implements ProviderInterface {
    *
    */
   private function getRandomCountryInfo($type = NULL) {
-    include_once DRUPAL_ROOT . '/includes/locale.inc';
     $manager = new CountryManager($this->getModuleHandler());
     $countries = $manager->getList();
     uksort($countries, function() {

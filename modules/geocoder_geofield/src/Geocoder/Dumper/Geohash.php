@@ -13,22 +13,22 @@ use Drupal\geophp\geoPHPInterface;
 /**
  * @author Pol Dellaiera <pol.dellaiera@gmail.com>
  */
-class Geometry implements Dumper {
+class Geohash implements Dumper {
   /**
    * @var \Geocoder\Dumper\Dumper
    */
-  private $dumper;
+  protected $dumper;
 
   /**
    * @var \Drupal\geophp\geoPHPInterface
    */
-  private $geophp;
+  protected $geophp;
 
   /**
    * @inheritdoc
    */
   public function dump(Address $address) {
-    return $this->geophp->load($this->dumper->dump($address), 'json');
+    return $this->geophp->load($this->dumper->dump($address), 'json')->out('geohash');
   }
 
   /**
