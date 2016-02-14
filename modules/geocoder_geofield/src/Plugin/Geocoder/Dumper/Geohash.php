@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a Geohash geocoder dumper plugin.
  *
- * @GeocoderPlugin(
+ * @GeocoderDumper(
  *   id = "geohash",
  *   name = "Geohash",
  *   handler = "\Geocoder\Dumper\GeoJson"

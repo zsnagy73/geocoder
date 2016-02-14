@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a Geometry geocoder dumper plugin.
  *
- * @GeocoderPlugin(
+ * @GeocoderDumper(
  *   id = "geometry",
  *   name = "Geometry",
  *   handler = "\Geocoder\Dumper\GeoJson"
