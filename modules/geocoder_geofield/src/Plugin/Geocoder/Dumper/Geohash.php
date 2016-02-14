@@ -7,10 +7,7 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\Dumper\GeoJson;
-use Drupal\geophp\GeoPHPInterface;
 use Geocoder\Model\Address;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a Geohash geocoder dumper plugin.
