@@ -12,7 +12,7 @@ use Drupal\geocoder\ProviderBase;
 /**
  * Provides a Geoip geocoder provider plugin.
  *
- * @GeocoderProvoder(
+ * @GeocoderProvider(
  *   id = "geoip",
  *   name = "Geoip",
  *   handler = "\Geocoder\Provider\Geoip"
