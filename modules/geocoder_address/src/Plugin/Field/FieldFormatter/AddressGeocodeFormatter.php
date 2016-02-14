@@ -15,7 +15,7 @@ use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
  * Plugin implementation of the Geocode formatter.
  *
  * @FieldFormatter(
- *   id = "geocoder_address_geocode_formatter",
+ *   id = "geocoder_address",
  *   label = @Translation("Geocode address"),
  *   field_types = {
  *     "address",
@@ -28,7 +28,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
-    $dumper = \Drupal::service('geocoder.dumper.' . $this->getSetting('dumper_plugin'));
+    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();

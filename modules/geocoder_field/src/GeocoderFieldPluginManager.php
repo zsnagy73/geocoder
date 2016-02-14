@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\geocoder\Plugin\GeocoderPluginManager;
 use Drupal\geocoder_field\Annotation\GeocoderField;
 
 /**
@@ -21,11 +20,11 @@ use Drupal\geocoder_field\Annotation\GeocoderField;
 class GeocoderFieldPluginManager extends DefaultPluginManager {
 
   /**
-   * The geocoder plugin manager service.
+   * The geocoder field preprocessor plugin manager service.
    *
-   * @var \Drupal\geocoder\Plugin\GeocoderPluginManager
+   * @var \Drupal\geocoder_field\PreprocessorPluginManager
    */
-  protected $geocoderPluginManager;
+  protected $preprocessorPluginManager;
 
   /**
    * The entity field manager service.
@@ -44,17 +43,17 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The cache backend to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\geocoder\Plugin\GeocoderPluginManager $geocoder_plugin_manager
-   *   The geocoder plugin manager service.
+   * @param \Drupal\geocoder_field\PreprocessorPluginManager $preprocessor_plugin_manager
+   *   The geocoder field preprocessor plugin manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager service.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, GeocoderPluginManager $geocoder_plugin_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, PreprocessorPluginManager $preprocessor_plugin_manager, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct('Plugin/Geocoder/Field', $namespaces, $module_handler, GeocoderFieldPluginInterface::class, GeocoderField::class);
     $this->alterInfo('geocode_field');
     $this->setCacheBackend($cache_backend, 'geocode_field_plugins');
 
-    $this->geocoderPluginManager = $geocoder_plugin_manager;
+    $this->preprocessorPluginManager = $preprocessor_plugin_manager;
     $this->entityFieldManager = $entity_field_manager;
   }
 
@@ -92,7 +91,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
     $options = [];
 
     $types = [];
-    foreach ($this->geocoderPluginManager->getDefinitions() as $definition) {
+    foreach ($this->preprocessorPluginManager->getDefinitions() as $definition) {
       foreach ($definition['field_types'] as $field_type) {
         $types[] = $field_type;
       }

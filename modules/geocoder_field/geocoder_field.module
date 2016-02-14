@@ -74,8 +74,8 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
     return;
   }
 
-  /** @var \Drupal\geocoder\Plugin\GeocoderPluginManager $data_prepare_manager */
-  $data_prepare_manager = \Drupal::service('plugin.manager.geocoder.data_prepare');
+  /** @var \Drupal\geocoder_field\PreprocessorPluginManager $preprocessor_manager */
+  $preprocessor_manager = \Drupal::service('plugin.manager.geocoder.preprocessor');
   $dumper_manager = \Drupal::service('plugin.manager.geocoder.dumper');
 
   foreach ($entity->getFields() as $field_name => $field) {
@@ -90,28 +90,19 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       continue;
     }
 
-    // @todo Check here for malformed $geocode and throw appropriate exceptions.
+    // @todo [cc]: Check here for malformed $geocode and throw exceptions.
 
     $remote_field = $entity->get($geocoder['field']);
-    $definitions = $data_prepare_manager->getDefinitionsBasedOnType($remote_field->getFieldDefinition()->getType());
 
-    $values = $remote_field->getValue();
-    /** @var \Drupal\geocoder\Plugin\Geocoder\DumperInterface $dumper */
+    // Pre-process field.
+    $preprocessor_manager->preprocess($remote_field);
+
+    /** @var \Drupal\geocoder\DumperInterface $dumper */
     $dumper = $dumper_manager->createInstance($geocoder['dumper']);
-
-    // Prepare data.
-    foreach ($definitions as $definition) {
-      /** @var \Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface $data_prepare_plugin */
-      $data_prepare_plugin = $data_prepare_manager->createInstance($definition['id']);
-      $data_prepare_plugin
-        ->setEntity($entity)
-        ->setGeocoderSettings($geocoder)
-        ->prepareValues($values);
-    }
 
     $default_values = $entity->get($field_name);
     $result = [];
-    foreach ($values as $delta => $value) {
+    foreach ($remote_field->getValue() as $delta => $value) {
       if ($address_collection = \Drupal::service('geocoder')->geocode($value['value'], $geocoder['plugins'])) {
         $result[$delta] = $dumper->dump($address_collection->first());
         continue;

@@ -31,8 +31,7 @@ class AddressText extends PluginBase implements DumperInterface {
         $values[$key] = $value;
       }
     }
-    unset($values['latitude']);
-    unset($values['longitude']);
+    unset($values['latitude'], $values['longitude']);
 
     return implode(',', array_filter($values));
   }

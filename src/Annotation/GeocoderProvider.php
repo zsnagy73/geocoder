@@ -7,14 +7,21 @@
 
 namespace Drupal\geocoder\Annotation;
 
-use Drupal\Component\Annotation\Plugin;
-
 /**
  * Defines a geocoder provider plugin annotation object.
  *
  * @Annotation
  */
 class GeocoderProvider extends GeocoderPluginBase {
+
+  /**
+   * The plugin handler.
+   *
+   * This is the fully qualified class name of the plugin handler.
+   *
+   * @var string (optional)
+   */
+  public $handler = NULL;
 
   /**
    * Handler arguments names.

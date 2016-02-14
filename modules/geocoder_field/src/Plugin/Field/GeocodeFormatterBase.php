@@ -1,5 +1,7 @@
 <?php
 
+// @todo [cc]: This and its successors need full review and, maybe, refactoring.
+
 /**
  * @file
  * Contains \Drupal\geocoder_field\Plugin\Field\GeocoderFormatterBase.

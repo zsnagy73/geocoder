@@ -1,28 +1,23 @@
 services:
+
   geocoder:
     class: Drupal\geocoder\Geocoder
     arguments: ['@plugin.manager.geocoder.provider']
+
   geocoder.http_adapter:
     class: Ivory\HttpAdapter\CurlHttpAdapter
+
   plugin.manager.geocoder.provider:
     class: Drupal\geocoder\ProviderPluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+    parent: default_plugin_manager
+
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\DumperPluginManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+    parent: default_plugin_manager
+
   cache.geocoder:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
     factory: cache_factory:get
     arguments: [geocoder]
-
-# Reviewed/reorganized above this line.
-
-  plugin.manager.geocoder.data_prepare:
-    class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [data_prepare, '@container.namespaces', '@cache.discovery', '@module_handler']
-
-
-  geocoder.provider.file:
-    class: Drupal\geocoder\Geocoder\Provider\File
