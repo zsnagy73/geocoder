@@ -1,31 +1,24 @@
 <?php
+
 /**
  * @file
- * The Geonames plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\Geonames.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class Geonames.
+ * Provides a Geoip geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "geonames",
- *  name = "Geonames"
+ * @GeocoderProvider(
+ *   id = "geonames",
+ *   name = "Geonames",
+ *   handler = "\Geocoder\Provider\Geonames",
+ *   arguments = {
+ *     "username"
+ *   }
  * )
  */
-class Geonames extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\Geonames($this->getAdapter(), $configuration['username']));
-
-    return parent::init();
-  }
-
-}
+class Geonames extends ProviderWithHttpAdapterBase { }

@@ -11,9 +11,9 @@ use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class Wkb.
+ * Provides a WKB geocoder dumper plugin.
  *
- * @GeocoderPlugin(
+ * @GeocoderDumper(
  *  id = "wkb",
  *  name = "WKB"
  * )

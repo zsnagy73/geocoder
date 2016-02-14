@@ -1,31 +1,25 @@
 <?php
+
 /**
  * @file
- * The Nominatim plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\Nominatim.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class Nominatim.
+ * Provides a Nominatim geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "nominatim",
- *  name = "Nominatim"
+ * @GeocoderProvider(
+ *   id = "nominatim",
+ *   name = "Nominatim",
+ *   handler = "\Geocoder\Provider\Nominatim",
+ *   arguments = {
+ *     "rootUrl",
+ *     "locale"
+ *   }
  * )
  */
-class Nominatim extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\Nominatim($this->getAdapter(), $configuration['rootUrl']));
-
-    return parent::init();
-  }
-
-}
+class Nominatim extends ProviderWithHttpAdapterBase { }

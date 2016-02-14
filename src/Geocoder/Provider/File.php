@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Contains \Drupal\geocoder\Geocoder\Provider\File.
  */
 
 namespace Drupal\geocoder\Geocoder\Provider;
@@ -12,24 +13,30 @@ use Geocoder\Provider\AbstractProvider;
 use Geocoder\Provider\Provider;
 
 /**
- * @author Pol Dellaiera <pol.dellaiera@gmail.com>
+ * Provides a file handler to be used by 'file' plugin.
  */
 class File extends AbstractProvider implements Provider {
+
   /**
-   * {@inheritDoc}.
+   * {@inheritdoc}
+   */
+  public function getName() {
+    return 'file';
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function geocode($filename) {
     if ($exif = exif_read_data($filename)) {
       if (isset($exif['GPSLatitude']) && isset($exif['GPSLatitudeRef']) && $exif['GPSLongitude'] && $exif['GPSLongitudeRef']) {
-        $latitude = $this->getGPSExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
-        $longitude = $this->getGPSExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
+        $latitude = $this->getGpsExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
+        $longitude = $this->getGpsExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
 
         return $this->returnResults([
-          array_merge($this->getDefaults(), [
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-          ]),
-        ]);
+          'latitude' => $latitude,
+          'longitude' => $longitude,
+        ] + $this->getDefaults());
       }
     }
 
@@ -37,14 +44,16 @@ class File extends AbstractProvider implements Provider {
   }
 
   /**
-   * Helper function to retrieve latitude and longitude data from exif.
+   * Retrieves the latitude and longitude from exif data.
    *
-   * @param $coordinate
-   * @param $hemisphere
+   * @param string $coordinate
+   *   The coordinate.
+   * @param string $hemisphere
+   *   The hemisphere.
    *
    * @return float
    */
-  public function getGPSExif($coordinate, $hemisphere) {
+  protected function getGpsExif($coordinate, $hemisphere) {
     for ($i = 0; $i < 3; $i++) {
       $part = explode('/', $coordinate[$i]);
 
@@ -67,17 +76,10 @@ class File extends AbstractProvider implements Provider {
   }
 
   /**
-   * {@inheritDoc}.
+   * {@inheritdoc}
    */
   public function reverse($latitude, $longitude) {
     throw new UnsupportedOperation('The Image plugin is not able to do reverse geocoding.');
-  }
-
-  /**
-   * {@inheritDoc}.
-   */
-  public function getName() {
-    return 'file';
   }
 
 }

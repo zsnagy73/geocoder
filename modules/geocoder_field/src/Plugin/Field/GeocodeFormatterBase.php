@@ -7,15 +7,88 @@
 
 namespace Drupal\geocoder_field\Plugin\Field;
 
-use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\Geocoder;
+use Drupal\geocoder\GeocoderInterface;
+use Drupal\geocoder\ProviderPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base Plugin implementation of the Geocode formatter.
  */
-abstract class GeocodeFormatterBase extends FormatterBase {
+abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The geocoder service.
+   *
+   * @var \Drupal\geocoder\ProviderPluginManager
+   */
+  protected $geocoder;
+
+  /**
+   * The provider plugin manager service.
+   *
+   * @var \Drupal\geocoder\ProviderPluginManager
+   */
+  protected $providerPluginManager;
+
+  /**
+   * The dumper plugin manager service.
+   *
+   * @var \Drupal\geocoder\DumperPluginManager
+   */
+  protected $dumperPluginManager;
+
+  /**
+   * Constructs a GeocodeFormatterBase object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\geocoder\Geocoder $geocoder
+   *   The gecoder service.
+   * @param \Drupal\geocoder\ProviderPluginManager $provider_plugin_manager
+   *   The provider plugin manager service.
+   * @param \Drupal\geocoder\DumperPluginManager $dumper_plugin_manager
+   *   The dumper plugin manager service.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, Geocoder $geocoder, ProviderPluginManager $provider_plugin_manager, DumperPluginManager $dumper_plugin_manager) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->geocoder = $geocoder;
+    $this->providerPluginManager = $provider_plugin_manager;
+    $this->dumperPluginManager = $dumper_plugin_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('geocoder'),
+      $container->get('plugin.manager.geocoder.provider'),
+      $container->get('plugin.manager.geocoder.dumper')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -67,7 +140,7 @@ abstract class GeocodeFormatterBase extends FormatterBase {
 
     $rows = array();
     $count = count($enabled_plugins);
-    foreach (Geocoder::getPlugins('Provider') as $plugin_id => $plugin_name) {
+    foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
       if (isset($enabled_plugins[$plugin_id])) {
         $weight = $enabled_plugins[$plugin_id]['weight'];
       }
@@ -110,7 +183,7 @@ abstract class GeocodeFormatterBase extends FormatterBase {
       '#weight' => 25,
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
-      '#options' => Geocoder::getPlugins('dumper'),
+      '#options' => $this->dumperPluginManager->getPluginsAsOptions(),
       '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     );
 
@@ -123,7 +196,7 @@ abstract class GeocodeFormatterBase extends FormatterBase {
   public function settingsSummary() {
     $summary = array();
     $provider_plugin_ids = $this->getEnabledProviderPlugins();
-    $dumper_plugins = Geocoder::getPlugins('Dumper');
+    $dumper_plugins = $this->dumperPluginManager->getPluginsAsOptions();
     $dumper_plugin = $this->getSetting('dumper_plugin');
 
     if (!empty($provider_plugin_ids)) {
@@ -141,11 +214,11 @@ abstract class GeocodeFormatterBase extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
-    $dumper = \Drupal::service('geocoder.dumper.' . $this->getSetting('dumper_plugin'));
+    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
-      if ($addressCollection = Geocoder::geocode($provider_plugins, $item->value)) {
+      if ($addressCollection = $this->geocoder->geocode($item->value, $provider_plugins)) {
         $elements[$delta] = array(
           '#plain_text' => $dumper->dump($addressCollection->first()),
         );
@@ -162,7 +235,7 @@ abstract class GeocodeFormatterBase extends FormatterBase {
    */
   public function getEnabledProviderPlugins() {
     $provider_plugin_ids = array();
-    $geocoder_plugins = Geocoder::getPlugins('Provider');
+    $geocoder_plugins = $this->providerPluginManager->getPluginsAsOptions();
 
     foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {

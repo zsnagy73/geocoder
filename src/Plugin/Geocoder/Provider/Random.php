@@ -14,7 +14,7 @@ use Geocoder\Model\AddressFactory;
 /**
  * Class Random.
  *
- * @GeocoderPlugin(
+ * @GeocoderProvider(
  *  id = "random",
  *  name = "Random"
  * )

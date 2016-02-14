@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * The GeoPlugin plugin.
@@ -6,25 +7,15 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class GeoPlugin.
+ * Provides a GeoPlugin geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "geoplugin",
- *  name = "GeoPlugin"
+ * @GeocoderProvider(
+ *   id = "geoplugin",
+ *   name = "GeoPlugin",
+ *   handler = "\Geocoder\Provider\GeoPlugin"
  * )
  */
-class GeoPlugin extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\GeoPlugin($this->getAdapter()));
-
-    return parent::init();
-  }
-
-}
+class GeoPlugin extends ProviderWithHttpAdapterBase { }

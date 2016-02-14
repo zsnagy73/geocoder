@@ -7,19 +7,18 @@
 
 namespace Drupal\geocoder_geofield_test\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderBase;
 use Geocoder\Model\AddressFactory;
 
 /**
- * Provides a geocoding providers for testing purposes.
+ * Provides a geocoding provider for testing purposes.
  *
- * @GeocoderPlugin(
+ * @GeocoderProvider(
  *  id = "test_provider",
  *  name = "Test provider"
  * )
  */
-class TestProvider extends ProviderBase implements ProviderInterface {
+class TestProvider extends ProviderBase {
 
   /**
    * The address factory.
@@ -29,19 +28,13 @@ class TestProvider extends ProviderBase implements ProviderInterface {
   protected $addressFactory;
 
   /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $this->addressFactory = new AddressFactory();
-  }
-
   /**
    * {@inheritdoc}
    */
-  public function geocode($data) {
-    switch ($data) {
+  public function geocode($source) {
+    switch ($source) {
       case 'Gotham City':
-        return $this->addressFactory->createFromArray([['latitude' => 20, 'longitude' => 40]]);
+        return $this->getAddressFactory()->createFromArray([['latitude' => 20, 'longitude' => 40]]);
 
       default:
         return FALSE;
@@ -53,6 +46,18 @@ class TestProvider extends ProviderBase implements ProviderInterface {
    */
   public function reverse($latitude, $longitude) {
     return FALSE;
+  }
+
+  /**
+   * Returns the address factory.
+   *
+   * @return \Geocoder\Model\AddressFactory
+   */
+  protected function getAddressFactory() {
+    if (!isset($this->addressFactory)) {
+      $this->addressFactory = new AddressFactory();
+    }
+    return $this->addressFactory;
   }
 
 }

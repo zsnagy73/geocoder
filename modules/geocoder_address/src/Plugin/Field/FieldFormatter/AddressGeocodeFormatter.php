@@ -40,7 +40,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
       $address[] = !empty($value['locality']) ? $value['locality'] : NULL;
       $address[] = !empty($value['country']) ? $value['country'] : NULL;
 
-      if ($addressCollection = Geocoder::geocode($this->getEnabledProviderPlugins(), implode(',', array_filter($address)))) {
+      if ($addressCollection = $this->geocoder->geocode(implode(',', array_filter($address)), $this->getEnabledProviderPlugins())) {
         $elements[$delta] = array(
           '#plain_text' => $dumper->dump($addressCollection->first()),
         );

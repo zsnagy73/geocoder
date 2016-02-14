@@ -12,7 +12,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldConfigInterface;
+use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder_field\GeocoderFieldPluginInterface;
+use Drupal\geocoder_field\GeocoderFieldPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,7 +39,14 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *
    * @var \Drupal\geocoder_field\GeocoderFieldPluginManager
    */
-  protected $manager;
+  protected $fieldPluginManager;
+
+  /**
+   * The dumper plugin manager service.
+   *
+   * @var \Drupal\geocoder\DumperPluginManager
+   */
+  protected $dumperPluginManager;
 
   /**
    * Constructs a 'default' plugin.
@@ -48,12 +57,15 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\geocoder_field\GeocoderFieldPluginManager $manager
+   * @param \Drupal\geocoder_field\GeocoderFieldPluginManager $field_plugin_manager
    *   The plugin manager for this type of plugins.
+   * @param \Drupal\geocoder\DumperPluginManager $dumper_plugin_manager
+   *  The dumper plugin manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, GeocoderFieldPluginManager $field_plugin_manager, DumperPluginManager $dumper_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->manager = $manager;
+    $this->fieldPluginManager = $field_plugin_manager;
+    $this->dumperPluginManager = $dumper_plugin_manager;
   }
 
   /**
@@ -64,7 +76,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('geocoder_field.plugin.manager.field')
+      $container->get('geocoder_field.plugin.manager.field'),
+      $container->get('plugin.manager.geocoder.dumper')
     );
   }
 
@@ -93,7 +106,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#title' => $this->t('Geocode from an existing field'),
       '#description' => $this->t('Select which field you would like to use.'),
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
-      '#options' => $this->manager->getSourceFields($field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName()),
+      '#options' => $this->fieldPluginManager->getSourceFields($field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName()),
     ];
     $element['plugins'] = [
       '#type' => 'table',
@@ -130,16 +143,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ];
     }
 
-    $dumpers = [];
-    foreach (\Drupal::service('plugin.manager.geocoder.dumper')->getDefinitions() as $plugin_id => $definition) {
-      $name = isset($definition['name']) ? $definition['name'] : $plugin_id;
-      $dumpers[$plugin_id] = $name;
-    }
     $element['dumper'] = [
       '#type' => 'select',
       '#title' => $this->t('Output format'),
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'dumper', 'wkt'),
-      '#options' => $dumpers,
+      '#options' => $this->dumperPluginManager->getPluginsAsOptions(),
       '#description' => $this->t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     ];
     $element['delta_handling'] = [

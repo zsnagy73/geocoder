@@ -1,31 +1,25 @@
 <?php
+
 /**
  * @file
- * The MapQuest plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\MapQuest.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class MapQuest.
+ * Provides a MapQuest geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "mapquest",
- *  name = "MapQuest"
+ * @GeocoderProvider(
+ *   id = "mapquest",
+ *   name = "MapQuest",
+ *   handler = "\Geocoder\Provider\MapQuest",
+ *   arguments = {
+ *     "apiKey",
+ *     "licensed" = FALSE
+ *   }
  * )
  */
-class MapQuest extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\MapQuest($this->getAdapter(), $configuration['apiKey'], $configuration['licensed']));
-
-    return parent::init();
-  }
-
-}
+class MapQuest extends ProviderWithHttpAdapterBase { }

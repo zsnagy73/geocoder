@@ -1,34 +1,21 @@
 <?php
+
 /**
  * @file
- * The Wkt plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Dumper\Wkt.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geocoder\DumperBase;
 
 /**
- * Class Wkt.
+ * Provides a WKT geocoder dumper plugin.
  *
- * @GeocoderPlugin(
- *  id = "wkt",
- *  name = "WKT"
+ * @GeocoderDumper(
+ *   id = "wkt",
+ *   name = "WKT",
+ *   handler = "\Geocoder\Dumper\Wkt"
  * )
  */
-class Wkt extends DumperBase implements DumperInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.wkt')
-    );
-  }
-
-}
+class Wkt extends DumperBase { }

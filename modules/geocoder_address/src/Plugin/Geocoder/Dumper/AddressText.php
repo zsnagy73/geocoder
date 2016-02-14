@@ -1,34 +1,40 @@
 <?php
+
 /**
  * @file
- * The AddressText plugin.
+ * Contains \Drupal\geocoder_address\Plugin\Geocoder\Dumper\AddressText.
  */
 
 namespace Drupal\geocoder_address\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Plugin\PluginBase;
+use Drupal\geocoder\DumperInterface;
+use Geocoder\Model\Address;
 
 /**
- * Class AddressText.
+ * Provides an address string geocoder dumper plugin.
  *
- * @GeocoderPlugin(
- *  id = "addresstext",
- *  name = "Address string"
+ * @GeocoderDumper(
+ *   id = "addresstext",
+ *   name = "Address string"
  * )
  */
-class AddressText extends DumperBase implements DumperInterface {
+class AddressText extends PluginBase implements DumperInterface {
+
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.addresstext')
-    );
+  public function dump(Address $address) {
+    $values = [];
+    foreach ($address->toArray() as $key => $value) {
+      if (!is_array($value)) {
+        $values[$key] = $value;
+      }
+    }
+    unset($values['latitude']);
+    unset($values['longitude']);
+
+    return implode(',', array_filter($values));
   }
 
 }

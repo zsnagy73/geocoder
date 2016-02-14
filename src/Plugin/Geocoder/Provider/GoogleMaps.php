@@ -1,30 +1,27 @@
 <?php
+
 /**
  * @file
- * The GoogleMaps plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\GoogleMaps.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class GoogleMaps.
+ * Provides a GoogleMaps geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "googlemaps",
- *  name = "GoogleMaps"
+ * @GeocoderProvider(
+ *   id = "googlemaps",
+ *   name = "GoogleMaps",
+ *   handler = "\Geocoder\Provider\GoogleMaps",
+ *   arguments = {
+ *     "locale",
+ *     "region",
+ *     "useSsl" = FALSE,
+ *     "apiKey"
+ *   }
  * )
  */
-class GoogleMaps extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\GoogleMaps($this->getAdapter()));
-
-    return parent::init();
-  }
-
-}
+class GoogleMaps extends ProviderWithHttpAdapterBase { }

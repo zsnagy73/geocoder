@@ -1,34 +1,21 @@
 <?php
+
 /**
  * @file
- * The GeoJson plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Dumper\GeoJson.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geocoder\DumperBase;
 
 /**
- * Class GeoJson.
+ * Provides a GeoJson geocoder dumper plugin.
  *
- * @GeocoderPlugin(
- *  id = "geojson",
- *  name = "GeoJson"
+ * @GeocoderDumper(
+ *   id = "geojson",
+ *   name = "GeoJson",
+ *   handler = "\Geocoder\Dumper\GeoJson"
  * )
  */
-class GeoJson extends DumperBase implements DumperInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.geojson')
-    );
-  }
-
-}
+class GeoJson extends DumperBase { }

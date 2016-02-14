@@ -47,4 +47,19 @@ class GeocoderPluginManager extends DefaultPluginManager {
     );
   }
 
+  /**
+   * TEMPORARY: Gets a list of available plugins to be used in forms.
+   *
+   * @return string[]
+   *   A list of plugins in a format suitable for form API '#options' key.
+   */
+  public function getPluginsAsOptions() {
+    $options = array_map(function (array $definition) {
+      return isset($definition['name']) ? $definition['name'] : $definition['id'];
+    }, $this->getDefinitions() );
+    asort($options);
+
+    return $options;
+  }
+
 }

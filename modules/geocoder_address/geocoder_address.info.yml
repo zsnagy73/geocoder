@@ -1,5 +1,5 @@
 name: Geocoder Address
-description: Providers Geocoder integration with contrib Address module.
+description: Provides Geocoder integration with contrib Address module.
 core: 8.x
 type: module
 dependencies:

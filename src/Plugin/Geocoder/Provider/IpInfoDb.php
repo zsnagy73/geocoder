@@ -1,31 +1,25 @@
 <?php
+
 /**
  * @file
- * The IpInfoDb plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\IpInfoDb.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class IpInfoDb.
+ * Provides an IpInfoDb geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "ipinfodb",
- *  name = "IpInfoDb"
+ * @GeocoderProvider(
+ *   id = "ipinfodb",
+ *   name = "IpInfoDb",
+ *   handler = "\Geocoder\Provider\IpInfoDb",
+ *   arguments = {
+ *     "apiKey",
+ *     "precision" = "city"
+ *   }
  * )
  */
-class IpInfoDb extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\IpInfoDb($this->getAdapter(), $configuration['apiKey']));
-
-    return parent::init();
-  }
-
-}
+class IpInfoDb extends ProviderWithHttpAdapterBase { }

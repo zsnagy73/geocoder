@@ -1,30 +1,21 @@
 <?php
+
 /**
  * @file
- * The OpenStreetMap plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\OpenStreetMap.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class OpenStreetMap.
+ * Provides an OpenStreetMap geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "openstreetmap",
- *  name = "OpenStreetMap"
+ * @GeocoderProvider(
+ *   id = "openstreetmap",
+ *   name = "OpenStreetMap",
+ *   handler = "\Geocoder\Provider\OpenStreetMap"
  * )
  */
-class OpenStreetMap extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\OpenStreetMap($this->getAdapter()));
-
-    return parent::init();
-  }
-
-}
+class OpenStreetMap extends ProviderWithHttpAdapterBase { }

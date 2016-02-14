@@ -1,30 +1,21 @@
 <?php
+
 /**
  * @file
- * The FreeGeoIp plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\FreeGeoIp.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderWithHttpAdapterBase;
 
 /**
- * Class FreeGeoIp.
+ * Provides a FreeGeoIp geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "freegeoip",
- *  name = "FreeGeoIp"
+ * @GeocoderProvider(
+ *   id = "freegeoip",
+ *   name = "FreeGeoIp",
+ *   handler = "\Geocoder\Provider\FreeGeoIp"
  * )
  */
-class FreeGeoIp extends ProviderBase implements ProviderInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\FreeGeoIp($this->getAdapter()));
-
-    return parent::init();
-  }
-
-}
+class FreeGeoIp extends ProviderWithHttpAdapterBase { }
