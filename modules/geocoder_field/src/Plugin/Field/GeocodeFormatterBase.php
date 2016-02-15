@@ -1,9 +1,9 @@
 <?php
 
-// @todo [cc]: This and its successors need full review and, maybe, refactoring.
-
 /**
  * @file
+ * @todo [cc]: This and its successors need full review and, maybe, refactoring.
+ *
  * Contains \Drupal\geocoder_field\Plugin\Field\GeocoderFormatterBase.
  */
 
@@ -16,7 +16,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\Geocoder;
-use Drupal\geocoder\GeocoderInterface;
 use Drupal\geocoder\ProviderPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

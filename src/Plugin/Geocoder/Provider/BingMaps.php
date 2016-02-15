@@ -21,4 +21,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class BingMaps extends ProviderWithHttpAdapterBase { }
+class BingMaps extends ProviderWithHttpAdapterBase {}

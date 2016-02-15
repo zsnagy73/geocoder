@@ -22,6 +22,7 @@ interface GeocoderInterface {
    * @param array $options
    *   (optional) An associative array with plugin options, keyed plugin by the
    *   plugin id. Defaults to an empty array.
+   *
    * @return \Geocoder\Model\AddressCollection|null An address collection or NULL on gecoding failure.
    * An address collection or NULL on gecoding failure.
    */

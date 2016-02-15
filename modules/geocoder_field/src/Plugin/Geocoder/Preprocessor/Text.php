@@ -25,4 +25,4 @@ use Drupal\geocoder_field\PreprocessorBase;
  *   }
  * )
  */
-class Text extends PreprocessorBase { }
+class Text extends PreprocessorBase {}

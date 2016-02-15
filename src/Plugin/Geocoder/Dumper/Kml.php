@@ -18,4 +18,4 @@ use Drupal\geocoder\DumperBase;
  *   handler = "\Geocoder\Dumper\Kml"
  * )
  */
-class Kml extends DumperBase { }
+class Kml extends DumperBase {}

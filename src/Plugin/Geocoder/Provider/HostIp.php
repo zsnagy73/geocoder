@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\HostIp"
  * )
  */
-class HostIp extends ProviderWithHttpAdapterBase { }
+class HostIp extends ProviderWithHttpAdapterBase {}

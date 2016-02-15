@@ -33,10 +33,10 @@ class File extends AbstractProvider implements Provider {
         $latitude = $this->getGpsExif($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
         $longitude = $this->getGpsExif($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
 
-        return $this->returnResults([
+        return $this->returnResults([[
           'latitude' => $latitude,
           'longitude' => $longitude,
-        ] + $this->getDefaults());
+        ] + $this->getDefaults()]);
       }
     }
 

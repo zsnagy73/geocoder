@@ -21,7 +21,7 @@ interface DumperInterface {
    * Dumps the argument into a specific format.
    *
    * @param \Geocoder\Model\Address
-   *   The address to be formated.
+   *   The address to be formatted.
    *
    * @return string
    *   The formatted address.

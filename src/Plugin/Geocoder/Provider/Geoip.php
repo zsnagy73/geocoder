@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderBase;
  *   handler = "\Geocoder\Provider\Geoip"
  * )
  */
-class Geoip extends ProviderBase { }
+class Geoip extends ProviderBase {}

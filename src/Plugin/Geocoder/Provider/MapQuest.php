@@ -22,4 +22,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class MapQuest extends ProviderWithHttpAdapterBase { }
+class MapQuest extends ProviderWithHttpAdapterBase {}

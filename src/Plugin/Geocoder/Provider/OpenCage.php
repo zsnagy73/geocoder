@@ -23,4 +23,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class OpenCage extends ProviderWithHttpAdapterBase { }
+class OpenCage extends ProviderWithHttpAdapterBase {}

@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\Yandex"
  * )
  */
-class Yandex extends ProviderWithHttpAdapterBase { }
+class Yandex extends ProviderWithHttpAdapterBase {}

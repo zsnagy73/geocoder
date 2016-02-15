@@ -21,4 +21,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class ArcGisOnline extends ProviderWithHttpAdapterBase { }
+class ArcGisOnline extends ProviderWithHttpAdapterBase {}

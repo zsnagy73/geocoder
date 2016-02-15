@@ -21,4 +21,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class Geonames extends ProviderWithHttpAdapterBase { }
+class Geonames extends ProviderWithHttpAdapterBase {}

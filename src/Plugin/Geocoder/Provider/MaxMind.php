@@ -23,4 +23,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class MaxMind extends ProviderWithHttpAdapterBase { }
+class MaxMind extends ProviderWithHttpAdapterBase {}

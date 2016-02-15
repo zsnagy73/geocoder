@@ -18,4 +18,4 @@ use Drupal\geocoder\DumperBase;
  *   handler = "\Geocoder\Dumper\GeoJson"
  * )
  */
-class GeoJson extends DumperBase { }
+class GeoJson extends DumperBase {}

@@ -42,7 +42,7 @@ class Address extends PreprocessorBase {
         $value['address_line2'],
         $value['postal_code'],
         $value['locality'],
-        $value['country_code']
+        $value['country_code'],
       ];
       $value['value'] = implode(',', array_filter($address));
       $this->field->set($delta, $value);

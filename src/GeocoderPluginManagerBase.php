@@ -21,10 +21,9 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
    *   A list of plugins in a format suitable for form API '#options' key.
    */
   public function getPluginsAsOptions() {
-    dpm($this->getDefinitions());
     $options = array_map(function (array $definition) {
       return isset($definition['name']) ? $definition['name'] : $definition['id'];
-    }, $this->getDefinitions() );
+    }, $this->getDefinitions());
     asort($options);
 
     return $options;

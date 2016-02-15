@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\OpenStreetMap"
  * )
  */
-class OpenStreetMap extends ProviderWithHttpAdapterBase { }
+class OpenStreetMap extends ProviderWithHttpAdapterBase {}
