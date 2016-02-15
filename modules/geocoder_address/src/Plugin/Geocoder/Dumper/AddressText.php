@@ -7,8 +7,7 @@
 
 namespace Drupal\geocoder_address\Plugin\Geocoder\Dumper;
 
-use Drupal\Core\Plugin\PluginBase;
-use Drupal\geocoder\DumperInterface;
+use Drupal\geocoder\DumperBase;
 use Geocoder\Model\Address;
 
 /**
@@ -19,8 +18,7 @@ use Geocoder\Model\Address;
  *   name = "Address string"
  * )
  */
-class AddressText extends PluginBase implements DumperInterface {
-
+class AddressText extends DumperBase {
   /**
    * {@inheritdoc}
    */
