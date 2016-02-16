@@ -8,6 +8,7 @@ namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
 use Drupal\Core\Locale\CountryManager;
 use Drupal\geocoder\ProviderBase;
+use Geocoder\Model\AddressFactory;
 
 /**
  * Class Random.
@@ -15,63 +16,44 @@ use Drupal\geocoder\ProviderBase;
  * @GeocoderProvider(
  *  id = "random",
  *  name = "Random",
- *  handler = "\Drupal\geocoder\Geocoder\Provider\Random"
  * )
  */
 class Random extends ProviderBase {
 
   /**
-   * {@inheritdoc}
-   */
-  public function geocode($data) {
-    $cid = $this->getCacheCid($data);
-
-    if ($value = $this->cache_get($cid)) {
-      return $value;
-    }
-
-    try {
-      $value = $this->factory->createFromArray(array($this->getRandomResult()));
-    }
-    catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
-    }
-
-    $this->cache_set($cid, $value);
-    return $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function reverse($latitude, $longitude) {
-    $cid = $this->getCacheCid($latitude, $longitude);
-
-    if ($value = $this->cache_get($cid)) {
-      return $value;
-    }
-
-    try {
-      $result = $this->getRandomResult();
-      $result['latitude'] = $latitude;
-      $result['longitude'] = $longitude;
-
-      $value = $this->factory->createFromArray(array($result));
-      $this->cache_set($cid, $value);
-    }
-    catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
-    }
-
-    return $value;
-  }
-
-  /**
+   * The address factory.
    *
+   * @var \Geocoder\Model\AddressFactory
+   */
+  protected $addressFactory;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doGeocode($source) {
+    return $this->getAddressFactory()->createFromArray([$this->getRandomResult()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function doReverse($latitude, $longitude) {
+    $result = $this->getRandomResult();
+    $result['latitude'] = $latitude;
+    $result['longitude'] = $longitude;
+
+    return $this->getAddressFactory()->createFromArray([$result]);
+  }
+
+  /**
+   * @todo [cc]: Tidy-up, document, etc.
    */
   private function getRandomCountryInfo($type = NULL) {
     $manager = new CountryManager($this->getModuleHandler());
@@ -94,6 +76,8 @@ class Random extends ProviderBase {
   }
 
   /**
+   * @todo [cc]: Tidi-up, document, etc.
+   *
    * Generate a fake random address array.
    *
    * @return array
@@ -114,4 +98,27 @@ class Random extends ProviderBase {
     );
   }
 
+  /**
+   * Returns the address factory.
+   *
+   * @return \Geocoder\Model\AddressFactory
+   */
+  protected function getAddressFactory() {
+    if (!isset($this->addressFactory)) {
+      $this->addressFactory = new AddressFactory();
+    }
+    return $this->addressFactory;
+  }
+
+  /**
+   * Returns the module handler service.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected function getModuleHandler() {
+    if (!isset($this->moduleHandler)) {
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    return $this->moduleHandler;
+  }
 }

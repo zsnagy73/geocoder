@@ -30,7 +30,7 @@ class TestProvider extends ProviderBase {
   /**
    * {@inheritdoc}.
    */
-  public function geocode($source) {
+  protected function doGeocode($source) {
     switch ($source) {
       case 'Gotham City':
         return $this->getAddressFactory()->createFromArray([['latitude' => 20, 'longitude' => 40]]);
@@ -43,7 +43,7 @@ class TestProvider extends ProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function reverse($latitude, $longitude) {
+  public function doReverse($latitude, $longitude) {
     return FALSE;
   }
 

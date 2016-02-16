@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\geocoder\ProviderWithHttpAdapterBase.
+ * Contains \Drupal\geocoder\ProviderUsingHandlerWithAdapterBase.
  */
 
 namespace Drupal\geocoder;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base class for providers using handlers with HTTP adapter.
  */
-abstract class ProviderWithHttpAdapterBase extends ProviderBase {
+abstract class ProviderUsingHandlerWithAdapterBase extends ProviderUsingHandlerBase {
 
   /**
    * The HTTP adapter.

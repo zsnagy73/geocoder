@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderBase;
+use Drupal\geocoder\ProviderUsingHandlerBase;
 
 /**
  * Provides a File geocoder provider plugin.
@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderBase;
  *   handler = "\Drupal\geocoder\Geocoder\Provider\File"
  * )
  */
-class File extends ProviderBase {}
+class File extends ProviderUsingHandlerBase {}

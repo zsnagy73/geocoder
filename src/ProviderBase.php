@@ -11,7 +11,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Geocoder\Exception\InvalidCredentials;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,13 +31,6 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
-
-  /**
-   * The provider handler.
-   *
-   * @var \Geocoder\Provider\Provider
-   */
-  protected $handler;
 
   /**
    * Constructs a geocoder provider plugin object.
@@ -76,7 +68,7 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function geocode($data) {
+  public function geocode($source) {
     return $this->process(__FUNCTION__, func_get_args());
   }
 
@@ -98,8 +90,6 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
    *   the longitude.
    *
    * @return \Geocoder\Model\Address|null
-   *
-   * @throws \Exception
    */
   protected function process($method, array $data) {
     if ($caching = $this->configFactory->get('geocoder.settings')->get('cache')) {
@@ -110,18 +100,9 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
       }
     }
 
-    list(, $method) = explode('::', $method, 2);
-
-    try {
-      // Perform geocoding.
-      $value = call_user_func_array([$this->getHandler(), $method], $data);
-    }
-    catch (InvalidCredentials $e) {
-      throw new InvalidCredentials($e->getMessage());
-    }
-    catch (\Exception $e) {
-      throw $e;
-    }
+    // Call the processor.
+    $processor = $method == 'geocode' ? 'doGeocode' : 'doReverse';
+    $value = call_user_func_array([$this, $processor], $data);
 
     if ($caching) {
       // Cache the result.
@@ -130,6 +111,28 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
 
     return $value;
   }
+
+  /**
+   * Performs the geocoding.
+   *
+   * @param string $source
+   *   The data to be geocoded.
+   *
+   * @return \Geocoder\Model\Address|null
+   */
+  abstract protected function doGeocode($source);
+
+  /**
+   * Performs the reverse geocode.
+   *
+   * @param float $latitude
+   *   The latitude.
+   * @param float $longitude
+   *   The longitude.
+   *
+   * @return \Geocoder\Model\AddressCollection|null
+   */
+  abstract protected function doReverse($latitude, $longitude);
 
   /**
    * Builds a cached id.
@@ -148,45 +151,6 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
     $cid = [$method, $this->getPluginId()];
     $cid[] = sha1(serialize($this->configuration) . serialize($data));
     return implode(':', $cid);
-  }
-
-
-  /**
-   * Returns the provider handler.
-   *
-   * @return \Geocoder\Provider\Provider
-   */
-  protected function getHandler() {
-    if (!isset($this->handler)) {
-      $definition = $this->getPluginDefinition();
-      $reflection_class = new \ReflectionClass($definition['handler']);
-      $this->handler = $reflection_class->newInstanceArgs($this->getArguments());
-    }
-
-    return $this->handler;
-  }
-
-  /**
-   * Builds a list of arguments to be used by the handler.
-   *
-   * @return array
-   *   The list of arguments for handler instantiation.
-   */
-  protected function getArguments() {
-    $arguments = [];
-    foreach ($this->getPluginDefinition()['arguments'] as $key => $argument) {
-      // No default value has been passed.
-      if (is_string($key)) {
-        $config_name = $key;
-        $default_value = $argument;
-      }
-      else {
-        $config_name = $argument;
-        $default_value = NULL;
-      }
-      $arguments[] = isset($this->configuration[$config_name]) ? $this->configuration[$config_name] : $default_value;
-    }
-    return $arguments;
   }
 
 }

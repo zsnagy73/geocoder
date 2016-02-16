@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderWithHttpAdapterBase;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides a TomTom geocoder provider plugin.
@@ -21,4 +21,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class TomTom extends ProviderWithHttpAdapterBase {}
+class TomTom extends ProviderUsingHandlerWithAdapterBase {}

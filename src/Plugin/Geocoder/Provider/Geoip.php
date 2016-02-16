@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderBase;
+use Drupal\geocoder\ProviderUsingHandlerBase;
 
 /**
  * Provides a Geoip geocoder provider plugin.
@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderBase;
  *   handler = "\Geocoder\Provider\Geoip"
  * )
  */
-class Geoip extends ProviderBase {}
+class Geoip extends ProviderUsingHandlerBase {}

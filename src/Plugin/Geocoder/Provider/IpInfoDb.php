@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderWithHttpAdapterBase;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides an IpInfoDb geocoder provider plugin.
@@ -22,4 +22,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class IpInfoDb extends ProviderWithHttpAdapterBase {}
+class IpInfoDb extends ProviderUsingHandlerWithAdapterBase {}

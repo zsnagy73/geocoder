@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderWithHttpAdapterBase;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides a GoogleMaps geocoder provider plugin.
@@ -24,4 +24,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class GoogleMaps extends ProviderWithHttpAdapterBase {}
+class GoogleMaps extends ProviderUsingHandlerWithAdapterBase {}

@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderWithHttpAdapterBase;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides a MapQuest geocoder provider plugin.
@@ -22,4 +22,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class MapQuest extends ProviderWithHttpAdapterBase {}
+class MapQuest extends ProviderUsingHandlerWithAdapterBase {}

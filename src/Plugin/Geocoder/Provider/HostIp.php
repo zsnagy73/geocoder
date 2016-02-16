@@ -7,7 +7,7 @@
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\ProviderWithHttpAdapterBase;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
  * Provides a HostIp geocoder provider plugin.
@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\HostIp"
  * )
  */
-class HostIp extends ProviderWithHttpAdapterBase {}
+class HostIp extends ProviderUsingHandlerWithAdapterBase {}
