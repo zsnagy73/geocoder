@@ -110,8 +110,6 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
       }
     }
 
-    list(, $method) = explode('::', $method, 2);
-
     try {
       // Perform geocoding.
       $value = call_user_func_array([$this->getHandler(), $method], $data);
