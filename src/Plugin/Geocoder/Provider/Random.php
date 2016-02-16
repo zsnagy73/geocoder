@@ -15,7 +15,7 @@ use Geocoder\Model\AddressFactory;
  *
  * @GeocoderProvider(
  *  id = "random",
- *  name = "Random",
+ *  name = "Random"
  * )
  */
 class Random extends ProviderBase {
