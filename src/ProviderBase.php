@@ -77,14 +77,14 @@ abstract class ProviderBase extends PluginBase implements ProviderInterface, Con
    * {@inheritdoc}
    */
   public function geocode($data) {
-    return $this->process(__METHOD__, func_get_args());
+    return $this->process(__FUNCTION__, func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
   public function reverse($latitude, $longitude) {
-    return $this->process(__METHOD__, func_get_args());
+    return $this->process(__FUNCTION__, func_get_args());
   }
 
   /**
