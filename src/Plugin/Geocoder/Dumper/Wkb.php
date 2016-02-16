@@ -1,34 +1,21 @@
 <?php
+
 /**
  * @file
- * The Wkb plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Dumper\Wkb.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geocoder\DumperBase;
 
 /**
- * Provides a WKB geocoder dumper plugin.
+ * Provides a Wkb geocoder dumper plugin.
  *
  * @GeocoderDumper(
- *  id = "wkb",
- *  name = "WKB"
+ *   id = "wkb",
+ *   name = "WKB",
+ *   handler = "\Geocoder\Dumper\Wkb"
  * )
  */
-class Wkb extends DumperBase implements DumperInterface {
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.wkb')
-    );
-  }
-
-}
+class Wkb extends DumperBase { }
