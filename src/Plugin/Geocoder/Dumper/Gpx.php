@@ -18,4 +18,4 @@ use Drupal\geocoder\DumperBase;
  *   handler = "\Geocoder\Dumper\Gpx"
  * )
  */
-class Gpx extends DumperBase { }
+class Gpx extends DumperBase {}

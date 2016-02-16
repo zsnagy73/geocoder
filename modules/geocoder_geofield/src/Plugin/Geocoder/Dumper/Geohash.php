@@ -24,7 +24,7 @@ class Geohash extends Geometry {
    * {@inheritdoc}
    */
   public function dump(Address $address) {
-    return parent::dump($address)->out('geohash');
+    return $this->geophp->load($this->getHandler()->dump($address), 'json')->out('geohash');
   }
 
 }

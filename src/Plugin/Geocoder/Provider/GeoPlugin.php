@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\GeoPlugin"
  * )
  */
-class GeoPlugin extends ProviderWithHttpAdapterBase { }
+class GeoPlugin extends ProviderWithHttpAdapterBase {}

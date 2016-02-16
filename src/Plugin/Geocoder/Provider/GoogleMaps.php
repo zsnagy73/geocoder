@@ -24,4 +24,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class GoogleMaps extends ProviderWithHttpAdapterBase { }
+class GoogleMaps extends ProviderWithHttpAdapterBase {}

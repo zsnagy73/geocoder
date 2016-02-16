@@ -28,8 +28,7 @@ class TestProvider extends ProviderBase {
   protected $addressFactory;
 
   /**
-  /**
-   * {@inheritdoc}
+   * {@inheritdoc}.
    */
   public function geocode($source) {
     switch ($source) {

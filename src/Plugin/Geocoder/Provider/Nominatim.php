@@ -22,4 +22,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class Nominatim extends ProviderWithHttpAdapterBase { }
+class Nominatim extends ProviderWithHttpAdapterBase {}

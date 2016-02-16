@@ -18,4 +18,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   handler = "\Geocoder\Provider\FreeGeoIp"
  * )
  */
-class FreeGeoIp extends ProviderWithHttpAdapterBase { }
+class FreeGeoIp extends ProviderWithHttpAdapterBase {}

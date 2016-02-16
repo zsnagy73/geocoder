@@ -22,4 +22,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class IpInfoDb extends ProviderWithHttpAdapterBase { }
+class IpInfoDb extends ProviderWithHttpAdapterBase {}

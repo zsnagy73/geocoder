@@ -12,6 +12,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Base class for the Preprocessor plugin.
+ */
 abstract class PreprocessorBase extends PluginBase implements PreprocessorInterface, ContainerFactoryPluginInterface {
 
   /**

@@ -21,4 +21,4 @@ use Drupal\geocoder\ProviderWithHttpAdapterBase;
  *   }
  * )
  */
-class TomTom extends ProviderWithHttpAdapterBase { }
+class TomTom extends ProviderWithHttpAdapterBase {}

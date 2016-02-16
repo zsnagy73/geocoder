@@ -12,10 +12,10 @@ use Drupal\geocoder\ProviderBase;
 /**
  * Provides a File geocoder provider plugin.
  *
- * @GeocoderDumper(
+ * @GeocoderProvider(
  *   id = "file",
  *   name = "File",
  *   handler = "\Drupal\geocoder\Geocoder\Provider\File"
  * )
  */
-class File extends ProviderBase { }
+class File extends ProviderBase {}

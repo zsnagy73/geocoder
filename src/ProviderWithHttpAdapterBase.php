@@ -36,7 +36,7 @@ abstract class ProviderWithHttpAdapterBase extends ProviderBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *  The cache backend used to cache geocoding data.
+   *   The cache backend used to cache geocoding data.
    * @param \Ivory\HttpAdapter\HttpAdapterInterface $http_adapter
    *   The HTTP adapter.
    */
