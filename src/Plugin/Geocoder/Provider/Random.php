@@ -121,4 +121,5 @@ class Random extends ProviderBase {
     }
     return $this->moduleHandler;
   }
+
 }
