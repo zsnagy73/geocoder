@@ -18,4 +18,4 @@ use Drupal\geocoder\DumperBase;
  *   handler = "\Geocoder\Dumper\Wkb"
  * )
  */
-class Wkb extends DumperBase { }
+class Wkb extends DumperBase {}
