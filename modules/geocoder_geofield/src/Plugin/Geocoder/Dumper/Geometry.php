@@ -63,7 +63,7 @@ class Geometry extends GeoJson {
    * {@inheritdoc}
    */
   public function dump(Address $address) {
-    return $this->geophp->load($this->dump($address), 'json');
+    return $this->geophp->load(parent::dump($address), 'json');
   }
 
 }
