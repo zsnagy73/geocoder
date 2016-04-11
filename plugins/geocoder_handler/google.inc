@@ -71,8 +71,13 @@ function geocoder_google($address, $options = array()) {
         break;
     }
 
+    $google_url = 'http://maps.googleapis.com/maps/api/geocode/json';
+    if (!empty($options['https'])) {
+      $google_url = str_replace('http://', 'https://', $google_url);
+    }
+
     // Build the URL.
-    $url = url("https://maps.googleapis.com/maps/api/geocode/json", array(
+    $url = url($google_url, array(
       'query' => $query,
     ));
 
@@ -211,6 +216,13 @@ function geocoder_google_field($field, $field_item, $options = array()) {
 
 function geocoder_google_form($default_values = array()) {
   $form = array();
+
+  $form['https'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Use HTTPS ?',
+    '#default_value' => isset($default_values['https']) ? $default_values['https'] : FALSE,
+    '#description' => 'Use HTTPS instead of HTTP in the query URL to Google ?',
+  );
 
   $form['geometry_type'] = array(
     '#type' => 'select',
