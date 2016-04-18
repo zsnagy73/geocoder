@@ -28,12 +28,19 @@ function geocoder_field_field_widget_settings_form($this_field, $instance) {
 
   $entities = entity_get_info();
 
-  $title_field = $entities[$instance['entity_type']]['entity keys']['label'];
-  $all_fields[$title_field] = array(
-    'field_name' => $title_field,
-    'type' => 'text',
-  );
-  $entity_fields['title']['label'] = t(drupal_ucfirst($title_field));
+  // Add the title field to the list of fields on this entity
+  $entity_keys = $entities[$instance['entity_type']]['entity keys'];
+  // Some entities do not have a "title" field, such as Field Collection or
+  // Message entities. If the entity does not have a label key, it will be
+  // undefined or FALSE.
+  if (isset($entity_keys['label']) && $entity_keys['label'] !== FALSE) {
+    $title_field = $entities[$instance['entity_type']]['entity keys']['label'];
+    $all_fields[$title_field] = array(
+      'field_name' => $title_field,
+      'type' => 'text',
+    );
+    $entity_fields['title']['label'] = t(drupal_ucfirst($title_field));
+  }
 
   // Get a list of all valid fields that we both support and are part of this entity
   foreach ($all_fields as $field) {
