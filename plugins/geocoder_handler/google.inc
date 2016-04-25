@@ -142,14 +142,16 @@ function geocoder_google($address, $options = array()) {
         $geom = new Point($item->geometry->location->lng, $item->geometry->location->lat);
       }
       elseif ($options['geometry_type'] == 'bounds') {
-        $points = array(
-          new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->southwest->lat),
-          new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->northeast->lat),
-          new Point($item->geometry->bounds->northeast->lng, $item->geometry->bounds->northeast->lat),
-          new Point($item->geometry->bounds->northeast->lng, $item->geometry->bounds->southwest->lat),
-          new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->southwest->lat),
-        );
-        $geom = new Polygon(array(new LineString($points)));
+        if (isset($item->geometry->bounds)) {
+          $points = array(
+            new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->southwest->lat),
+            new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->northeast->lat),
+            new Point($item->geometry->bounds->northeast->lng, $item->geometry->bounds->northeast->lat),
+            new Point($item->geometry->bounds->northeast->lng, $item->geometry->bounds->southwest->lat),
+            new Point($item->geometry->bounds->southwest->lng, $item->geometry->bounds->southwest->lat),
+          );
+          $geom = new Polygon(array(new LineString($points)));
+        }
       }
       elseif ($options['geometry_type'] == 'viewport') {
         $points = array(
