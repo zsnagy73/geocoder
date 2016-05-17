@@ -6,6 +6,7 @@
 
 namespace Drupal\geocoder_geofield\Geocoder\Dumper;
 
+use Drupal\geocoder\DumperPluginManager;
 use Geocoder\Dumper\Dumper;
 use Geocoder\Model\Address;
 use Drupal\geophp\geoPHPInterface;
@@ -20,7 +21,7 @@ class Geometry implements Dumper {
   private $dumper;
 
   /**
-   * @var \Drupal\geophp\geoPHPInterface
+   * @var \Drupal\geofield\geophp\geoPHPInterface
    */
   private $geophp;
 
@@ -34,9 +35,9 @@ class Geometry implements Dumper {
   /**
    * @inheritDoc
    */
-  public function __construct(Dumper $dumper, geoPHPInterface $geophp) {
-    $this->dumper = $dumper;
-    $this->geophp = $geophp;
+  public function __construct() {
+    $this->dumper = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geojson');
+    $this->geophp = \Drupal::service('geofield.geophp');
   }
 
 }

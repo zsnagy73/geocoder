@@ -8,7 +8,7 @@
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
 use Drupal\geocoder\Plugin\Geocoder\Dumper\GeoJson;
-use Drupal\geophp\GeoPHPInterface;
+use Drupal\geofield\GeoPHP\GeoPHPInterface;
 use Geocoder\Model\Address;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,7 +26,7 @@ class Geometry extends GeoJson {
   /**
    * The geophp service.
    *
-   * @var \Drupal\geophp\GeoPHPInterface
+   * @var Drupal\geofield\GeoPHP\GeoPHPInterface
    */
   protected $geophp;
 
@@ -39,7 +39,7 @@ class Geometry extends GeoJson {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\geophp\GeoPHPInterface $geophp
+   * @param Drupal\geofield\GeoPHP\GeoPHPInterface $geophp
    *   The geophp service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, GeoPHPInterface $geophp) {

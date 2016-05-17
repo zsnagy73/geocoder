@@ -7,9 +7,19 @@
 
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
+use Drupal\geocoder\DumperBase;
 use Geocoder\Model\Address;
 
-class Geohash extends Geometry {
+/**
+ * Provides a geohash geocoder dumper plugin.
+ *
+ * @GeocoderDumper(
+ *   id = "geohash",
+ *   name = "Geohash",
+ *   handler = "\Drupal\geocoder_geofield\Geocoder\Dumper\Geometry"
+ * )
+ */
+class Geohash extends DumperBase {
 
   /**
    * {@inheritdoc}
