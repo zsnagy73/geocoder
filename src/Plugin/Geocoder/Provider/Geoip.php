@@ -1,30 +1,21 @@
 <?php
+
 /**
  * @file
- * The Geoip plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\Geoip.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerBase;
 
 /**
- * Class Geoip.
+ * Provides a Geoip geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "geoip",
- *  name = "Geoip"
+ * @GeocoderProvider(
+ *   id = "geoip",
+ *   name = "Geoip",
+ *   handler = "\Geocoder\Provider\Geoip"
  * )
  */
-class Geoip extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\Geoip());
-
-    return parent::init();
-  }
-
-}
+class Geoip extends ProviderUsingHandlerBase {}

@@ -1,31 +1,26 @@
 <?php
+
 /**
  * @file
- * The MaxMind plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\MaxMind.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class MaxMind.
+ * Provides a MaxMind geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "maxmind",
- *  name = "MaxMind"
+ * @GeocoderProvider(
+ *   id = "maxmind",
+ *   name = "MaxMind",
+ *   handler = "\Geocoder\Provider\MaxMind",
+ *   arguments = {
+ *     "apiKey",
+ *     "service" = "f",
+ *     "useSsl" = FALSE
+ *   }
  * )
  */
-class MaxMind extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\MaxMind($this->getAdapter(), $configuration['apiKey']));
-
-    return parent::init();
-  }
-
-}
+class MaxMind extends ProviderUsingHandlerWithAdapterBase {}

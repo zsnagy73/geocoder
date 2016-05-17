@@ -1,31 +1,24 @@
 <?php
+
 /**
  * @file
- * The BingMaps plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\BingMaps.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class BingMaps.
+ * Provides a BingMaps geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "bingmaps",
- *  name = "BingMaps"
+ * @GeocoderProvider(
+ *   id = "bingmaps",
+ *   name = "BingMaps",
+ *   handler = "\Geocoder\Provider\BingMaps",
+ *   arguments = {
+ *     "apiKey"
+ *   }
  * )
  */
-class BingMaps extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\BingMaps($this->getAdapter(), $configuration['apiKey']));
-
-    return parent::init();
-  }
-
-}
+class BingMaps extends ProviderUsingHandlerWithAdapterBase {}

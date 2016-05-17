@@ -1,34 +1,21 @@
 <?php
+
 /**
  * @file
- * The Geohash plugin.
+ * Contains \Drupal\geocoder_geofield\Plugin\Geocoder\Dumper\Geohash.
  */
 
 namespace Drupal\geocoder_geofield\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\Dumper\GeoJson;
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Geocoder\Model\Address;
 
-/**
- * Class Geohash.
- *
- * @GeocoderPlugin(
- *  id = "geohash",
- *  name = "Geohash"
- * )
- */
-class Geohash extends GeoJson implements DumperInterface {
+class Geohash extends Geometry {
+
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.geohash')
-    );
+  public function dump(Address $address) {
+    return parent::dump($address)->out('geohash');
   }
 
 }

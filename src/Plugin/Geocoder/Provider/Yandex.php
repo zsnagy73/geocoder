@@ -1,30 +1,21 @@
 <?php
+
 /**
  * @file
- * The Yandex plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\Yandex.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class Yandex.
+ * Provides a Yandex geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "yandex",
- *  name = "Yandex"
+ * @GeocoderProvider(
+ *   id = "yandex",
+ *   name = "Yandex",
+ *   handler = "\Geocoder\Provider\Yandex"
  * )
  */
-class Yandex extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $this->setHandler(new \Geocoder\Provider\Yandex($this->getAdapter()));
-
-    return parent::init();
-  }
-
-}
+class Yandex extends ProviderUsingHandlerWithAdapterBase {}

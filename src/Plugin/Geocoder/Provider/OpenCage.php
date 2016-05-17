@@ -1,31 +1,26 @@
 <?php
+
 /**
  * @file
- * The OpenCage plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\OpenCage.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class OpenCage.
+ * Provides an OpenCage geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "opencage",
- *  name = "OpenCage"
+ * @GeocoderProvider(
+ *   id = "opencage",
+ *   name = "OpenCage",
+ *   handler = "",
+ *   arguments = {
+ *     "apiKey",
+ *     "useSsl" = FALSE,
+ *     "locale"
+ *   }
  * )
  */
-class OpenCage extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\OpenCage($this->getAdapter(), $configuration['apiKey']));
-
-    return parent::init();
-  }
-
-}
+class OpenCage extends ProviderUsingHandlerWithAdapterBase {}

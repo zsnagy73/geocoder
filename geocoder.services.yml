@@ -1,27 +1,23 @@
 services:
-  plugin.manager.geocoder.provider:
-    class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [provider, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.geocoder.dumper:
-    class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [dumper, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.geocoder.data_prepare:
-    class: Drupal\geocoder\Plugin\GeocoderPluginManager
-    arguments: [data_prepare, '@container.namespaces', '@cache.discovery', '@module_handler']
+
+  geocoder:
+    class: Drupal\geocoder\Geocoder
+    arguments: ['@plugin.manager.geocoder.provider']
 
   geocoder.http_adapter:
-    class: \Ivory\HttpAdapter\CurlHttpAdapter
+    class: Ivory\HttpAdapter\CurlHttpAdapter
 
-  geocoder.dumper.geojson:
-    class: \Geocoder\Dumper\GeoJson
-  geocoder.dumper.gpx:
-    class: \Geocoder\Dumper\Gpx
-  geocoder.dumper.kml:
-    class: \Geocoder\Dumper\Kml
-  geocoder.dumper.wkb:
-    class: \Geocoder\Dumper\Wkb
-  geocoder.dumper.wkt:
-    class: \Geocoder\Dumper\Wkt
+  plugin.manager.geocoder.provider:
+    class: Drupal\geocoder\ProviderPluginManager
+    parent: default_plugin_manager
 
-  geocoder.provider.file:
-    class: Drupal\geocoder\Geocoder\Provider\File
+  plugin.manager.geocoder.dumper:
+    class: Drupal\geocoder\DumperPluginManager
+    parent: default_plugin_manager
+
+  cache.geocoder:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [geocoder]

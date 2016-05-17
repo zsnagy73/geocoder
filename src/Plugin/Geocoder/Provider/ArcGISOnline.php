@@ -1,31 +1,24 @@
 <?php
+
 /**
  * @file
- * The ArcGISOnline plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\ArcGisOnline.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class ArcGISOnline.
+ * Provides an ArcGISOnline geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "arcgisonline",
- *  name = "ArcGISOnline"
+ * @GeocoderProvider(
+ *   id = "arcgisonline",
+ *   name = "ArcGISOnline",
+ *   handler = "\Geocoder\Provider\ArcGISOnline",
+ *   arguments = {
+ *     "sourceCountry"
+ *   }
  * )
  */
-class ArcGISOnline extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\ArcGISOnline($this->getAdapter(), $configuration['sourceCountry']));
-
-    return parent::init();
-  }
-
-}
+class ArcGisOnline extends ProviderUsingHandlerWithAdapterBase {}

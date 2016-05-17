@@ -1,7 +1,7 @@
+type: module
 name: Geocoder Geofield
 description: Providers Geocoder integration with contrib Geofield module.
 core: 8.x
-type: module
 dependencies:
   - geocoder_field
-  - geophp
+  - geofield

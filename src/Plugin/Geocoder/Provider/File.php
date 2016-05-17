@@ -1,30 +1,21 @@
 <?php
+
 /**
  * @file
- * The File plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\File.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerBase;
 
 /**
- * Class File.
+ * Provides a File geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "file",
- *  name = "File"
+ * @GeocoderProvider(
+ *   id = "file",
+ *   name = "File",
+ *   handler = "\Drupal\geocoder\Geocoder\Provider\File"
  * )
  */
-class File extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $this->setHandler(new \Drupal\geocoder\Geocoder\Provider\File());
-
-    return parent::init();
-  }
-
-}
+class File extends ProviderUsingHandlerBase {}

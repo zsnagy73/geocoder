@@ -1,34 +1,21 @@
 <?php
+
 /**
  * @file
- * The Gpx plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Dumper\Gpx.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Dumper;
 
-use Drupal\geocoder\Plugin\Geocoder\DumperBase;
-use Drupal\geocoder\Plugin\Geocoder\DumperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\geocoder\DumperBase;
 
 /**
- * Class Gpx.
+ * Provides a GPX geocoder dumper plugin.
  *
- * @GeocoderPlugin(
- *  id = "gpx",
- *  name = "GPX"
+ * @GeocoderDumper(
+ *   id = "gpx",
+ *   name = "GPX",
+ *   handler = "\Geocoder\Dumper\Gpx"
  * )
  */
-class Gpx extends DumperBase implements DumperInterface {
-  /**
-   * @inheritdoc
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('geocoder.dumper.gpx')
-    );
-  }
-
-}
+class Gpx extends DumperBase {}

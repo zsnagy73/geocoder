@@ -7,86 +7,55 @@
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
 use Drupal\Core\Locale\CountryManager;
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderBase;
 use Geocoder\Model\AddressFactory;
 
 /**
  * Class Random.
  *
- * @GeocoderPlugin(
+ * @GeocoderProvider(
  *  id = "random",
  *  name = "Random"
  * )
  */
-class Random extends ProviderBase implements ProviderInterface {
-  /**
-   * @var AddressFactory
-   */
-  private $factory;
+class Random extends ProviderBase {
 
   /**
+   * The address factory.
    *
+   * @var \Geocoder\Model\AddressFactory
    */
-  public function init() {
-    $this->factory = new AddressFactory();
+  protected $addressFactory;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doGeocode($source) {
+    return $this->getAddressFactory()->createFromArray([$this->getRandomResult()]);
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
-  public function geocode($data) {
-    $cid = $this->getCacheCid($data);
+  public function doReverse($latitude, $longitude) {
+    $result = $this->getRandomResult();
+    $result['latitude'] = $latitude;
+    $result['longitude'] = $longitude;
 
-    if ($value = $this->cache_get($cid)) {
-      return $value;
-    }
-
-    try {
-      $value = $this->factory->createFromArray(array($this->getRandomResult()));
-    }
-    catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
-    }
-
-    $this->cache_set($cid, $value);
-    return $value;
+    return $this->getAddressFactory()->createFromArray([$result]);
   }
 
   /**
-   *
-   */
-  public function reverse($latitude, $longitude) {
-    $cid = $this->getCacheCid($latitude, $longitude);
-
-    if ($value = $this->cache_get($cid)) {
-      return $value;
-    }
-
-    try {
-      $result = $this->getRandomResult();
-      $result['latitude'] = $latitude;
-      $result['longitude'] = $longitude;
-
-      $value = $this->factory->createFromArray(array($result));
-      $this->cache_set($cid, $value);
-    }
-    catch (\Exception $e) {
-      $this->loggerChannel->error($e->getMessage(), array('channel' => 'geocoder'));
-      $this->messenger->addMessage($e->getMessage(), 'error', FALSE);
-      $value = FALSE;
-    }
-
-    return $value;
-  }
-
-  /**
-   *
+   * @todo [cc]: Tidy-up, document, etc.
    */
   private function getRandomCountryInfo($type = NULL) {
-    include_once DRUPAL_ROOT . '/includes/locale.inc';
     $manager = new CountryManager($this->getModuleHandler());
     $countries = $manager->getList();
     uksort($countries, function() {
@@ -107,11 +76,13 @@ class Random extends ProviderBase implements ProviderInterface {
   }
 
   /**
+   * @todo [cc]: Tidi-up, document, etc.
+   *
    * Generate a fake random address array.
    *
    * @return array
    */
-  private function getRandomResult() {
+  protected function getRandomResult() {
     $country = $this->getRandomCountryInfo();
     $streetTypes = array('street', 'avenue', 'square', 'road', 'way', 'drive', 'lane', 'place', 'hill', 'gardens', 'park');
 
@@ -125,6 +96,30 @@ class Random extends ProviderBase implements ProviderInterface {
       'country' => $country['name'],
       'countryCode' => $country['code'],
     );
+  }
+
+  /**
+   * Returns the address factory.
+   *
+   * @return \Geocoder\Model\AddressFactory
+   */
+  protected function getAddressFactory() {
+    if (!isset($this->addressFactory)) {
+      $this->addressFactory = new AddressFactory();
+    }
+    return $this->addressFactory;
+  }
+
+  /**
+   * Returns the module handler service.
+   *
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected function getModuleHandler() {
+    if (!isset($this->moduleHandler)) {
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    return $this->moduleHandler;
   }
 
 }

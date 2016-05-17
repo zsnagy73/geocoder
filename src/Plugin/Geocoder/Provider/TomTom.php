@@ -1,31 +1,24 @@
 <?php
+
 /**
  * @file
- * The TomTom plugin.
+ * Contains \Drupal\geocoder\Plugin\Geocoder\Provider\TomTom.
  */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
-use Drupal\geocoder\Plugin\Geocoder\ProviderBase;
-use Drupal\geocoder\Plugin\Geocoder\ProviderInterface;
+use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
 
 /**
- * Class TomTom.
+ * Provides a TomTom geocoder provider plugin.
  *
- * @GeocoderPlugin(
- *  id = "tomtom",
- *  name = "TomTom"
+ * @GeocoderProvider(
+ *   id = "tomtom",
+ *   name = "TomTom",
+ *   handler = "\Geocoder\Provider\TomTom",
+ *   arguments = {
+ *     "apiKey"
+ *   }
  * )
  */
-class TomTom extends ProviderBase implements ProviderInterface {
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    $configuration = $this->getConfiguration();
-    $this->setHandler(new \Geocoder\Provider\TomTom($this->getAdapter(), $configuration['apiKey']));
-
-    return parent::init();
-  }
-
-}
+class TomTom extends ProviderUsingHandlerWithAdapterBase {}

@@ -1,6 +1,7 @@
-name: Geocoder Field
-description: Widgets and formatters for the Geocoder module.
-core: 8.x
 type: module
+name: Geocoder Field
+description: 'Geocodes the content of a field and stores the result in other field and vice-versa.'
+core: 8.x
 dependencies:
+  - field
   - geocoder
