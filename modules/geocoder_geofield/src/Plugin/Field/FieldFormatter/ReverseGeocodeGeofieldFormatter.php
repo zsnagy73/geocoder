@@ -27,7 +27,7 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
-    $geophp = \Drupal::service('geophp.geophp');
+    $geophp = \Drupal::service('geofield.geophp');
     $dumper = \Drupal::service('geocoder.dumper.' . $this->getSetting('dumper_plugin'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 

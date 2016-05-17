@@ -55,7 +55,7 @@ class Geometry extends GeoJson {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('geophp.geophp')
+      $container->get('geofield.geophp')
     );
   }
 
