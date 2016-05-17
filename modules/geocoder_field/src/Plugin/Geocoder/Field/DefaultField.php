@@ -33,9 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, ContainerFactoryPluginInterface {
-
-  use StringTranslationTrait;
-
   /**
    * The plugin manager for this type of plugins.
    *
