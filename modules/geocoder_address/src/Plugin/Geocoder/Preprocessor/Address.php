@@ -31,8 +31,10 @@ class Address extends PreprocessorBase {
     $defaults = [
       'address_line1' => NULL,
       'address_line2' => NULL,
-      'postal_code' => NULL,
       'locality' => NULL,
+      'dependent_locality' => NULL,
+      'administrative_area' => NULL,
+      'postal_code' => NULL,
       'country_code' => NULL,
     ];
     foreach ($this->field->getValue() as $delta => $value) {
@@ -40,10 +42,13 @@ class Address extends PreprocessorBase {
       $address = [
         $value['address_line1'],
         $value['address_line2'],
-        $value['postal_code'],
         $value['locality'],
+        $value['dependent_locality'],
+        str_replace($value['country_code'] . '-', '', $value['administrative_area']),
+        $value['postal_code'],
         $value['country_code'],
       ];
+
       $value['value'] = implode(',', array_filter($address));
       $this->field->set($delta, $value);
     }
