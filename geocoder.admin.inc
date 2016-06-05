@@ -118,6 +118,13 @@ function geocoder_admin_settings($form, &$form_state) {
     '#description' => t('Geocoder caches all queries by default. Do you want that to include the ones with no results? If not, it will be checked every time, probably with the same no-result.'),
   );
 
+  $form['geocoder_log_empty_results'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Log empty results'),
+    '#default_value' => variable_get('geocoder_log_empty_results', FALSE),
+    '#description' => t('Whether to generate a watchdog log when geocoding returns no results.'),
+  );
+
   $form['#submit'][] = 'geocoder_admin_settings_submit';
   return system_settings_form($form);
 }
