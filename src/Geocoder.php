@@ -43,10 +43,10 @@ class Geocoder implements GeocoderInterface {
         return $provider->geocode($data);
       }
       catch (InvalidCredentials $e) {
-        self::log($e->getMessage(), 'error');
+        static::log($e->getMessage(), 'error');
       }
       catch (\Exception $e) {
-        self::log($e->getMessage(), 'error');
+        static::log($e->getMessage(), 'error');
       }
     }
 
@@ -65,9 +65,9 @@ class Geocoder implements GeocoderInterface {
         return $provider->reverse($latitude, $longitude);
       }
       catch (InvalidCredentials $e) {
-        self::log($e->getMessage(), 'error');
+        static::log($e->getMessage(), 'error');
       } catch (\Exception $e) {
-        self::log($e->getMessage(), 'error');
+        static::log($e->getMessage(), 'error');
       }
     }
 
