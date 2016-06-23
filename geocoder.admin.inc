@@ -124,6 +124,12 @@ function geocoder_admin_settings($form, &$form_state) {
     '#default_value' => variable_get('geocoder_log_empty_results', FALSE),
     '#description' => t('Whether to generate a watchdog log when geocoding returns no results.'),
   );
+  $form['geocoder_recode'] = array(
+     '#type' => 'checkbox',
+     '#title' => t('Force re-geocoding'),
+     '#description' => t('Enable forced re-geocoding of all geocoder fields on entity save (even if there are no changes to the source of the geocoded data). This option can slow down bulk saves and increases the amount of calls to the geocoding service.'),
+     '#default_value' => variable_get('geocoder_recode', FALSE),
+  );
 
   $form['#submit'][] = 'geocoder_admin_settings_submit';
   return system_settings_form($form);
