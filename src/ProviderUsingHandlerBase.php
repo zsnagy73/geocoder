@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder\ProviderUsingHandlerBase.
- */
-
 namespace Drupal\geocoder;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;

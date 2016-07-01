@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder\Geocoder.
- */
-
 namespace Drupal\geocoder;
 
 use Geocoder\Exception\InvalidCredentials;

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @file
- * @todo [cc]: This and its successors need full review and, maybe, refactoring.
- *
- * Contains \Drupal\geocoder_field\Plugin\Field\GeocoderFormatterBase.
- */
-
 namespace Drupal\geocoder_field\Plugin\Field;
 
 use Drupal\Core\Field\FieldDefinitionInterface;

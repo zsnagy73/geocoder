@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder_field\PreprocessorPluginManager.
- */
-
 namespace Drupal\geocoder_field;
 
 use Drupal\Component\Utility\SortArray;

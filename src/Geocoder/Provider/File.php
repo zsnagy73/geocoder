@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder\Geocoder\Provider\File.
- */
-
 namespace Drupal\geocoder\Geocoder\Provider;
 
 use Geocoder\Exception\NoResult;

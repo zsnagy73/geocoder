@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder_field\Plugin\Field\FieldFormatter\AddressGeocodeFormatter.
- */
-
 namespace Drupal\geocoder_address\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;

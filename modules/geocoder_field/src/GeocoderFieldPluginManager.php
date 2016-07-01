@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder_field\GeocoderFieldPluginManager.
- */
-
 namespace Drupal\geocoder_field;
 
 use Drupal\Core\Cache\CacheBackendInterface;

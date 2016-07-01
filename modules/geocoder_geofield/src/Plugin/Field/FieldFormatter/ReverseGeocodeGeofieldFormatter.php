@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder_geofield\Plugin\Field\FieldFormatter\ReverseGeocodeGeofieldFormatter.
- */
-
 namespace Drupal\geocoder_geofield\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
