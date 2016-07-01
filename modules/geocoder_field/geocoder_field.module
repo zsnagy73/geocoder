@@ -325,9 +325,9 @@ function geocoder_field_widget_get_field_value($entity_type, $field_instance, $e
   // Required settings
   if (isset($field_instance['widget']['settings']['geocoder_handlers']) && isset($field_instance['widget']['settings']['geocoder_field'])) {
 
-    $geocoder_handlers = array_filter($field_instance['widget']['settings']['geocoder_handlers'], function($v, $k) {
+    $geocoder_handlers = array_filter($field_instance['widget']['settings']['geocoder_handlers'], function($v) {
       return (bool) $v['enabled'];
-    }, ARRAY_FILTER_USE_BOTH);
+    });
     uasort($geocoder_handlers, function($a, $b) {
       if ($a['enabled'] > $b['enabled']) {
         return -1;
@@ -744,9 +744,9 @@ function geocoder_field_field_formatter_settings_summary($field, $instance, $vie
   $settings = $display['settings'];
   $summary = array();
 
-  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v, $k) {
+  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v) {
     return (bool) $v['enabled'];
-  }, ARRAY_FILTER_USE_BOTH);
+  });
 
   uasort($geocoder_handlers, function($a, $b) {
     if ($a['enabled'] > $b['enabled']) {
@@ -778,9 +778,9 @@ function geocoder_field_field_formatter_view($entity_type, $entity, $field, $ins
   $element = array();
   $settings = $display['settings'];
 
-  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v, $k) {
+  $geocoder_handlers = array_filter($settings['geocoder_handlers'], function($v) {
     return (bool) $v['enabled'];
-  }, ARRAY_FILTER_USE_BOTH);
+  });
 
   uasort($geocoder_handlers, function($a, $b) {
     if ($a['enabled'] > $b['enabled']) {
