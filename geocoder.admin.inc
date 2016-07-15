@@ -42,6 +42,14 @@ function geocoder_admin_settings($form, &$form_state) {
     '#required' => FALSE,
   );
 
+  $form['geocoder_apikey_mapbox'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Mapbox Access Token'),
+    '#description' => t('You can obtain a Mapbox access token at ') . ' ' . 'http://www.mapbox.com',
+    '#default_value' => empty($geocoder_settings['geocoder_apikey_mapbox']) ? '' : $geocoder_settings['geocoder_apikey_mapbox'],
+    '#required' => FALSE,
+  );
+
   $form['geocoder_google_auth_method'] = array(
     '#type'          => 'select',
     '#title'         => t('Google API Authorization Method'),
@@ -147,6 +155,7 @@ function geocoder_admin_settings_submit($form, &$form_state) {
   $geocoder_settings['geocoder_apikey_yandex'] = trim($form_state['values']['geocoder_apikey_yandex']);
   $geocoder_settings['geocoder_apikey_bing'] = trim($form_state['values']['geocoder_apikey_bing']);
   $geocoder_settings['geocoder_apikey_mapzen'] = trim($form_state['values']['geocoder_apikey_mapzen']);
+  $geocoder_settings['geocoder_apikey_mapbox'] = trim($form_state['values']['geocoder_apikey_mapbox']);
   $geocoder_settings['geocoder_apikey_google'] = trim($form_state['values']['geocoder_apikey_google']);
   variable_set("geocoder_settings", $geocoder_settings);
 }
