@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder\Annotation\DumperProvider.
- */
-
 namespace Drupal\geocoder\Annotation;
 
 /**

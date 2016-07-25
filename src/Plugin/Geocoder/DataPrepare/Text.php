@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * The Text Data Prepare plugin.
- */
 
 namespace Drupal\geocoder\Plugin\Geocoder\DataPrepare;
 

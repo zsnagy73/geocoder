@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\geocoder\GeocoderInterface.
- */
-
 namespace Drupal\geocoder;
 
 /**

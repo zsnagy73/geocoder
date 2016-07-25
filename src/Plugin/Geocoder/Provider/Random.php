@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * The TomTom plugin.
- */
 
 namespace Drupal\geocoder\Plugin\Geocoder\Provider;
 
