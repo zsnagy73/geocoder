@@ -9,7 +9,7 @@ This is the Geocoder module for Drupal 8 rewritten using the Geocoder PHP librar
 
 # Installation
 * Make sure to read this page: https://www.drupal.org/node/2404989
-* Make sure to add the drupal.org repository: composer config repositories.drupal https://packages.drupal.org/8
+* Make sure to add the drupal.org repository: ```composer config repositories.drupal composer https://packages.drupal.org/8```
 * Download the module: ```composer require drupal/geocoder```
 * Enable the module via drush ```drush en geocoder``` or the web interface.
 * Enable the submodules ```geocoder_geofield``` or ```geocoder_field```.
