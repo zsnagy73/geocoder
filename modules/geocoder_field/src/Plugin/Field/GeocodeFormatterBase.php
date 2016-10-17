@@ -168,7 +168,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       );
     }
 
-    uasort($rows, function($a, $b) {
+    uasort($rows, function ($a, $b) {
       return strcmp($a['#weight'], $b['#weight']);
     });
 

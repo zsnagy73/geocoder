@@ -17,6 +17,7 @@ use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
  * )
  */
 class AddressGeocodeFormatter extends GeocodeFormatter {
+
   /**
    * {@inheritdoc}
    */

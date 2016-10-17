@@ -17,6 +17,7 @@ use Drupal\geocoder_field\Plugin\Field\GeocodeFormatterBase;
  * )
  */
 class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
+
   /**
    * {@inheritdoc}
    */

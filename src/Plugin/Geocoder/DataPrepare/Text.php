@@ -17,6 +17,7 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  * )
  */
 class Text extends DataPrepareBase implements GeocoderPluginInterface {
+
   /**
    * @inheritDoc
    */

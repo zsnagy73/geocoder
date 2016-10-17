@@ -61,7 +61,8 @@ class Geocoder implements GeocoderInterface {
       }
       catch (InvalidCredentials $e) {
         static::log($e->getMessage(), 'error');
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         static::log($e->getMessage(), 'error');
       }
     }
@@ -73,9 +74,9 @@ class Geocoder implements GeocoderInterface {
    * Log a message in the Drupal watchdog and on screen.
    *
    * @param string $message
-   *   The message
+   *   The message.
    * @param string $type
-   *   The type of message
+   *   The type of message.
    */
   public static function log($message, $type) {
     \Drupal::logger('geocoder')->error($message);

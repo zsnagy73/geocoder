@@ -14,6 +14,7 @@ use Geocoder\Model\Address;
  * )
  */
 class AddressText extends DumperBase {
+
   /**
    * {@inheritdoc}
    */

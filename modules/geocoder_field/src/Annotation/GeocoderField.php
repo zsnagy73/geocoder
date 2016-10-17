@@ -21,9 +21,9 @@ class GeocoderField extends Plugin {
   /**
    * The human-readable name of the geocoder field plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 

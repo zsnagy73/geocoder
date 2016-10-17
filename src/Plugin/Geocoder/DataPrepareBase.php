@@ -3,7 +3,6 @@
 namespace Drupal\geocoder\Plugin\Geocoder;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\geocoder\Plugin\Geocoder\DataPrepareInterface;
 use Drupal\geocoder\Plugin\GeocoderPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

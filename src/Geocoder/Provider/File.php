@@ -31,7 +31,8 @@ class File extends AbstractProvider implements Provider {
         return $this->returnResults([[
           'latitude' => $latitude,
           'longitude' => $longitude,
-        ] + $this->getDefaults()]);
+        ] + $this->getDefaults(),
+        ]);
       }
     }
 
