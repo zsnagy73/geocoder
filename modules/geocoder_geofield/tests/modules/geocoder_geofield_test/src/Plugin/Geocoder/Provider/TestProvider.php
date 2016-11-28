@@ -46,6 +46,7 @@ class TestProvider extends ProviderBase {
    * Returns the address factory.
    *
    * @return \Geocoder\Model\AddressFactory
+   *   Returns Address factory.
    */
   protected function getAddressFactory() {
     if (!isset($this->addressFactory)) {

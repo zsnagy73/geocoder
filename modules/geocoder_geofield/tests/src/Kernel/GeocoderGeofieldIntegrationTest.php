@@ -17,7 +17,19 @@ class GeocoderGeofieldIntegrationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['geophp', 'geofield', 'field', 'geocoder_geofield', 'geocoder_geofield_test', 'geocoder', 'geocoder_field', 'entity_test', 'text', 'user', 'filter'];
+  public static $modules = [
+    'geophp',
+    'geofield',
+    'field',
+    'geocoder_geofield',
+    'geocoder_geofield_test',
+    'geocoder',
+    'geocoder_field',
+    'entity_test',
+    'text',
+    'user',
+    'filter',
+  ];
 
   /**
    * Tests the geocoding on Geofield field type.
