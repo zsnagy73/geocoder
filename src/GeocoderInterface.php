@@ -39,6 +39,6 @@ interface GeocoderInterface {
    * @return \Geocoder\Model\AddressCollection|null
    *   An address collection or NULL on gecoding failure.
    */
-  public function reverse(double $latitude, double $longitude, array $plugins, array $options = []);
+  public function reverse(\double $latitude, \double $longitude, array $plugins, array $options = []);
 
 }
