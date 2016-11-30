@@ -16,7 +16,7 @@ class GeocoderPreprocessor extends GeocoderPluginBase {
    *
    * @var array
    */
-  public $field_types;
+  public $fieldTypes;
 
   /**
    * The weight of this preprocessor.

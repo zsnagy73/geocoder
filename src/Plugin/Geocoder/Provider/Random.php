@@ -95,7 +95,7 @@ class Random extends ProviderBase {
       'hill',
       'gardens',
       'park',
-      );
+    );
 
     return array(
       'latitude' => mt_rand(0, 90) + mt_rand() / mt_getrandmax(),

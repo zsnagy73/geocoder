@@ -19,7 +19,7 @@ class Geocoder implements GeocoderInterface {
   /**
    * Constructs a geocoder factory class.
    *
-   * @param \Drupal\geocoder\ProviderPluginManager
+   * @param \Drupal\geocoder\ProviderPluginManager $provider_plugin_manager
    *   The geocoder provider plugin manager service.
    */
   public function __construct(ProviderPluginManager $provider_plugin_manager) {

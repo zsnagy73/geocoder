@@ -22,7 +22,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
    *
    * @var string
    */
-  private $field_id;
+  private $fieldId;
 
   /**
    * Array of Values.
@@ -36,14 +36,14 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
    *
    * @var string[]
    */
-  private $widget_ids;
+  private $widgetIds;
 
   /**
    * Widget Configuration.
    *
    * @var array
    */
-  private $widget_configuration;
+  private $widgetConfiguration;
 
   /**
    * Set Entity.
@@ -130,8 +130,8 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
    *
    * @inheritDoc
    */
-  public function setCurrentField($field_id) {
-    $this->field_id = $field_id;
+  public function setCurrentField($fieldId) {
+    $this->fieldId = $fieldId;
 
     return $this;
   }
@@ -142,7 +142,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
    * @inheritDoc
    */
   public function getCurrentField() {
-    return $this->field_id;
+    return $this->$fieldId;
   }
 
   /**
