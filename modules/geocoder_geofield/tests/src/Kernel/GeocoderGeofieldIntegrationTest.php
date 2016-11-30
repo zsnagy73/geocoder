@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the integration between geocoder with geofield.
  *
- * @group geocoder
+ * @group Geocoder
  */
 class GeocoderGeofieldIntegrationTest extends KernelTestBase {
 
