@@ -24,7 +24,7 @@ class GeocoderPreprocessor extends GeocoderPluginBase {
    * Many preprocessors are called to pre-process the same field. This value
    * can determine an order in which the preprocessors are called.
    *
-   * @var intoptional
+   * @var int
    */
   public $weight = 0;
 
