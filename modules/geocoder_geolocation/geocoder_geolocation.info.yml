@@ -1,0 +1,7 @@
+type: module
+name: Geocoder Geolocation
+description: Providers Geocoder integration with contrib Geolocation module.
+core: 8.x
+dependencies:
+  - geocoder_field
+  - geolocation

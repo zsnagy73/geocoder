@@ -1,0 +1,7 @@
+type: module
+name: 'Geocoder Geolocation Test'
+description: 'Geocoder Geolocation Test module'
+core: 8.x
+package: Testing
+dependencies:
+  - geocoder_geolocation
