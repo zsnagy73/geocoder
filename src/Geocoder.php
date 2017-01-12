@@ -38,10 +38,10 @@ class Geocoder implements GeocoderInterface {
         return $provider->geocode($data);
       }
       catch (InvalidCredentials $e) {
-        static::log($e->getMessage(), 'error');
+        static::log($e->getMessage());
       }
       catch (\Exception $e) {
-        static::log($e->getMessage(), 'error');
+        static::log($e->getMessage());
       }
     }
 
@@ -75,12 +75,9 @@ class Geocoder implements GeocoderInterface {
    *
    * @param string $message
    *   The message.
-   * @param string $type
-   *   The type of message.
    */
-  public static function log($message, $type) {
+  public static function log($message) {
     \Drupal::logger('geocoder')->error($message);
-    drupal_set_message($message, $type);
   }
 
 }
