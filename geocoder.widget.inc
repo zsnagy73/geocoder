@@ -481,7 +481,13 @@ function geocoder_widget_parse_addressfield($field_item) {
   $address[] = !empty($field_item['sub_premise']) ? $field_item['sub_premise'] : NULL;
   $address[] = !empty($field_item['thoroughfare']) ? $field_item['thoroughfare'] : NULL;
   $address[] = !empty($field_item['locality']) ? $field_item['locality'] : NULL;
-  $address[] = !empty($field_item['administrative_area']) ? $field_item['administrative_area'] : NULL;
+  if (!empty($field_item['country']) && !empty($field_item['administrative_area'])) {
+    module_load_include('inc', 'addressfield', 'addressfield.administrative_areas');
+    $address[] = addressfield_get_administrative_areas($field_item['country'])[$field_item['administrative_area']];
+  }
+  else {
+    $address[] = !empty($field_item['administrative_area']) ? $field_item['administrative_area'] : NULL;
+  }
   $address[] = !empty($field_item['sub_administrative_area']) ? $field_item['sub_administrative_area'] : NULL;
 
   if (!empty($field_item['country'])) {
