@@ -169,24 +169,14 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     $element['delta_handling'] = [
       '#type' => 'select',
       '#title' => $this->t('Multi-value input handling'),
-      '#description' => [
-        ['#markup' => $this->t('Should geometries from multiple inputs be:')],
-        [
-          '#theme' => 'item_list',
-          '#items' => [
-            $this->t('Matched with each input (e.g. One POINT for each address field'),
-            $this->t('Aggregated into a single MULTIPOINT geofield (e.g. One MULTIPOINT polygon from multiple address fields)'),
-            $this->t('Broken up into multiple geometries (e.g. One MULTIPOINT to multiple POINTs.)'),
-          ],
-        ],
-      ],
+      '#description' => 'If the source field is a multi-value field, this is mapped 1-on-1 by default.
+      That means that if you can add an unlimited amount of text fields, this also results in an
+      unlimited amount of geocodes. However, if you have one field that contains multiple geocodes
+      (like a file) you can select single-to-multiple to extract all geocodes from the first field.',
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'delta_handling', 'default'),
       '#options' => [
         'default' => $this->t('Match Multiples (default)'),
-        'm_to_s' => $this->t('Multiple to Single'),
         's_to_m' => $this->t('Single to Multiple'),
-        'c_to_s' => $this->t('Concatenate to Single'),
-        'c_to_m' => $this->t('Concatenate to Multiple'),
       ],
       '#states' => $invisible_state,
     ];
