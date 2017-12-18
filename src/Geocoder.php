@@ -51,7 +51,7 @@ class Geocoder implements GeocoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function reverse(\double $latitude, \double $longitude, array $plugins, array $options = []) {
+  public function reverse($latitude, $longitude, array $plugins, array $options = []) {
     foreach ($plugins as $plugin_id) {
       $options += [$plugin_id => []];
       $provider = $this->providerPluginManager->createInstance($plugin_id, $options[$plugin_id]);
