@@ -127,21 +127,19 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         continue;
 
       }
-      else {
-        if ($geocoder['failure']['handling'] == 'preserve') {
-          $result[$delta] = isset($default_values[$delta]) ? $default_values[$delta]->getValue() : NULL;
-        }
-        elseif ($geocoder['failure']['handling'] == 'empty') {
-          $result[$delta] = NULL;
-        }
-        // Display a status message.
-        if ($geocoder['failure']['status_message']) {
-          drupal_set_message(t("'@text' cannot be geocoded.", ['@text' => $value['value']]), 'warning');
-        }
-        // Log the failure.
-        if ($geocoder['failure']['log']) {
-          \Drupal::logger('geocoder')->warning(t("'@text' cannot be geocoded.", ['@text' => $value['value']]));
-        }
+      if ($geocoder['failure']['handling'] == 'preserve') {
+        $result[$delta] = isset($default_values[$delta]) ? $default_values[$delta]->getValue() : NULL;
+      }
+      elseif ($geocoder['failure']['handling'] == 'empty') {
+        $result[$delta] = NULL;
+      }
+      // Display a status message.
+      if ($geocoder['failure']['status_message']) {
+        drupal_set_message(t("'@text' cannot be geocoded.", ['@text' => $value['value']]), 'warning');
+      }
+      // Log the failure.
+      if ($geocoder['failure']['log']) {
+        \Drupal::logger('geocoder')->warning(t("'@text' cannot be geocoded.", ['@text' => $value['value']]));
       }
     }
     $entity->set($field_name, $result);
