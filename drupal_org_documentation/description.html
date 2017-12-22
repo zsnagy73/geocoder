@@ -56,30 +56,43 @@ dpm($handlers);
 
 New geocoder handlers as easy to define. Simply create a new ctools plugin of the type "geocoder_handler".
 
-<h2>Geocoder 2.x</h2>
-Development version released the 16th of January.
+<h2>Geocoder 2.x, for D8</h2>
 
-This is a complete rewrite of the code, based on the <a href="http://geocoder-php.org/">Geocoder PHP library</a>.
+This is the new Geocoder module, rewritten using the <a href="http://geocoder-php.org/">Geocoder PHP library</a>.
 
 <h3>Features</h3>
 <ul>
   <li>Solid API based on <a href="http://geocoder-php.org">Geocoder PHP library</a></li>
-  <li>Geocode and Reverse Geocode using one or multiple providers (<a href="https://github.com/drupol/geocoder/tree/7.x-2.x/src/Plugin/GeocoderProvider">list</a>)</li>
-  <li>Results can be dumped into multiple formats (<a href="https://github.com/drupol/geocoder/tree/7.x-2.x/src/Plugin/GeocoderDumper">list</a>)</li>
-  <li>Submodule Geocoder Field: provides Drupal fields widgets and formatters, with even more options.</li>
-  <li>Submodule Geocoder Services: provides a Geocoding and reverse geocoding service through the contrib module Services.</li>
-  <li>File geocoding, Addressfield integration, caching enabled by default.</li>
+  <li>Geocode and Reverse Geocode using one or multiple Geocoder providers (ArcGISOnline, BingMaps, File, GoogleMaps,  Nominatim, OpeneStreetMap, etc)</li>
+  <li>Results can be dumped into multiple formats such as WKT, GeoJson, etc ...</li>
+  <li>The Geocoder Provider and Dumper plugins are extendable through a custom module.</li>
+  <li>Submodule Geocoder Field provides Drupal fields widgets and formatters, with even more options.</li>
+  <li><a href="https://www.drupal.org/project/geofield">Geofield</a> and <a href="https://www.drupal.org/project/address">Address</a> field integration.</li>
+  <li>Caching results capabilities, enabled by default</li>
 </ul>
 
 <h3>Requirements</h3>
 <ul>
-  <li><a href="http://www.drush.org/">Drush</a></li>
-  <li><a href="https://getcomposer.org/">Composer</a></li>
-  <li>Contrib module <a href="https://drupal.org/project/service_container">Service Container</a></li>
-  <li>Contrib module <a href="https://drupal.org/project/composer_manager">Composer Manager</a></li>
+  <li><a href="http://drush.org">Drush</a></li>
+  <li><a href="https://getcomposer.org">Composer</a>, to add the module to your codebase (for more info refer to <a href="https://www.drupal.org/node/2718229">Using Composer to manage Drupal site dependencies</a></li>
+  <li>No other external requirements for the main geocoder Module: the <a href="http://geocoder-php.org">Geocoder PHP library</a> will be downloaded automatically via composer.
+  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/geofield">Geofield Module</a></li>
+  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/address">Address Module</a></li>
 </ul>
 
-<h3>Installation</h3>
+<h3>Installation for D8</h3>
+
+<ol>
+  <li>Download the module running the following shell command from you project root (at the composer.json file level):<br>
+    $ composer require drupal/geocoder<br>
+  <strong>Note:</strong> this will also download the Geocoder PHP library as vendor/willdurand/geocoder</li>
+  <li>Enable the module via Drush<br>
+  $ drush en geocoder<br>
+    or the website back-end/administration interface.</li>
+  <li>Eventually enable also the submodules: geocoder_field and geocoder_geofield / geocoder_address</li>
+</ol>
+
+<h3>Installation for D7</h3>
 
 <ol>
   <li>drush dl composer_manager</li>
@@ -87,16 +100,13 @@ This is a complete rewrite of the code, based on the <a href="http://geocoder-ph
   <li>drush dl composer-8.x-1.x</li>
   <li>drush dl geocoder-7.x-2.x</li>
   <li>drush en geocoder -y</li>
+  <li>Eventually enable also the submodules: geocoder_field and geocoder_geofield / geocoder_address</li>
+
 </ol>
-
-Have a look at <a href="https://gist.github.com/drupol/c2a44cda3ad3da4e32ea">the log of the installation</a> on my computer.
-
-<blockquote>Warning: I only use drush to install modules, documentation on how to install without it is to be done.
-</blockquote>
 
 <h3>API</h3>
 
-Find the documentation on the API in <a href="https://github.com/drupol/geocoder/blob/7.x-2.x/README.md#api">the README file</a>.
+Find the documentation on the API in the README.md file.
 
 <h3>Modules using Geocoder 2.x</h3>
 <ul>
