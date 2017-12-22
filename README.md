@@ -1,6 +1,6 @@
 # Geocoder 8.x-2.x
 
-This is the new Geocoder module rewritten using the
+This is a complete rewrite of the Geocoder module, based on the
 [Geocoder PHP library](http://geocoder-php.org)
 
 # Features
