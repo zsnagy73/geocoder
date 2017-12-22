@@ -63,21 +63,21 @@ This is a complete rewrite of the Geocoder module, based on the <a href="http://
 <h3>Features</h3>
 <ul>
   <li>Solid API based on <a href="http://geocoder-php.org">Geocoder PHP library</a></li>
-  <li>Geocode and Reverse Geocode using one or multiple Geocoder providers (ArcGISOnline, BingMaps, File, GoogleMaps,  Nominatim, OpeneStreetMap, etc)</li>
+  <li>Geocode and Reverse Geocode using one or multiple Geocoder providers (ArcGISOnline, BingMaps, File, GoogleMaps,  Nominatim, OpeneStreetMap, etc);</li>
   <li>Results can be dumped into multiple formats such as WKT, GeoJson, etc ...</li>
-  <li>The Geocoder Provider and Dumper plugins are extendable through a custom module.</li>
-  <li>Submodule Geocoder Field provides Drupal fields widgets and formatters, with even more options.</li>
-  <li><a href="https://www.drupal.org/project/geofield">Geofield</a> and <a href="https://www.drupal.org/project/address">Address</a> field integration.</li>
-  <li>Caching results capabilities, enabled by default</li>
+  <li>The Geocoder Provider and Dumper plugins are extendable through a custom module;</li>
+  <li>Submodule Geocoder Field provides Drupal fields widgets and formatters, with even more options;</li>
+  <li><a href="https://www.drupal.org/project/geofield">Geofield</a> and <a href="https://www.drupal.org/project/address">Address</a> field integration;</li>
+  <li>Caching results capabilities, enabled by default;</li>
 </ul>
 
 <h3>Requirements</h3>
 <ul>
-  <li><a href="http://drush.org">Drush</a></li>
-  <li><a href="https://getcomposer.org">Composer</a>, to add the module to your codebase (for more info refer to <a href="https://www.drupal.org/node/2718229">Using Composer to manage Drupal site dependencies</a></li>
-  <li>No other external requirements for the main geocoder Module: the <a href="http://geocoder-php.org">Geocoder PHP library</a> will be downloaded automatically via composer.
-  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/geofield">Geofield Module</a></li>
-  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/address">Address Module</a></li>
+  <li><a href="https://getcomposer.org">Composer</a>, to add the module to your codebase (for more info refer to <a href="https://www.drupal.org/node/2718229">Using Composer to manage Drupal site dependencies)</a></li>
+  <li><a href="http://drush.org">Drush</a>, to enable the module (and its dependencies) from the shell;</li>
+  <li>No other external requirements for the main geocoder Module: the <a href="http://geocoder-php.org">Geocoder PHP library</a> will be downloaded automatically via composer;</li>
+  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/geofield">Geofield Module</a>;</li>
+  <li>The embedded "Geocoder Address" submodule requires the <a href="https://www.drupal.org/project/address">Address Module</a>;</li>
 </ul>
 
 <h3>Installation for D8</h3>
@@ -85,11 +85,11 @@ This is a complete rewrite of the Geocoder module, based on the <a href="http://
 <ol>
   <li>Download the module running the following shell command from you project root (at the composer.json file level):<br>
     $ composer require drupal/geocoder<br>
-  <strong>Note:</strong> this will also download the Geocoder PHP library as vendor/willdurand/geocoder</li>
+    <strong>Note:</strong> this will also download the Geocoder PHP library as vendor/willdurand/geocoder</li>
   <li>Enable the module via Drush<br>
-  $ drush en geocoder<br>
-    or the website back-end/administration interface.</li>
-  <li>Eventually enable also the submodules: geocoder_field and geocoder_geofield / geocoder_address</li>
+    $ drush en geocoder<br>
+    or the website back-end/administration interface;</li>
+  <li>Eventually enable also the submodules: geocoder_field and geocoder_geofield / geocoder_address;</li>
 </ol>
 
 <h3>Installation for D7</h3>
