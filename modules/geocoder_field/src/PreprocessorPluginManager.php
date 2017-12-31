@@ -27,7 +27,7 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
    * Pre-processes a field, running all plugins that support that field type.
    *
    * @param \Drupal\Core\Field\FieldItemListInterface $field
-   *   The field item list to be processsed.
+   *   The field item list to be processed.
    */
   public function preprocess(FieldItemListInterface &$field) {
     $type = $field->getFieldDefinition()->getType();

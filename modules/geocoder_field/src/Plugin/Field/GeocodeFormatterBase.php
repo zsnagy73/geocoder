@@ -92,9 +92,9 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public static function defaultSettings() {
     return parent::defaultSettings() + array(
-      'dumper_plugin' => 'wkt',
-      'provider_plugins' => array(),
-    );
+        'dumper_plugin' => 'wkt',
+        'provider_plugins' => array(),
+      );
   }
 
   /**
@@ -197,12 +197,13 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $dumper_plugins = $this->dumperPluginManager->getPluginsAsOptions();
     $dumper_plugin = $this->getSetting('dumper_plugin');
 
-    if (!empty($provider_plugin_ids)) {
-      $summary[] = t('Geocoder plugin(s): @plugin_ids', array('@plugin_ids' => implode(', ', $provider_plugin_ids)));
-    }
-    if (!empty($dumper_plugin)) {
-      $summary[] = t('Output format plugin: @format', array('@format' => $dumper_plugins[$dumper_plugin]));
-    }
+    $summary[] = t('Geocoder plugin(s): @plugin_ids', array(
+      '@plugin_ids' => !empty($provider_plugin_ids) ? implode(', ', $provider_plugin_ids) : $this->t('Not yet set'),
+    ));
+
+    $summary[] = t('Output format plugin: @format', array(
+      '@format' => !empty($dumper_plugin) ? $dumper_plugins[$dumper_plugin] : $this->t('Not yet set'),
+    ));
 
     return $summary;
   }
@@ -216,7 +217,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
-      if ($addressCollection = $this->geocoder->geocode($item->value, $provider_plugins)) {
+      if ($addressCollection = $this->geocoder->geocode($item->value, array_keys($provider_plugins))) {
         $elements[$delta] = array(
           '#plain_text' => $dumper->dump($addressCollection->first()),
         );

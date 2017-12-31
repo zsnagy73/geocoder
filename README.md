@@ -1,7 +1,7 @@
 # Geocoder 8.x-2.x
 
 This is a complete rewrite of the Geocoder module, based on the
-[Geocoder PHP library](http://geocoder-php.org)
+[Geocoder PHP library](http://geocoder-php.org) - [version 3.x](https://github.com/geocoder-php/Geocoder/tree/3.x)
 
 # Features
 * Solid API based on [Geocoder PHP library](href="http://geocoder-php.org);
@@ -129,5 +129,5 @@ $geometry = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('
 # Links
 * [Composer](https://getcomposer.org/)
 * [Drush](http://drush.org)
-* [Geocoder PHP library](http://geocoder-php.org/)
+* [Geocoder PHP library](http://geocoder-php.org) - [version 3.x](https://github.com/geocoder-php/Geocoder/tree/3.x)
 * [Geocoder module](https://www.drupal.org/project/geocoder)

@@ -26,9 +26,9 @@ interface GeocoderInterface {
   /**
    * Reverse geocode coordinates.
    *
-   * @param $latitude
+   * @param string $latitude
    *   The latitude.
-   * @param $longitude
+   * @param string $longitude
    *   The longitude.
    * @param string[] $plugins
    *   A list of plugin identifiers to use.

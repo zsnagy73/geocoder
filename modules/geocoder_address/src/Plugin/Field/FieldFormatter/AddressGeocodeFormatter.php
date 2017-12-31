@@ -24,6 +24,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
+    $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();
@@ -35,7 +36,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
       $address[] = !empty($value['locality']) ? $value['locality'] : NULL;
       $address[] = !empty($value['country']) ? $value['country'] : NULL;
 
-      if ($addressCollection = $this->geocoder->geocode(implode(',', array_filter($address)), $this->getEnabledProviderPlugins())) {
+      if ($addressCollection = $this->geocoder->geocode(implode(' ', array_filter($address)), array_keys($provider_plugins))) {
         $elements[$delta] = array(
           '#plain_text' => $dumper->dump($addressCollection->first()),
         );

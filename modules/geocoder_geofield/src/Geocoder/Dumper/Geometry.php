@@ -20,7 +20,7 @@ class Geometry implements Dumper {
   /**
    * Geophp interface.
    *
-   * @var \Drupal\geofield\geophp\geoPHPInterface
+   * @var \Drupal\geofield\GeoPHP\GeoPHPInterface
    */
   private $geophp;
 

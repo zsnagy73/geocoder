@@ -23,17 +23,19 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = array();
+    /* @var \Drupal\geofield\GeoPHP\GeoPHPInterface */
     $geophp = \Drupal::service('geofield.geophp');
-    $dumper = \Drupal::service('geocoder.dumper.' . $this->getSetting('dumper_plugin'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
       /** @var \Geometry $geom */
       $geom = $geophp->load($item->value);
+      /** @var \Point $centroid */
       $centroid = $geom->getCentroid();
-      if ($addressCollection = $this->geocoder->reverse($centroid->y(), $centroid->x(), $provider_plugins)) {
+      if ($address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), array_keys($provider_plugins))) {
+        // @TODO This should be generated from the Formatter (to be created) instead.
         $elements[$delta] = array(
-          '#markup' => $dumper->dump($addressCollection->first()),
+          '#markup' => $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'))->dump($address_collection->first()),
         );
       }
     }

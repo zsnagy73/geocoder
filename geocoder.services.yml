@@ -15,6 +15,10 @@ services:
     class: Drupal\geocoder\DumperPluginManager
     parent: default_plugin_manager
 
+  plugin.manager.geocoder.formatter:
+    class: Drupal\geocoder\FormatterPluginManager
+    parent: default_plugin_manager
+
   cache.geocoder:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

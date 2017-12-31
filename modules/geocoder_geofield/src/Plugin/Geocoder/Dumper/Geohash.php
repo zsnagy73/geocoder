@@ -20,7 +20,9 @@ class Geohash extends DumperBase {
    * {@inheritdoc}
    */
   public function dump(Address $address) {
-    return parent::dump($address)->out('geohash');
+    /* @var \Geometry $geometry */
+    $geometry = parent::dump($address);
+    return $geometry->out('geohash');
   }
 
 }
