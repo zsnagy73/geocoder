@@ -262,8 +262,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public static function validateGeocodeFormatterPlugins(array $element, FormStateInterface &$form_state) {
     $plugins = [];
-    $element_values_array = $element['#value'];
-    foreach ($element_values_array as $k => $value) {
+    foreach ($element['#value'] as $k => $value) {
       if (isset($value['checked']) && $value['checked'] == '1') {
         $plugins[] = $k;
       }

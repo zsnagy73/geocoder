@@ -7,6 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geocoder\Annotation\GeocoderDumper;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Field\FieldConfigInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 
 /**
  * Provides a plugin manager for geocoder dumpers.
@@ -19,12 +20,20 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
   ];
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $logger;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct('Plugin/Geocoder/Dumper', $namespaces, $module_handler, DumperInterface::class, GeocoderDumper::class);
     $this->alterInfo('geocoder_dumper_info');
     $this->setCacheBackend($cache_backend, 'geocoder_dumper_plugins');
+    $this->logger = $logger_factory;
   }
 
   /**
@@ -61,7 +70,6 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
    *   The Field Configuration.
    */
   public function fixDumperFieldIncompatibility(&$dumper_result, $dumper, FieldConfigInterface $field_config) {
-
     // Fix not UTF-8 encoded result strings.
     // https://stackoverflow.com/questions/6723562/how-to-detect-malformed-utf-8-string-in-php
     if (!preg_match('//u', $dumper_result)) {
@@ -86,7 +94,7 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
       drupal_set_message($incompatibility_warning_message, 'warning');
 
       // Log the max-length incompatibility.
-      \Drupal::logger('geocoder')->warning($incompatibility_warning_message);
+      $this->logger->get('geocoder')->warning($incompatibility_warning_message);
     }
   }
 

@@ -45,7 +45,6 @@ class AddressField extends DefaultField {
         '#type' => 'value',
         '#value' => 'geojson',
       ];
-
     }
 
     return $element;

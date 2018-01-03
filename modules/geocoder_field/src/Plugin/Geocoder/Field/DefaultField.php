@@ -327,7 +327,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     $form_values = $form_state->getValues();
 
     if ($form_values['method'] !== 'none' && empty($form_values['plugins'])) {
-      $form_state->setError($form['third_party_settings']['geocoder_field']['plugins'], t('The Geocoder operation chosen needs at least one Plugin to be selected.'));
+      $form_state->setError($form['third_party_settings']['geocoder_field']['plugins'], t('The selected Geocode operation needs at least one plugin.'));
     }
 
     // On Reverse Geocode the delta_handling should always be 'default'

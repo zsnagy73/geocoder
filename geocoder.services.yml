@@ -14,6 +14,7 @@ services:
   plugin.manager.geocoder.dumper:
     class: Drupal\geocoder\DumperPluginManager
     parent: default_plugin_manager
+    arguments: ['@logger.factory']
 
   plugin.manager.geocoder.formatter:
     class: Drupal\geocoder\FormatterPluginManager

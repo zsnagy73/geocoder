@@ -53,6 +53,36 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
   }
 
   /**
+   * Get Fields Options.
+   *
+   * @param string $entity_type_id
+   *   The entity type id.
+   * @param string $bundle
+   *   The bundle.
+   * @param string $field_name
+   *   The field name.
+   * @param array $field_types
+   *   The field types array.
+   *
+   * @return mixed
+   *   The options results.
+   */
+  private function getFieldsOptions($entity_type_id, $bundle, $field_name, array $field_types) {
+    $options = [];
+    foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $id => $definition) {
+      if (in_array($definition->getType(), $field_types) && ($definition->getName()) !== $field_name) {
+        $options[$id] = new TranslatableMarkup(
+          '@label (@name) [@type]', [
+            '@label' => $definition->getLabel(),
+            '@name' => $definition->getName(),
+            '@type' => $definition->getType(),
+          ]);
+      }
+    }
+    return $options;
+  }
+
+  /**
    * Returns the first plugin that handles a specific field type.
    *
    * @param string $field_type
@@ -86,21 +116,8 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The array of source fields and their label.
    */
   public function getGeocodeSourceFields($entity_type_id, $bundle, $field_name) {
-    $options = [];
-
-    $types = $this->preprocessorPluginManager->getGeocodeSourceFieldsTypes();
-
-    foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $id => $definition) {
-      if (in_array($definition->getType(), $types) && ($definition->getName()) !== $field_name) {
-        $options[$id] = new TranslatableMarkup(
-          '@label (@name) [@type]', [
-            '@label' => $definition->getLabel(),
-            '@name' => $definition->getName(),
-            '@type' => $definition->getType(),
-          ]);
-      }
-    }
-
+    $field_types = $this->preprocessorPluginManager->getGeocodeSourceFieldsTypes();
+    $options = $this->getFieldsOptions($entity_type_id, $bundle, $field_name, $field_types);
     return $options;
   }
 
@@ -118,20 +135,8 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The array of source fields and their label.
    */
   public function getReverseGeocodeSourceFields($entity_type_id, $bundle, $field_name) {
-    $options = [];
-
-    $types = $this->preprocessorPluginManager->getReverseGeocodeSourceFieldsTypes();
-
-    foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $id => $definition) {
-      if (in_array($definition->getType(), $types) && ($definition->getName()) !== $field_name) {
-        $options[$id] = new TranslatableMarkup(
-          '@label (@name) [@type]', [
-            '@label' => $definition->getLabel(),
-            '@name' => $definition->getName(),
-            '@type' => $definition->getType(),
-          ]);
-      }
-    }
+    $field_types = $this->preprocessorPluginManager->getReverseGeocodeSourceFieldsTypes();
+    $options = $this->getFieldsOptions($entity_type_id, $bundle, $field_name, $field_types);
     return $options;
   }
 
