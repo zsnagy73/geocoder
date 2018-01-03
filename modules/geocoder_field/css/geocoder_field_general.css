@@ -1,0 +1,13 @@
+/* line 2, ../sass/geocoder_field_general.scss */
+table#edit-third-party-settings-geocoder-field-plugins .form-item input.error {
+  outline: solid red thin;
+}
+
+/* line 6, ../sass/geocoder_field_general.scss */
+#field-display-overview .field-plugin-settings-edit-form table.geocode-formatter .form-item {
+  margin: 0;
+}
+/* line 8, ../sass/geocoder_field_general.scss */
+#field-display-overview .field-plugin-settings-edit-form table.geocode-formatter .form-item input.error {
+  outline: solid red thin;
+}

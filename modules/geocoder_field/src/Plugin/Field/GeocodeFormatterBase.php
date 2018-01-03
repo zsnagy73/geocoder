@@ -92,9 +92,9 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public static function defaultSettings() {
     return parent::defaultSettings() + array(
-        'dumper_plugin' => 'wkt',
-        'provider_plugins' => array(),
-      );
+      'dumper_plugin' => 'wkt',
+      'provider_plugins' => array(),
+    );
   }
 
   /**
@@ -102,6 +102,11 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
+
+    // Attach Geofield Map Library.
+    $elements['#attached']['library'] = [
+      'geocoder_field/general',
+    ];
 
     $enabled_plugins = array();
     $i = 0;
@@ -134,6 +139,12 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
           'group' => 'provider_plugins-order-weight',
         ),
       ),
+      '#attributes' => [
+        'class' => [
+          'geocode-formatter',
+        ],
+      ],
+      '#element_validate' => array([get_class($this), 'validateGeocodeFormatterPlugins']),
     );
 
     $rows = array();
@@ -244,6 +255,23 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     }
 
     return $provider_plugin_ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function validateGeocodeFormatterPlugins(array $element, FormStateInterface &$form_state) {
+    $plugins = [];
+    $element_values_array = $element['#value'];
+    foreach ($element_values_array as $k => $value) {
+      if (isset($value['checked']) && $value['checked'] == '1') {
+        $plugins[] = $k;
+      }
+    }
+
+    if (empty($plugins)) {
+      $form_state->setError($element, t('The Geocoder operation chosen needs at least one Plugin to be selected.'));
+    }
   }
 
 }

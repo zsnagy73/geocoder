@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\ProviderPluginManager;
 use Drupal\geocoder_field\GeocoderFieldPluginInterface;
@@ -27,6 +28,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
   /**
    * The plugin manager for this type of plugins.
    *
@@ -57,6 +66,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    * @param \Drupal\geocoder_field\GeocoderFieldPluginManager $field_plugin_manager
    *   The plugin manager for this type of plugins.
    * @param \Drupal\geocoder\DumperPluginManager $dumper_plugin_manager
@@ -64,8 +75,17 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    * @param \Drupal\geocoder\ProviderPluginManager $provider_plugin_manager
    *   The provider plugin manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, GeocoderFieldPluginManager $field_plugin_manager, DumperPluginManager $dumper_plugin_manager, ProviderPluginManager $provider_plugin_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ModuleHandlerInterface $module_handler,
+    GeocoderFieldPluginManager $field_plugin_manager,
+    DumperPluginManager $dumper_plugin_manager,
+    ProviderPluginManager $provider_plugin_manager
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->moduleHandler = $module_handler;
     $this->fieldPluginManager = $field_plugin_manager;
     $this->dumperPluginManager = $dumper_plugin_manager;
     $this->providerPluginManager = $provider_plugin_manager;
@@ -79,6 +99,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('module_handler'),
       $container->get('geocoder_field.plugin.manager.field'),
       $container->get('plugin.manager.geocoder.dumper'),
       $container->get('plugin.manager.geocoder.provider')
@@ -95,15 +116,9 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#open' => TRUE,
     ];
 
-    $element['method'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Geocode method'),
-      '#options' => [
-        'none' => $this->t('No geocoding'),
-        'source' => $this->t('Geocode from an existing field'),
-        'destination' => $this->t('Reverse geocode from an existing field'),
-      ],
-      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
+    // Attach Geofield Map Library.
+    $element['#attached']['library'] = [
+      'geocoder_field/general',
     ];
 
     $invisible_state = [
@@ -112,14 +127,103 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
-    $element['field'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Geocode from an existing field'),
-      '#description' => $this->t('Select which field you would like to use.'),
-      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'field'),
-      '#options' => $this->fieldPluginManager->getSourceFields($field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName()),
+    $element['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Weight'),
+      '#description' => $this->t('This is the weight order that will be followed for Geocode/Reverse Geocode operations on multiple fields of this entity. Lowest weights will be processed first.'),
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'weight', 0),
+      '#min' => 0,
+      '#max' => 9,
+      '#size' => 2,
       '#states' => $invisible_state,
     ];
+
+    $element['method'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Geocode method'),
+      '#options' => [
+        'none' => $this->t('No geocoding'),
+        'source' => $this->t('<b>Geocode</b> from an existing field'),
+      ],
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
+    ];
+
+    // Set a default empty array value for geocode_field.
+    $element['geocode_field'] = [
+      '#type' => 'value',
+      '#value' => [],
+    ];
+
+    // Set a default empty array value for reverse_geocode_field.
+    $element['reverse_geocode_field'] = [
+      '#type' => 'value',
+      '#value' => [],
+    ];
+
+    // Get the field options for geocode and reverse geocode source fields.
+    $geocode_source_fields_options = $this->fieldPluginManager->getGeocodeSourceFields($field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName());
+    $reverse_geocode_source_fields_options = $this->fieldPluginManager->getReverseGeocodeSourceFields($field->getTargetEntityTypeId(), $field->getTargetBundle(), $field->getName());
+
+    // If there is at least one geocode source field defined from the entity,
+    // extend the Form with Geocode Option.
+    // (from Geofield) capabilities.
+    if (!empty($geocode_source_fields_options)) {
+      $element['geocode_field'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Geocode from an existing field'),
+        '#description' => $this->t('Select which field you would like to use as Source Address field.'),
+        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'geocode_field'),
+        '#options' => $geocode_source_fields_options,
+        '#states' => [
+          'visible' => [
+            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'source'],
+          ],
+        ],
+      ];
+    }
+
+    // If the Geocoder Geofield Module exists and there is at least one
+    // geofield defined from the entity, extend the Form with Reverse Geocode
+    // (from Geofield) capabilities.
+    if (!empty($reverse_geocode_source_fields_options) && $this->moduleHandler->moduleExists('geocoder_geofield')) {
+
+      // Add the Option to Reverse Geocode.
+      $element['method']['#options']['destination'] = $this->t('<b>Reverse Geocode</b> from a Geofield type existing field');
+
+      // Add the Element to select the Reverse Geocode field.
+      $element['reverse_geocode_field'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Reverse Geocode from an existing field'),
+        '#description' => $this->t('Select which field you would like to use as Geographic Source field.'),
+        '#default_value' => $field->getThirdPartySetting('geocoder_field', 'reverse_geocode_field'),
+        '#options' => $reverse_geocode_source_fields_options,
+        '#states' => [
+          'visible' => [
+            ':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'destination'],
+          ],
+        ],
+      ];
+    }
+    $element['hidden'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('<strong>Hide</strong> this field in the Content Edit Form'),
+      '#description' => $this->t('If checked, the Field will be Hidden to the user in the edit form, </br>and totally managed by the Geocode/Reverse Geocode operation chosen'),
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'hidden'),
+      '#states' => $invisible_state,
+    );
+    $element['disabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('<strong>Disable</strong> this field in the Content Edit Form'),
+      '#description' => $this->t('If checked, the Field will be Disabled to the user in the edit form, </br>and totally managed by the Geocode/Reverse Geocode operation chosen'),
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'disabled'),
+      '#states' => [
+        'invisible' => [
+          [':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'none']],
+          [':input[name="third_party_settings[geocoder_field][hidden]"]' => ['checked' => TRUE]],
+        ],
+      ],
+    );
+
     $element['plugins'] = [
       '#type' => 'table',
       '#header' => [t('Geocoder plugins'), $this->t('Weight')],
@@ -178,7 +282,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         'default' => $this->t('Match Multiples (default)'),
         's_to_m' => $this->t('Single to Multiple'),
       ],
-      '#states' => $invisible_state,
+      '#states' => [
+        'visible' => [
+          [':input[name="third_party_settings[geocoder_field][method]"]' => ['value' => 'source']],
+        ],
+      ],
     ];
     $failure = (array) $field->getThirdPartySetting('geocoder_field', 'failure') + [
       'handling' => 'preserve',
@@ -215,6 +323,18 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
   /**
    * {@inheritdoc}
    */
-  public function validateSettingsForm(array $form, FormStateInterface &$form_state) {}
+  public function validateSettingsForm(array $form, FormStateInterface &$form_state) {
+    $form_values = $form_state->getValues();
+
+    if ($form_values['method'] !== 'none' && empty($form_values['plugins'])) {
+      $form_state->setError($form['third_party_settings']['geocoder_field']['plugins'], t('The Geocoder operation chosen needs at least one Plugin to be selected.'));
+    }
+
+    // On Reverse Geocode the delta_handling should always be 'default'
+    // (many to many), because the other scenario is not admittable.
+    if ($form_values['method'] == 'destination') {
+      $form_state->setValue('delta_handling', 'default');
+    }
+  }
 
 }

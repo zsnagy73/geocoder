@@ -10,6 +10,27 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
 
   /**
+   * List of fields types available as source for Geocode operations.
+   *
+   * @var array
+   */
+  protected $geocodeSourceFieldsTypes = [
+    "string",
+    "text",
+    "text_long",
+    "address",
+  ];
+
+  /**
+   * List of fields types available as source for Reverse Geocode operations.
+   *
+   * @var array
+   */
+  protected $reverseGeocodeSourceFieldsTypes = [
+    "geofield",
+  ];
+
+  /**
    * Gets a list of available plugins to be used in forms.
    *
    * @return string[]
@@ -22,6 +43,26 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
     asort($options);
 
     return $options;
+  }
+
+  /**
+   * Gets a list of fields types available for Geocode operations.
+   *
+   * @return string[]
+   *   A list of plugins in a format suitable for form API '#options' key.
+   */
+  public function getGeocodeSourceFieldsTypes() {
+    return $this->geocodeSourceFieldsTypes;
+  }
+
+  /**
+   * Gets a list of fields types available for Reverse Geocode operations.
+   *
+   * @return string[]
+   *   A list of plugins in a format suitable for form API '#options' key.
+   */
+  public function getReverseGeocodeSourceFieldsTypes() {
+    return $this->reverseGeocodeSourceFieldsTypes;
   }
 
 }

@@ -1,0 +1,11 @@
+
+table#edit-third-party-settings-geocoder-field-plugins .form-item input.error {
+  outline: solid red thin;
+}
+
+#field-display-overview .field-plugin-settings-edit-form table.geocode-formatter .form-item {
+  margin: 0;
+  input.error {
+    outline: solid red thin;
+  }
+}
