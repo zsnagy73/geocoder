@@ -22,13 +22,13 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();
-      $address = array();
+      $address = [];
 
       $address[] = !empty($value['address_line1']) ? $value['address_line1'] : NULL;
       $address[] = !empty($value['address_line2']) ? $value['address_line2'] : NULL;
@@ -37,9 +37,9 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
       $address[] = !empty($value['country']) ? $value['country'] : NULL;
 
       if ($addressCollection = $this->geocoder->geocode(implode(' ', array_filter($address)), array_keys($provider_plugins))) {
-        $elements[$delta] = array(
+        $elements[$delta] = [
           '#plain_text' => $dumper->dump($addressCollection->first()),
-        );
+        ];
       }
     }
 

@@ -148,12 +148,12 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
           '#title' => $plugin_name,
           '#default_value' => in_array($plugin_id, $default_plugins),
         ],
-        'weight' => array(
+        'weight' => [
           '#type' => 'weight',
           '#title' => $this->t('Weight for @title', ['@title' => $plugin_name]),
           '#title_display' => 'invisible',
           '#attributes' => ['class' => ['plugins-order-weight']],
-        ),
+        ],
         '#attributes' => ['class' => ['draggable']],
       ];
     }

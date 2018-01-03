@@ -91,10 +91,10 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return parent::defaultSettings() + array(
-        'dumper_plugin' => 'wkt',
-        'provider_plugins' => array(),
-      );
+    return parent::defaultSettings() + [
+      'dumper_plugin' => 'wkt',
+      'provider_plugins' => [],
+    ];
   }
 
   /**
@@ -103,7 +103,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $enabled_plugins = array();
+    $enabled_plugins = [];
     $i = 0;
     foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
@@ -112,31 +112,31 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       }
     }
 
-    $elements['geocoder_plugins_title'] = array(
+    $elements['geocoder_plugins_title'] = [
       '#type' => 'item',
       '#weight' => 15,
       '#title' => t('Geocoder plugin(s)'),
       '#description' => t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
-    );
+    ];
 
-    $elements['provider_plugins'] = array(
+    $elements['provider_plugins'] = [
       '#type' => 'table',
       '#weight' => 20,
-      '#header' => array(
-        array('data' => $this->t('Enabled')),
-        array('data' => $this->t('Weight')),
-        array('data' => $this->t('Name')),
-      ),
-      '#tabledrag' => array(
-        array(
+      '#header' => [
+        ['data' => $this->t('Enabled')],
+        ['data' => $this->t('Weight')],
+        ['data' => $this->t('Name')],
+      ],
+      '#tabledrag' => [
+        [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'provider_plugins-order-weight',
-        ),
-      ),
-    );
+        ],
+      ],
+    ];
 
-    $rows = array();
+    $rows = [];
     $count = count($enabled_plugins);
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
       if (isset($enabled_plugins[$plugin_id])) {
@@ -146,26 +146,26 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
         $weight = $count++;
       }
 
-      $rows[$plugin_id] = array(
-        '#attributes' => array(
-          'class' => array('draggable'),
-        ),
+      $rows[$plugin_id] = [
+        '#attributes' => [
+          'class' => ['draggable'],
+        ],
         '#weight' => $weight,
-        'checked' => array(
+        'checked' => [
           '#type' => 'checkbox',
           '#default_value' => isset($enabled_plugins[$plugin_id]) ? 1 : 0,
-        ),
-        'weight' => array(
+        ],
+        'weight' => [
           '#type' => 'weight',
-          '#title' => t('Weight for @title', array('@title' => $plugin_id)),
+          '#title' => t('Weight for @title', ['@title' => $plugin_id]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
-          '#attributes' => array('class' => array('provider_plugins-order-weight')),
-        ),
-        'name' => array(
+          '#attributes' => ['class' => ['provider_plugins-order-weight']],
+        ],
+        'name' => [
           '#plain_text' => $plugin_name,
-        ),
-      );
+        ],
+      ];
     }
 
     uasort($rows, function ($a, $b) {
@@ -176,14 +176,14 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       $elements['provider_plugins'][$plugin_id] = $row;
     }
 
-    $elements['dumper_plugin'] = array(
+    $elements['dumper_plugin'] = [
       '#type' => 'select',
       '#weight' => 25,
       '#title' => 'Output format',
       '#default_value' => $this->getSetting('dumper_plugin'),
       '#options' => $this->dumperPluginManager->getPluginsAsOptions(),
       '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
-    );
+    ];
 
     return $elements;
   }
@@ -192,18 +192,18 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
     $provider_plugin_ids = $this->getEnabledProviderPlugins();
     $dumper_plugins = $this->dumperPluginManager->getPluginsAsOptions();
     $dumper_plugin = $this->getSetting('dumper_plugin');
 
-    $summary[] = t('Geocoder plugin(s): @plugin_ids', array(
+    $summary[] = t('Geocoder plugin(s): @plugin_ids', [
       '@plugin_ids' => !empty($provider_plugin_ids) ? implode(', ', $provider_plugin_ids) : $this->t('Not yet set'),
-    ));
+    ]);
 
-    $summary[] = t('Output format plugin: @format', array(
+    $summary[] = t('Output format plugin: @format', [
       '@format' => !empty($dumper_plugin) ? $dumper_plugins[$dumper_plugin] : $this->t('Not yet set'),
-    ));
+    ]);
 
     return $summary;
   }
@@ -212,15 +212,15 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {
       if ($addressCollection = $this->geocoder->geocode($item->value, array_keys($provider_plugins))) {
-        $elements[$delta] = array(
+        $elements[$delta] = [
           '#plain_text' => $dumper->dump($addressCollection->first()),
-        );
+        ];
       }
     }
 
@@ -234,7 +234,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    *   Provider plugin IDs.
    */
   public function getEnabledProviderPlugins() {
-    $provider_plugin_ids = array();
+    $provider_plugin_ids = [];
     $geocoder_plugins = $this->providerPluginManager->getPluginsAsOptions();
 
     foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
