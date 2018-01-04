@@ -27,7 +27,7 @@ class AddressText extends DumperBase {
   /**
    * The Geocoder formatter.
    *
-   * @var \Drupal\geocoder\Plugin\Geocoder\Formatter\GeocoderFormatterInterface
+   * @var \Drupal\geocoder\Plugin\Geocoder\Formatter\FormatterInterface
    */
   protected $geocoderFormatter;
 
@@ -51,7 +51,7 @@ class AddressText extends DumperBase {
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->geocoderFormatterPluginManager = $geocoder_formatter_plugin_manager;
-    $this->geocoderFormatter = $this->geocoderFormatterPluginManager->createInstance('default_geocoder_address_formatter');
+    $this->geocoderFormatter = $this->geocoderFormatterPluginManager->createInstance('default_formatted_address');
   }
 
   /**

@@ -5,14 +5,14 @@ namespace Drupal\geocoder\Plugin\Geocoder\Formatter;
 use Geocoder\Model\Address;
 
 /**
- * Provides a Geocoder Default Formatter plugin.
+ * Provides a Default Formatted Address plugin.
  *
  * @GeocoderFormatter(
- *   id = "default_geocoder_address_formatter",
- *   name = "Default Geocoder Address Formatter"
+ *   id = "default_formatted_address",
+ *   name = "Default Formatted Address"
  * )
  */
-class GeocoderFormattedAddress extends GeocoderFormatterBase {
+class FormattedAddress extends FormatterBase {
 
   /**
    * {@inheritdoc}

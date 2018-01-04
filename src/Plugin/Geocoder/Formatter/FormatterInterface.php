@@ -10,7 +10,7 @@ use Geocoder\Model\Address;
  * Dumpers are plugins that knows to format geographical data into an industry
  * standard format.
  */
-interface GeocoderFormatterInterface {
+interface FormatterInterface {
 
   /**
    * Dumps the argument into a specific format.

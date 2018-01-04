@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base class for geocoder formatter plugins.
  */
-abstract class GeocoderFormatterBase extends PluginBase implements GeocoderFormatterInterface, ContainerFactoryPluginInterface {
+abstract class FormatterBase extends PluginBase implements FormatterInterface, ContainerFactoryPluginInterface {
 
   /**
    * The geocoder formatter handler.
