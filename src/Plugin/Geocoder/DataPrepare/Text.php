@@ -23,13 +23,13 @@ class Text extends DataPrepareBase implements GeocoderPluginInterface {
    *
    * @inheritDoc
    */
-  public function getPreparedReverseGeocodeValues(array $values = array()) {
+  public function getPreparedReverseGeocodeValues(array $values = []) {
     foreach ($values as $index => $value) {
       list($lat, $lon) = explode(',', trim($value['value']));
-      $values[$index] += array(
+      $values[$index] += [
         'lat' => trim($lat),
         'lon' => trim($lon),
-      );
+      ];
     }
 
     return $values;
