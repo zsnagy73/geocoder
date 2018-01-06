@@ -144,7 +144,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
           'geocode-formatter',
         ],
       ],
-      '#element_validate' => array([get_class($this), 'validateGeocodeFormatterPlugins']),
+      '#element_validate' => [[get_class($this), 'validateGeocodeFormatterPlugins']],
     ];
 
     $rows = [];

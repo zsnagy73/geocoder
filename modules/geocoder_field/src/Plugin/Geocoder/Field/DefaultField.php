@@ -204,14 +204,14 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         ],
       ];
     }
-    $element['hidden'] = array(
+    $element['hidden'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<strong>Hide</strong> this field in the Content Edit Form'),
       '#description' => $this->t('If checked, the Field will be Hidden to the user in the edit form, </br>and totally managed by the Geocode/Reverse Geocode operation chosen'),
       '#default_value' => $field->getThirdPartySetting('geocoder_field', 'hidden'),
       '#states' => $invisible_state,
-    );
-    $element['disabled'] = array(
+    ];
+    $element['disabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('<strong>Disable</strong> this field in the Content Edit Form'),
       '#description' => $this->t('If checked, the Field will be Disabled to the user in the edit form, </br>and totally managed by the Geocode/Reverse Geocode operation chosen'),
@@ -222,7 +222,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
           [':input[name="third_party_settings[geocoder_field][hidden]"]' => ['checked' => TRUE]],
         ],
       ],
-    );
+    ];
 
     $element['plugins'] = [
       '#type' => 'table',
