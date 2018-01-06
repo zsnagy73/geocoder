@@ -9,3 +9,9 @@ table#edit-third-party-settings-geocoder-field-plugins .form-item input.error {
     outline: solid red thin;
   }
 }
+
+table.geocode-formatter thead th .options-field-description {
+  font-weight: normal;
+  text-transform: none;
+  font-size: 0.95em;
+}

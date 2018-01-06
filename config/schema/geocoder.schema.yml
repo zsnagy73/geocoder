@@ -7,3 +7,6 @@ gecoder.settings:
     cache:
       type: boolean
       label: 'Cache results'
+    plugins_options:
+      type: string
+      label: 'Geocoders plugins Specific Options'
