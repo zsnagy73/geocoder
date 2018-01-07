@@ -14,6 +14,11 @@
             "name": "Pol Dellaiera (@drupol)",
             "homepage": "https://www.drupal.org/u/pol",
             "role": "Maintainer"
+        },
+        {
+          "name": "Italo Mairo  (@itamair)",
+          "homepage": "https://www.drupal.org/u/itamair",
+          "role": "Co-Maintainer"
         }
     ],
     "support": {
@@ -25,7 +30,7 @@
         "phpro/grumphp": "^0.12.1",
         "squizlabs/php_codesniffer": "^2.7",
         "sensiolabs/security-checker": "^4.1",
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^5.7|^6.5",
         "drupal/coder": "^8.2"
     }
 }
