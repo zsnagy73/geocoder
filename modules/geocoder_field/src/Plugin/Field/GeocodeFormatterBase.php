@@ -92,7 +92,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public static function defaultSettings() {
     return parent::defaultSettings() + [
-      'dumper_plugin' => 'wkt',
+      'dumper' => 'wkt',
       'provider_plugins' => [],
     ];
   }
@@ -187,11 +187,11 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       $elements['provider_plugins'][$plugin_id] = $row;
     }
 
-    $elements['dumper_plugin'] = [
+    $elements['dumper'] = [
       '#type' => 'select',
       '#weight' => 25,
       '#title' => 'Output format',
-      '#default_value' => $this->getSetting('dumper_plugin'),
+      '#default_value' => $this->getSetting('dumper'),
       '#options' => $this->dumperPluginManager->getPluginsAsOptions(),
       '#description' => t('Set the output format of the value. Ex, for a geofield, the format must be set to WKT.'),
     ];
@@ -206,7 +206,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $summary = [];
     $provider_plugin_ids = $this->getEnabledProviderPlugins();
     $dumper_plugins = $this->dumperPluginManager->getPluginsAsOptions();
-    $dumper_plugin = $this->getSetting('dumper_plugin');
+    $dumper_plugin = $this->getSetting('dumper');
 
     $summary[] = t('Geocoder plugin(s): @plugin_ids', [
       '@plugin_ids' => !empty($provider_plugin_ids) ? implode(', ', $provider_plugin_ids) : $this->t('Not yet set'),
@@ -224,7 +224,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
+    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {

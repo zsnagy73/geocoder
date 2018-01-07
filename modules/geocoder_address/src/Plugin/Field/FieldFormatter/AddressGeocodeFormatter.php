@@ -23,7 +23,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'));
+    $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
 
     foreach ($items as $delta => $item) {

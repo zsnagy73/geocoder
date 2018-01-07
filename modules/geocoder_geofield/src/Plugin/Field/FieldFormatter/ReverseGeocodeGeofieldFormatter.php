@@ -35,7 +35,7 @@ class ReverseGeocodeGeofieldFormatter extends GeocodeFormatterBase {
       if ($address_collection = $this->geocoder->reverse($centroid->y(), $centroid->x(), array_keys($provider_plugins))) {
         // @TODO This should be generated from the Formatter (to be created) instead.
         $elements[$delta] = [
-          '#markup' => $this->dumperPluginManager->createInstance($this->getSetting('dumper_plugin'))->dump($address_collection->first()),
+          '#markup' => $this->dumperPluginManager->createInstance($this->getSetting('dumper'))->dump($address_collection->first()),
         ];
       }
     }
