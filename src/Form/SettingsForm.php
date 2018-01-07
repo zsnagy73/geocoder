@@ -151,7 +151,7 @@ class SettingsForm extends ConfigFormBase {
       ],
       '#attributes' => [
         'class' => [
-          'geocode-formatter',
+          'geocode-plugins-list',
         ],
       ],
     ];

@@ -3,15 +3,22 @@ table#edit-third-party-settings-geocoder-field-plugins .form-item input.error {
   outline: solid red thin;
 }
 
-#field-display-overview .field-plugin-settings-edit-form table.geocode-formatter .form-item {
-  margin: 0;
-  input.error {
-    outline: solid red thin;
+table.geocode-plugins-list {
+  thead th .options-field-description {
+    font-weight: normal;
+    text-transform: none;
+    font-size: 0.95em;
   }
-}
-
-table.geocode-formatter thead th .options-field-description {
-  font-weight: normal;
-  text-transform: none;
-  font-size: 0.95em;
+  td {
+    .not-yet-set {
+      font-size: 0.95em;
+      color: grey;
+    }
+  }
+  .form-item {
+    margin: 0;
+    input.error {
+      outline: solid red thin;
+    }
+  }
 }

@@ -6,12 +6,18 @@ use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geocoder\DumperPluginManager;
 use Drupal\geocoder\ProviderPluginManager;
 use Drupal\geocoder_field\GeocoderFieldPluginInterface;
 use Drupal\geocoder_field\GeocoderFieldPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Provides a default generic geocoder field plugin.
@@ -28,6 +34,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $config;
 
   /**
    * The module handler.
@@ -58,6 +71,20 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
   protected $providerPluginManager;
 
   /**
+   * The Renderer service property.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $renderer;
+
+  /**
+   * The Link generator Service.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $link;
+
+  /**
    * Constructs a 'default' plugin.
    *
    * @param array $configuration
@@ -66,6 +93,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   A config factory for retrieving required config objects.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\geocoder_field\GeocoderFieldPluginManager $field_plugin_manager
@@ -74,21 +103,31 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
    *   The dumper plugin manager service.
    * @param \Drupal\geocoder\ProviderPluginManager $provider_plugin_manager
    *   The provider plugin manager service.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
+   *   The Link Generator service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
+    ConfigFactoryInterface $config_factory,
     ModuleHandlerInterface $module_handler,
     GeocoderFieldPluginManager $field_plugin_manager,
     DumperPluginManager $dumper_plugin_manager,
-    ProviderPluginManager $provider_plugin_manager
+    ProviderPluginManager $provider_plugin_manager,
+    RendererInterface $renderer,
+    LinkGeneratorInterface $link_generator
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->config = $config_factory->get('geocoder.settings');
     $this->moduleHandler = $module_handler;
     $this->fieldPluginManager = $field_plugin_manager;
     $this->dumperPluginManager = $dumper_plugin_manager;
     $this->providerPluginManager = $provider_plugin_manager;
+    $this->renderer = $renderer;
+    $this->link = $link_generator;
   }
 
   /**
@@ -99,10 +138,13 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('config.factory'),
       $container->get('module_handler'),
       $container->get('geocoder_field.plugin.manager.field'),
       $container->get('plugin.manager.geocoder.dumper'),
-      $container->get('plugin.manager.geocoder.provider')
+      $container->get('plugin.manager.geocoder.provider'),
+      $container->get('renderer'),
+      $container->get('link_generator')
     );
   }
 
@@ -224,9 +266,39 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
+    $default_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
+    $plugins = array_combine($default_plugins, $default_plugins);
+    $plugins_options = Json::decode($this->config->get('plugins_options'));
+
+    $geocoder_settings_link = $this->link->generate(t('Set/Edit options in the Geocoder Configuration Page</span>'), Url::fromRoute('geocoder.settings', [], [
+      'query' => [
+        'destination' => Url::fromRoute('<current>')
+          ->toString(),
+      ],
+    ]));
+
+    $options_field_description = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $this->t('Object literals in javascript object notation (json) format. @geocoder_settings_link', [
+        '@geocoder_settings_link' => $geocoder_settings_link ,
+      ]),
+      '#attributes' => [
+        'class' => [
+          'options-field-description',
+        ],
+      ],
+    ];
+
     $element['plugins'] = [
       '#type' => 'table',
-      '#header' => [t('Geocoder plugins'), $this->t('Weight')],
+      '#header' => [
+        $this->t('Geocoder plugins'),
+        $this->t('Weight'),
+        $this->t('Options<br>@options_field_description', [
+          '@options_field_description' => $this->renderer->renderRoot($options_field_description),
+        ]),
+      ],
       '#tabledrag' => [[
         'action' => 'order',
         'relationship' => 'sibling',
@@ -235,17 +307,19 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
       '#caption' => $this->t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
       // We need this class for #states to hide the entire table.
-      '#attributes' => ['class' => ['js-form-item']],
+      '#attributes' => ['class' => ['js-form-item', 'geocode-plugins-list']],
       '#states' => $invisible_state,
     ];
 
-    $default_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
-    $plugins = array_combine($default_plugins, $default_plugins);
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
       // Non-default values are appended at the end.
       $plugins[$plugin_id] = $plugin_name;
     }
+
     foreach ($plugins as $plugin_id => $plugin_name) {
+      $empty_options_value = in_array($plugin_id, $default_plugins) ? new FormattableMarkup('<span class="not-yet-set">@string</span>', [
+        '@string' => $this->t('Not yet set'),
+      ]) : '';
       $element['plugins'][$plugin_id] = [
         'checked' => [
           '#type' => 'checkbox',
@@ -257,6 +331,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
           '#title' => $this->t('Weight for @title', ['@title' => $plugin_name]),
           '#title_display' => 'invisible',
           '#attributes' => ['class' => ['plugins-order-weight']],
+        ],
+        'options' => [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => !empty($plugins_options[$plugin_id]) ? $plugins_options[$plugin_id] : $empty_options_value,
         ],
         '#attributes' => ['class' => ['draggable']],
       ];
