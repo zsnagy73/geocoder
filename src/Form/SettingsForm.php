@@ -140,7 +140,7 @@ class SettingsForm extends ConfigFormBase {
     // Define default placeholder for the options field.
     $options_field_placeholder = '{"locale":"' . $language_id . '", "key_2": "value_2", "key_n": "value_n"}';
 
-    $form['provider_plugins'] = [
+    $form['plugins'] = [
       '#type' => 'table',
       '#weight' => 20,
       '#header' => [
@@ -184,7 +184,7 @@ class SettingsForm extends ConfigFormBase {
     }
 
     foreach ($rows as $plugin_id => $row) {
-      $form['provider_plugins'][$plugin_id] = $row;
+      $form['plugins'][$plugin_id] = $row;
     }
 
     return parent::buildForm($form, $form_state);
@@ -204,8 +204,8 @@ class SettingsForm extends ConfigFormBase {
     $form_state_values = $form_state->getValues();
 
     $plugins_options = [];
-    foreach ($form_state_values['provider_plugins'] as $k => $plugin) {
-      $plugins_options[$k] = $form_state_values['provider_plugins'][$k]['options']['json_options'];
+    foreach ($form_state_values['plugins'] as $k => $plugin) {
+      $plugins_options[$k] = $form_state_values['plugins'][$k]['options']['json_options'];
     }
 
     $this->config('geocoder.settings')->set('cache', $form_state_values['cache']);

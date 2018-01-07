@@ -93,7 +93,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
   public static function defaultSettings() {
     return parent::defaultSettings() + [
       'dumper' => 'wkt',
-      'provider_plugins' => [],
+      'plugins' => [],
     ];
   }
 
@@ -110,7 +110,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
 
     $enabled_plugins = [];
     $i = 0;
-    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $plugin['weight'] = intval($i++);
         $enabled_plugins[$plugin_id] = $plugin;
@@ -124,7 +124,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       '#description' => t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
     ];
 
-    $elements['provider_plugins'] = [
+    $elements['plugins'] = [
       '#type' => 'table',
       '#weight' => 20,
       '#header' => [
@@ -184,7 +184,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     });
 
     foreach ($rows as $plugin_id => $row) {
-      $elements['provider_plugins'][$plugin_id] = $row;
+      $elements['plugins'][$plugin_id] = $row;
     }
 
     $elements['dumper'] = [
@@ -248,7 +248,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $provider_plugin_ids = [];
     $geocoder_plugins = $this->providerPluginManager->getPluginsAsOptions();
 
-    foreach ($this->getSetting('provider_plugins') as $plugin_id => $plugin) {
+    foreach ($this->getSetting('plugins') as $plugin_id => $plugin) {
       if ($plugin['checked']) {
         $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
       }
