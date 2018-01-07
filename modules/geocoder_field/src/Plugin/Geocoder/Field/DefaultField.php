@@ -266,6 +266,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
+    $enabled_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
+
     $geocoder_settings_link = $this->link->generate(t('Set/Edit options in the Geocoder Configuration Page</span>'), Url::fromRoute('geocoder.settings', [], [
       'query' => [
         'destination' => Url::fromRoute('<current>')
@@ -320,29 +322,30 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#states' => $invisible_state,
     ];
 
-    $default_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
     // Reorder the plugins promoting the default ones in the proper order.
-    $plugins = array_combine($default_plugins, $default_plugins);
+    $plugins = array_combine($enabled_plugins, $enabled_plugins);
     $plugins_options = Json::decode($this->config->get('plugins_options'));
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
       // Non-default values are appended at the end.
       $plugins[$plugin_id] = $plugin_name;
     }
-
+    $i = 1;
     foreach ($plugins as $plugin_id => $plugin_name) {
-      $empty_options_value = in_array($plugin_id, $default_plugins) ? new FormattableMarkup('<span class="not-yet-set">@string</span>', [
+      $empty_options_value = in_array($plugin_id, $enabled_plugins) ? new FormattableMarkup('<span class="not-yet-set">@string</span>', [
         '@string' => $this->t('Not yet set'),
       ]) : '';
       $element['plugins'][$plugin_id] = [
         'checked' => [
           '#type' => 'checkbox',
           '#title' => $plugin_name,
-          '#default_value' => in_array($plugin_id, $default_plugins),
+          '#default_value' => in_array($plugin_id, $enabled_plugins),
         ],
         'weight' => [
           '#type' => 'weight',
           '#title' => $this->t('Weight for @title', ['@title' => $plugin_name]),
           '#title_display' => 'invisible',
+          '#default_value' => $i,
+          '#delta' => 20,
           '#attributes' => ['class' => ['plugins-order-weight']],
         ],
         'options' => [
@@ -352,6 +355,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         ],
         '#attributes' => ['class' => ['draggable']],
       ];
+      $i++;
     }
 
     $element['dumper'] = [

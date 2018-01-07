@@ -9,16 +9,20 @@ table.geocode-plugins-list {
     text-transform: none;
     font-size: 0.95em;
   }
-  td {
-    .not-yet-set {
-      font-size: 0.95em;
-      color: grey;
+  tr {
+    border-bottom-color: lightgray;
+    td {
+      .not-yet-set {
+        font-size: 0.95em;
+        color: grey;
+      }
+    }
+    .form-item {
+      margin: 0 !important;
+      input.error {
+        outline: solid red thin;
+      }
     }
   }
-  .form-item {
-    margin: 0;
-    input.error {
-      outline: solid red thin;
-    }
-  }
+
 }

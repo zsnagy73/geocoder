@@ -9,16 +9,20 @@ table.geocode-plugins-list thead th .options-field-description {
   text-transform: none;
   font-size: 0.95em;
 }
-/* line 13, ../sass/geocoder_field_general.scss */
-table.geocode-plugins-list td .not-yet-set {
+/* line 12, ../sass/geocoder_field_general.scss */
+table.geocode-plugins-list tr {
+  border-bottom-color: lightgray;
+}
+/* line 15, ../sass/geocoder_field_general.scss */
+table.geocode-plugins-list tr td .not-yet-set {
   font-size: 0.95em;
   color: grey;
 }
-/* line 18, ../sass/geocoder_field_general.scss */
-table.geocode-plugins-list .form-item {
-  margin: 0;
-}
 /* line 20, ../sass/geocoder_field_general.scss */
-table.geocode-plugins-list .form-item input.error {
+table.geocode-plugins-list tr .form-item {
+  margin: 0 !important;
+}
+/* line 22, ../sass/geocoder_field_general.scss */
+table.geocode-plugins-list tr .form-item input.error {
   outline: solid red thin;
 }
