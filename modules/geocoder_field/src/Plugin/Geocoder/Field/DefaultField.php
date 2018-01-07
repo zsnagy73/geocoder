@@ -266,10 +266,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
-    $default_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
-    $plugins = array_combine($default_plugins, $default_plugins);
-    $plugins_options = Json::decode($this->config->get('plugins_options'));
-
     $geocoder_settings_link = $this->link->generate(t('Set/Edit options in the Geocoder Configuration Page</span>'), Url::fromRoute('geocoder.settings', [], [
       'query' => [
         'destination' => Url::fromRoute('<current>')
@@ -290,10 +286,23 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
+    $caption = [
+      'title' => [
+        '#type' => 'html_tag',
+        '#tag' => 'label',
+        '#value' => $this->t('Geocoder plugin(s)'),
+      ],
+      'caption' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
+      ],
+    ];
+
     $element['plugins'] = [
       '#type' => 'table',
       '#header' => [
-        $this->t('Geocoder plugins'),
+        $this->t('Name'),
         $this->t('Weight'),
         $this->t('Options<br>@options_field_description', [
           '@options_field_description' => $this->renderer->renderRoot($options_field_description),
@@ -305,12 +314,16 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
         'group' => 'plugins-order-weight',
       ],
       ],
-      '#caption' => $this->t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
+      '#caption' => $this->renderer->renderRoot($caption),
       // We need this class for #states to hide the entire table.
       '#attributes' => ['class' => ['js-form-item', 'geocode-plugins-list']],
       '#states' => $invisible_state,
     ];
 
+    $default_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
+    // Reorder the plugins promoting the default ones in the proper order.
+    $plugins = array_combine($default_plugins, $default_plugins);
+    $plugins_options = Json::decode($this->config->get('plugins_options'));
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
       // Non-default values are appended at the end.
       $plugins[$plugin_id] = $plugin_name;
