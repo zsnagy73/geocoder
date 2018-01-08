@@ -52,11 +52,9 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
   }
 
   /**
-   * Provides a reordered list of Geocoder set fields.
+   * Get the ordered list of fields to be Geocoded | Reverse Geocoded.
    *
-   * This lists before the reverse geocode and than the geocode fields so that
-   * to implement a correct incremental combination of both operations in the
-   * entity presave.
+   * Reorders the fields based on the user-defined GeocoderField weights.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The Entity that needs to be preprocessed.
