@@ -114,6 +114,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
   /** @var \Drupal\geocoder\DumperPluginManager $dumper_manager */
   $dumper_manager = \Drupal::service('plugin.manager.geocoder.dumper');
 
+  // Reorder the list of fields to be Geocoded | Reverse Geocoded.
   $order_geocoder_fields = $preprocessor_manager->getOrderedGeocodeFields($entity);
 
   foreach ($order_geocoder_fields as $field_name => $field) {
