@@ -171,14 +171,14 @@ class SettingsForm extends ConfigFormBase {
             '#title' => $this->t('@title Options', ['@title' => $plugin_name]),
             '#title_display' => 'invisible',
             '#rows' => 2,
-            '#default_value' => isset($plugins_options[$plugin_id]) ? $plugins_options[$plugin_id] : '',
+            '#default_value' => isset($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : '',
             '#placeholder' => $options_field_placeholder,
             '#element_validate' => [[get_class($this), 'jsonValidate']],
           ],
         ],
       ];
 
-      // Customize the Plugin Options Row based on the Plugin Id.
+      // Customize the Row Plugin Options based on the Plugin Id.
       $rows[$plugin_id] = $this->pluginRowCustomize($rows[$plugin_id], $plugin_id, $plugins_options);
 
     }
@@ -205,7 +205,7 @@ class SettingsForm extends ConfigFormBase {
 
     $plugins_options = [];
     foreach ($form_state_values['plugins'] as $k => $plugin) {
-      $plugins_options[$k] = $form_state_values['plugins'][$k]['options']['json_options'];
+      $plugins_options[$k] = JSON::decode($form_state_values['plugins'][$k]['options']['json_options']);
     }
 
     $this->config('geocoder.settings')->set('cache', $form_state_values['cache']);
@@ -239,7 +239,7 @@ class SettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Customize the Plugin Options Row based on the Plugin Id.
+   * Eventually Customize the Row Plugin Options based on the Plugin Id.
    *
    * @param array $row
    *   The Row.
@@ -261,7 +261,7 @@ class SettingsForm extends ConfigFormBase {
         $row['options']['json_options']['#placeholder'] = $this->t('{"apiKey": "[a_valid_google_maps_api_key]", "useSsl": 1, "locale":"@language_id", "key_n": "value_n"}', [
           '@language_id' => $language_id,
         ]);
-        if (empty(Json::decode($plugins_options[$plugin_id])['apiKey'])) {
+        if (empty($plugins_options[$plugin_id]['apiKey'])) {
           $row['options']['json_options_notes'] = [
             '#type' => 'html_tag',
             '#tag' => 'div',

@@ -253,7 +253,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
         'options' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => !empty($plugins_options[$plugin_id]) ? $plugins_options[$plugin_id] : $empty_options_value,
+          '#value' => !empty($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : $empty_options_value,
         ],
         '#attributes' => ['class' => ['draggable']],
       ];

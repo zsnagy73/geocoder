@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\ContentEntityFormInterface;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_form_alter().
@@ -114,6 +115,9 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
   /** @var \Drupal\geocoder\DumperPluginManager $dumper_manager */
   $dumper_manager = \Drupal::service('plugin.manager.geocoder.dumper');
 
+  $geocoder_config = \Drupal::configFactory()->get('geocoder.settings');
+  $geocoder_plugins_options = Json::decode($geocoder_config->get('plugins_options'));
+
   // Reorder the list of fields to be Geocoded | Reverse Geocoded.
   $order_geocoder_fields = $preprocessor_manager->getOrderedGeocodeFields($entity);
 
@@ -161,12 +165,12 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         switch ($geocoder['method']) {
           case 'source':
             $failure_status_message = t("Unable to Geocode '@text'.", ['@text' => $value['value']]);
-            $address_collection = \Drupal::service('geocoder')->geocode($value['value'], $geocoder['plugins']);
+            $address_collection = \Drupal::service('geocoder')->geocode($value['value'], $geocoder['plugins'], $geocoder_plugins_options);
             break;
 
           case 'destination':
-            $failure_status_message = t("Unable to Reverse Geocode '@text'.", ['@text' => $value['value']]);
-            $address_collection = \Drupal::service('geocoder')->reverse($value['lat'], $value['lon'], $geocoder['plugins']);
+            $failure_status_message = t("Unable to Reverse Geocode the '@field_name' value.", ['@field_name' => $field_name]);
+            $address_collection = isset($value['lat']) && isset($value['lon']) ? \Drupal::service('geocoder')->reverse($value['lat'], $value['lon'], $geocoder['plugins'], $geocoder_plugins_options) : NULL;
             break;
 
           default:
