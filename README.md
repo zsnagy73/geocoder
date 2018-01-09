@@ -27,7 +27,7 @@ This is a complete rewrite of the Geocoder module, based on the
  ```$ drush en geocoder```  
  or the website back-end/administration interface;
 * Eventually enable also the submodules: ```geocoder_field``` and ```geocoder_geofield``` / ```geocoder_address```.
-* Form the module configuration page it is possible to setup caching and custom options for every available Geocoder Provider; 
+* From the module configuration page it is possible to setup caching and custom options for every available Geocoder Provider; 
 
 # Submodules
 The geocoder submodules are needed to set-up and implement Geocode and Reverse Geocode functionalities on Entities fields from the Drupal backend.
