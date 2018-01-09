@@ -10,7 +10,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -153,9 +152,6 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     }
     $i = 1;
     foreach ($plugins as $plugin_id => $plugin_name) {
-      $empty_options_value = in_array($plugin_id, $enabled_plugins) ? new FormattableMarkup('<span class="not-set">@string</span>', [
-        '@string' => $this->t('Not set'),
-      ]) : '';
       $element['plugins'][$plugin_id] = [
         'checked' => [
           '#type' => 'checkbox',
@@ -173,7 +169,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
         'options' => [
           '#type' => 'html_tag',
           '#tag' => 'div',
-          '#value' => !empty($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : $empty_options_value,
+          '#value' => !empty($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : '',
         ],
         '#attributes' => ['class' => ['draggable']],
       ];
