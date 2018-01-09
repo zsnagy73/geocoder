@@ -135,10 +135,15 @@ class SettingsForm extends ConfigFormBase {
           'options-field-description',
         ],
       ],
+      'warning' => [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#value' => $this->t('<u>Note: Always use <b>"apiKey"</b> key to input the library API key (if needed).</u> The Geocoder Php Library will parse it correctly into the specific Plugin library.'),
+      ],
     ];
 
     // Define default placeholder for the options field.
-    $options_field_placeholder = '{"locale":"' . $language_id . '", "key_2": "value_2", "key_n": "value_n"}';
+    $options_field_placeholder = '{"apKey": "[if-needed]", "locale":"' . $language_id . '", "key_n": "value_n"}';
 
     $form['plugins'] = [
       '#type' => 'table',
@@ -160,11 +165,17 @@ class SettingsForm extends ConfigFormBase {
 
     $rows = [];
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
+
       $rows[$plugin_id] = [
         'name' => [
           '#plain_text' => $plugin_name,
         ],
-        'options' => [
+      ];
+
+      $plugin_definition = $this->providerPluginManager->getDefinition($plugin_id);
+      // Expose an Options Field if the Plugin accepts arguments.
+      if (!empty($plugin_definition['arguments'])) {
+        $rows[$plugin_id]['options'] = [
           '#type' => 'container',
           'json_options' => [
             '#type' => 'textarea',
@@ -175,12 +186,33 @@ class SettingsForm extends ConfigFormBase {
             '#placeholder' => $options_field_placeholder,
             '#element_validate' => [[get_class($this), 'jsonValidate']],
           ],
-        ],
-      ];
-
+          'json_options_notes' => [
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => $this->t('Accepted keys: @accepted_keys', [
+              '@accepted_keys' => implode(', ', $plugin_definition['arguments']),
+            ]),
+          ],
+        ];
+      }
+      else {
+        $rows[$plugin_id]['options']['json_options'] = [
+          '#type' => 'value',
+          '#value' => [],
+          'notes' => [
+            '#type' => 'html_tag',
+            '#tag' => 'div',
+            '#value' => $this->t("This plugins don't accept arguments"),
+            '#attributes' => [
+              'class' => [
+                'options-notes',
+              ],
+            ],
+          ],
+        ];
+      }
       // Customize the Row Plugin Options based on the Plugin Id.
       $rows[$plugin_id] = $this->pluginRowCustomize($rows[$plugin_id], $plugin_id, $plugins_options);
-
     }
 
     foreach ($rows as $plugin_id => $row) {
@@ -262,7 +294,7 @@ class SettingsForm extends ConfigFormBase {
           '@language_id' => $language_id,
         ]);
         if (empty($plugins_options[$plugin_id]['apiKey'])) {
-          $row['options']['json_options_notes'] = [
+          $row['options']['json_options_notes']['googlemaps_notes'] = [
             '#type' => 'html_tag',
             '#tag' => 'div',
             '#value' => $this->t('@gmap_api_key_link', [
