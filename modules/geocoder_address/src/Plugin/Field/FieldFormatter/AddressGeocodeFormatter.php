@@ -4,6 +4,7 @@ namespace Drupal\geocoder_address\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\geocoder_field\Plugin\Field\FieldFormatter\GeocodeFormatter;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Plugin implementation of the Geocode formatter.
@@ -25,6 +26,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
     $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
+    $geocoder_plugins_options = Json::decode($this->config->get('plugins_options'));
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();
@@ -36,7 +38,7 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
       $address[] = !empty($value['locality']) ? $value['locality'] : NULL;
       $address[] = !empty($value['country']) ? $value['country'] : NULL;
 
-      if ($addressCollection = $this->geocoder->geocode(implode(' ', array_filter($address)), array_keys($provider_plugins))) {
+      if ($addressCollection = $this->geocoder->geocode(implode(' ', array_filter($address)), array_keys($provider_plugins), $geocoder_plugins_options)) {
         $elements[$delta] = [
           '#plain_text' => $dumper->dump($addressCollection->first()),
         ];
