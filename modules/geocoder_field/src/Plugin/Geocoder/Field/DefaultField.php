@@ -319,7 +319,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#caption' => $this->renderer->renderRoot($caption),
       // We need this class for #states to hide the entire table.
       '#attributes' => ['class' => ['js-form-item', 'geocode-plugins-list']],
-      '#states' => $invisible_state,
     ];
 
     // Reorder the plugins promoting the default ones in the proper order.
@@ -357,6 +356,8 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ];
       $i++;
     }
+
+    $element['plugins']['#states'] = $invisible_state;
 
     $element['dumper'] = [
       '#type' => 'select',

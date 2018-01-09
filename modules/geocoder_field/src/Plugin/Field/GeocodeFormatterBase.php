@@ -220,8 +220,6 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       '#caption' => $this->renderer->renderRoot($caption),
       // We need this class for #states to hide the entire table.
       '#attributes' => ['class' => ['js-form-item', 'geocode-plugins-list']],
-      '#states' => isset($invisible_state) ? $invisible_state : [],
-      '#element_validate' => [[get_class($this), 'validatePluginsSettingsForm']],
     ];
 
     // Reorder the plugins promoting the default ones in the proper order.
@@ -259,6 +257,8 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
       ];
       $i++;
     }
+
+    $element['plugins']['#element_validate'] = [[get_class($this), 'validatePluginsSettingsForm']];
 
     $element['dumper'] = [
       '#type' => 'select',
