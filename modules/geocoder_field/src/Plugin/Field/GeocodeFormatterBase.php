@@ -12,11 +12,8 @@ use Drupal\geocoder\Geocoder;
 use Drupal\geocoder\ProviderPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Base Plugin implementation of the Geocode formatter.
