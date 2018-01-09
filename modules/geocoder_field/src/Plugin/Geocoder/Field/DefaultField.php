@@ -266,97 +266,11 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
+    // Get the enabled/selected plugins.
     $enabled_plugins = (array) $field->getThirdPartySetting('geocoder_field', 'plugins');
 
-    $geocoder_settings_link = $this->link->generate(t('Set/Edit options in the Geocoder Configuration Page</span>'), Url::fromRoute('geocoder.settings', [], [
-      'query' => [
-        'destination' => Url::fromRoute('<current>')
-          ->toString(),
-      ],
-    ]));
-
-    $options_field_description = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $this->t('Object literals in javascript object notation (json) format. @geocoder_settings_link', [
-        '@geocoder_settings_link' => $geocoder_settings_link ,
-      ]),
-      '#attributes' => [
-        'class' => [
-          'options-field-description',
-        ],
-      ],
-    ];
-
-    $caption = [
-      'title' => [
-        '#type' => 'html_tag',
-        '#tag' => 'label',
-        '#value' => $this->t('Geocoder plugin(s)'),
-      ],
-      'caption' => [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => $this->t('Select the Geocoder plugins to use, you can reorder them. The first one to return a valid value will be used.'),
-      ],
-    ];
-
-    $element['plugins'] = [
-      '#type' => 'table',
-      '#header' => [
-        $this->t('Name'),
-        $this->t('Weight'),
-        $this->t('Options<br>@options_field_description', [
-          '@options_field_description' => $this->renderer->renderRoot($options_field_description),
-        ]),
-      ],
-      '#tabledrag' => [[
-        'action' => 'order',
-        'relationship' => 'sibling',
-        'group' => 'plugins-order-weight',
-      ],
-      ],
-      '#caption' => $this->renderer->renderRoot($caption),
-      // We need this class for #states to hide the entire table.
-      '#attributes' => ['class' => ['js-form-item', 'geocode-plugins-list']],
-    ];
-
-    // Reorder the plugins promoting the default ones in the proper order.
-    $plugins = array_combine($enabled_plugins, $enabled_plugins);
-    $plugins_options = Json::decode($this->config->get('plugins_options'));
-    foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
-      // Non-default values are appended at the end.
-      $plugins[$plugin_id] = $plugin_name;
-    }
-    $i = 1;
-    foreach ($plugins as $plugin_id => $plugin_name) {
-      $empty_options_value = in_array($plugin_id, $enabled_plugins) ? new FormattableMarkup('<span class="not-yet-set">@string</span>', [
-        '@string' => $this->t('Not yet set'),
-      ]) : '';
-      $element['plugins'][$plugin_id] = [
-        'checked' => [
-          '#type' => 'checkbox',
-          '#title' => $plugin_name,
-          '#default_value' => in_array($plugin_id, $enabled_plugins),
-        ],
-        'weight' => [
-          '#type' => 'weight',
-          '#title' => $this->t('Weight for @title', ['@title' => $plugin_name]),
-          '#title_display' => 'invisible',
-          '#default_value' => $i,
-          '#delta' => 20,
-          '#attributes' => ['class' => ['plugins-order-weight']],
-        ],
-        'options' => [
-          '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#value' => !empty($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : $empty_options_value,
-        ],
-        '#attributes' => ['class' => ['draggable']],
-      ];
-      $i++;
-    }
-
+    // Generates the Draggable Table of Selectable Geocoder Plugins.
+    $element['plugins'] = $this->providerPluginManager->providersPluginsTableList($enabled_plugins);
     $element['plugins']['#states'] = $invisible_state;
 
     $element['dumper'] = [

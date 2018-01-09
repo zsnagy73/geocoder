@@ -14,7 +14,7 @@ table.geocode-plugins-list tr {
   border-bottom-color: lightgray;
 }
 /* line 15, ../sass/geocoder_field_general.scss */
-table.geocode-plugins-list tr td .not-yet-set {
+table.geocode-plugins-list tr td .not-set {
   font-size: 0.95em;
   color: grey;
 }
