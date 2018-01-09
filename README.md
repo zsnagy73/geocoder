@@ -19,14 +19,24 @@ This is a complete rewrite of the Geocoder module, based on the
 * The embedded "Geocoder Geofield" submodule requires the [Geofield Module](https://www.drupal.org/project/geofield);
 * The embedded "Geocoder Address" submodule requires the [Address Module](https://www.drupal.org/project/address);
 
-# Installation
+# Installation and setup
 * Download the module running the following shell command from you project root (at the composer.json file level):  
   ```$ composer require drupal/geocoder```  
   **Note:** this will also download the Geocoder PHP library as vendor/willdurand/geocoder
 * Enable the module via [Drush](http://drush.org)  
  ```$ drush en geocoder```  
- or the website back-end/administration interface.
+ or the website back-end/administration interface;
 * Eventually enable also the submodules: ```geocoder_field``` and ```geocoder_geofield``` / ```geocoder_address```.
+* Form the module configuration page it is possible to setup caching and custom options for every available Geocoder Provider; 
+
+# Submodules
+The geocoder submodules are needed to set-up and implement Geocode and Reverse Geocode functionalities on Entities fields from the Drupal backend.
+* The **geocoder_field** module adds the ability to setup Geocode operations among string/text fields on entity insert/edit and as field Geo formatters,
+using all the available Geocoder Provider Plugins and Output Geo Formats (via Dumpers).
+* The **geocoder_geofield** module provides integration with Geofield (module/field type) and the ability to both use it as target of Geocode or source of Reverse Geocode with the other fields;
+* The **geocoder_address** module provides integration with Address (module/field type) and the ability to both use it as target of Reverse Geocode or source of Geocode with the other fields;
+
+From the Geocoder configuration page it is possible to setup custom options for every available 
 
 # API
 
