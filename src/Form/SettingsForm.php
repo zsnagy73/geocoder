@@ -126,33 +126,12 @@ class SettingsForm extends ConfigFormBase {
       ]),
     ];
 
-    $options_field_description = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $this->t('An object literal of Geocoder options.<u> The syntax should respect the javascript object notation (json) format.</u><br>As suggested always use double quotes (") both for the indexes and the string values.'),
-      '#attributes' => [
-        'class' => [
-          'options-field-description',
-        ],
-      ],
-      'warning' => [
-        '#type' => 'html_tag',
-        '#tag' => 'div',
-        '#value' => $this->t('<u>Note: Always use <b>"apiKey"</b> key to input the library API key (if needed).</u> The Geocoder Php Library will parse it correctly into the specific Plugin library.'),
-      ],
-    ];
-
-    // Define default placeholder for the options field.
-    $options_field_placeholder = '{"apKey": "[if-needed]", "locale":"' . $language_id . '", "key_n": "value_n"}';
-
     $form['plugins'] = [
       '#type' => 'table',
       '#weight' => 20,
       '#header' => [
         $this->t('Geocoder plugins'),
-        $this->t('Options<br>@options_field_description', [
-          '@options_field_description' => $this->renderer->renderRoot($options_field_description),
-        ]),
+        $this->t('Options / Arguments'),
       ],
       '#attributes' => [
         'class' => [
@@ -161,6 +140,7 @@ class SettingsForm extends ConfigFormBase {
       ],
     ];
 
+    // Get the set plugins options.
     $plugins_options = Json::decode($config->get('plugins_options'));
 
     $rows = [];
@@ -175,28 +155,28 @@ class SettingsForm extends ConfigFormBase {
       $plugin_definition = $this->providerPluginManager->getDefinition($plugin_id);
       // Expose an Options Field if the Plugin accepts arguments.
       if (!empty($plugin_definition['arguments'])) {
-        $rows[$plugin_id]['options'] = [
-          '#type' => 'container',
-          'json_options' => [
-            '#type' => 'textarea',
-            '#title' => $this->t('@title Options', ['@title' => $plugin_name]),
-            '#title_display' => 'invisible',
-            '#rows' => 2,
-            '#default_value' => isset($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : '',
-            '#placeholder' => $options_field_placeholder,
-            '#element_validate' => [[get_class($this), 'jsonValidate']],
-          ],
-          'json_options_notes' => [
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => $this->t('Accepted keys: @accepted_keys', [
-              '@accepted_keys' => implode(', ', $plugin_definition['arguments']),
-            ]),
-          ],
-        ];
+        foreach ($plugin_definition['arguments'] as $option_key => $value) {
+          // If the argument is boolean generate a checkbox field.
+          if (is_bool($value)) {
+            $rows[$plugin_id]['options'][$option_key] = [
+              '#type' => 'checkbox',
+              '#title' => $option_key,
+              '#default_value' => isset($plugins_options[$plugin_id][$option_key]) ? $plugins_options[$plugin_id][$option_key] : $value,
+            ];
+          }
+          // A textfield field otherwise.
+          else {
+            $rows[$plugin_id]['options'][$option_key] = [
+              '#type' => 'textfield',
+              '#size' => 50,
+              '#title' => $option_key,
+              '#default_value' => isset($plugins_options[$plugin_id][$option_key]) ? $plugins_options[$plugin_id][$option_key] : NULL,
+            ];
+          }
+        }
       }
       else {
-        $rows[$plugin_id]['options']['json_options'] = [
+        $rows[$plugin_id]['options'] = [
           '#type' => 'value',
           '#value' => [],
           'notes' => [
@@ -237,7 +217,7 @@ class SettingsForm extends ConfigFormBase {
 
     $plugins_options = [];
     foreach ($form_state_values['plugins'] as $k => $plugin) {
-      $plugins_options[$k] = JSON::decode($form_state_values['plugins'][$k]['options']['json_options']);
+      $plugins_options[$k] = $form_state_values['plugins'][$k]['options'];
     }
 
     $this->config('geocoder.settings')->set('cache', $form_state_values['cache']);
@@ -252,22 +232,6 @@ class SettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return ['geocoder.settings'];
-  }
-
-  /**
-   * Form element json format validation handler.
-   *
-   * {@inheritdoc}
-   */
-  public static function jsonValidate($element, FormStateInterface &$form_state) {
-    $element_values_array = JSON::decode($element['#value']);
-    // Check the jsonValue.
-    if (!empty($element['#value']) && $element_values_array == NULL) {
-      $form_state->setError($element, t('The @field field is not valid Json Format.', ['@field' => $element['#title']]));
-    }
-    elseif (!empty($element['#value'])) {
-      $form_state->setValueForElement($element, JSON::encode($element_values_array));
-    }
   }
 
   /**
@@ -290,11 +254,8 @@ class SettingsForm extends ConfigFormBase {
     switch ($plugin_id) {
 
       case 'googlemaps':
-        $row['options']['json_options']['#placeholder'] = $this->t('{"apiKey": "[a_valid_google_maps_api_key]", "useSsl": 1, "locale":"@language_id", "key_n": "value_n"}', [
-          '@language_id' => $language_id,
-        ]);
         if (empty($plugins_options[$plugin_id]['apiKey'])) {
-          $row['options']['json_options_notes']['googlemaps_notes'] = [
+          $row['options']['googlemaps_notes'] = [
             '#type' => 'html_tag',
             '#tag' => 'div',
             '#value' => $this->t('@gmap_api_key_link', [

@@ -19,12 +19,18 @@ table.geocode-plugins-list {
     }
     .form-item {
       margin: 0 !important;
+      label {
+        font-weight: normal !important;
+      }
       input.error {
         outline: solid red thin;
       }
+      input[type="checkbox"] {
+        margin: 12px 0;
+      }
     }
     .options-notes {
-      color: lightgray;
+      color: gray;
       font-size: 0.90em;
     }
   }

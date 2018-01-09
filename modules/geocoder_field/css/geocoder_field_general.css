@@ -23,11 +23,19 @@ table.geocode-plugins-list tr .form-item {
   margin: 0 !important;
 }
 /* line 22, ../sass/geocoder_field_general.scss */
+table.geocode-plugins-list tr .form-item label {
+  font-weight: normal !important;
+}
+/* line 25, ../sass/geocoder_field_general.scss */
 table.geocode-plugins-list tr .form-item input.error {
   outline: solid red thin;
 }
-/* line 26, ../sass/geocoder_field_general.scss */
+/* line 28, ../sass/geocoder_field_general.scss */
+table.geocode-plugins-list tr .form-item input[type="checkbox"] {
+  margin: 12px 0;
+}
+/* line 32, ../sass/geocoder_field_general.scss */
 table.geocode-plugins-list tr .options-notes {
-  color: lightgray;
+  color: gray;
   font-size: 0.90em;
 }
