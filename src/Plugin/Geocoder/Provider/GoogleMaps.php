@@ -12,10 +12,10 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   name = "GoogleMaps",
  *   handler = "\Geocoder\Provider\GoogleMaps",
  *   arguments = {
- *     "locale",
- *     "region",
+ *     "locale" = NULL,
+ *     "region" = NULL,
  *     "useSsl" = FALSE,
- *     "apiKey"
+ *     "apiKey" = NULL,
  *   }
  * )
  */
