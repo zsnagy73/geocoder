@@ -48,8 +48,17 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
   public function setAddressFieldFromGeojson($geojson) {
     $geojson_array = Json::decode($geojson);
 
+    $country_code = isset($geojson_array['properties']['countryCode']) ? strtoupper(substr($geojson_array['properties']['countryCode'], 0, 2)) : NULL;
+
+    // Some provider (like MapQuest) might not return the countryCode but just
+    // the country name, so try to convert it into countryCode, as it seems to
+    // be mandatory in Address Field Entity API.
+    if (!isset($country_code)) {
+      $country_code = isset($geojson_array['properties']['country']) ? strtoupper(substr($geojson_array['properties']['country'], 0, 2)) : '';
+    }
+
     $address_field_value = [
-      'country_code' => isset($geojson_array['properties']['countryCode']) ? substr($geojson_array['properties']['countryCode'], 0, 2) : '',
+      'country_code' => $country_code,
       'address_line1' => isset($geojson_array['properties']['streetName']) ? $geojson_array['properties']['streetName'] : '',
       'postal_code' => isset($geojson_array['properties']['postalCode']) ? $geojson_array['properties']['postalCode'] : '',
       'locality' => isset($geojson_array['properties']['locality']) ? $geojson_array['properties']['locality'] : '',
