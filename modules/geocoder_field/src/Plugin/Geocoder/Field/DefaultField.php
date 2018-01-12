@@ -224,7 +224,7 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
     // If the Geocoder Geofield Module exists and there is at least one
     // geofield defined from the entity, extend the Form with Reverse Geocode
     // (from Geofield) capabilities.
-    if (!empty($reverse_geocode_source_fields_options) && $this->moduleHandler->moduleExists('geocoder_geofield')) {
+    if ($this->moduleHandler->moduleExists('geocoder_geofield') && !empty($reverse_geocode_source_fields_options)) {
 
       // Add the Option to Reverse Geocode.
       $element['method']['#options']['destination'] = $this->t('<b>Reverse Geocode</b> from a Geofield type existing field');

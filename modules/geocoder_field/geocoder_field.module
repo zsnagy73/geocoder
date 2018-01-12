@@ -199,7 +199,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
 
               // If an Address field is being processed, transform its Dumper
               // string result into array to comply to Address entity->set Api.
-              if ($geocoder['method'] == 'destination' && $field_config->getType() == 'address' && $dumper->getPluginId() == 'geojson') {
+              if ($field_config->getType() == 'address' && $dumper->getPluginId() == 'geojson') {
                 $result[$delta] = $dumper_manager->setAddressFieldFromGeojson($result[$delta]);
               }
           }
