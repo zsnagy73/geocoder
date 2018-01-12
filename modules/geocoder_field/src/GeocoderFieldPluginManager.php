@@ -76,7 +76,9 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
   private function getFieldsOptions($entity_type_id, $bundle, $field_name, array $field_types) {
     $options = [];
     foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $id => $definition) {
-      if (in_array($definition->getType(), $field_types) && ($definition->getName()) !== $field_name) {
+      if (in_array($definition->getType(), $field_types)
+        && ($definition->getName()) !== $field_name
+        && !in_array($id, ['title', 'revision_log'])) {
         $options[$id] = new TranslatableMarkup(
           '@label (@name) [@type]', [
             '@label' => $definition->getLabel(),

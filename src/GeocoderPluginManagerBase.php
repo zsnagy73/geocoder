@@ -16,6 +16,7 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
    */
   protected $geocodeSourceFieldsTypes = [
     "string",
+    "string_long",
     "text",
     "text_long",
     "address",
