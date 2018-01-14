@@ -26,7 +26,8 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
  *     "text",
  *     "text_long",
  *     "text_with_summary",
- *     "string"
+ *     "string",
+ *     "string_long",
  *   }
  * )
  */
