@@ -166,6 +166,16 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       ],
     ];
 
+    $element['method'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Geocode method'),
+      '#options' => [
+        'none' => $this->t('No geocoding'),
+        'source' => $this->t('<b>Geocode</b> from an existing field'),
+      ],
+      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
+    ];
+
     $element['weight'] = [
       '#type' => 'number',
       '#title' => $this->t('Weight'),
@@ -175,16 +185,6 @@ class DefaultField extends PluginBase implements GeocoderFieldPluginInterface, C
       '#max' => 9,
       '#size' => 2,
       '#states' => $invisible_state,
-    ];
-
-    $element['method'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Geocode method'),
-      '#options' => [
-        'none' => $this->t('No geocoding'),
-        'source' => $this->t('<b>Geocode</b> from an existing field'),
-      ],
-      '#default_value' => $field->getThirdPartySetting('geocoder_field', 'method', 'none'),
     ];
 
     // Set a default empty array value for geocode_field.
