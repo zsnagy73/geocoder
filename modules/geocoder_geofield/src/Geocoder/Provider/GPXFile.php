@@ -15,7 +15,7 @@ class GPXFile extends AbstractProvider implements Provider {
   /**
    * Geophp interface.
    *
-   * @var \Drupal\geofield\geophp\geoPHPInterface
+   * @var \Drupal\geofield\GeoPHP\GeoPHPInterface
    */
   private $geophp;
 
@@ -44,7 +44,7 @@ class GPXFile extends AbstractProvider implements Provider {
     $results = [];
     foreach ($geometry->getComponents() as $component) {
       // Currently the Provider only supports GPX points, so skip the rest.
-      if ($component->getGeomType() != 'Point') {
+      if ('Point' !== $component->getGeomType()) {
         continue;
       }
 

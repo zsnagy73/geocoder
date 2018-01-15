@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Geometry extends GeoJson {
 
   /**
-   * The geophp service.
+   * Geophp interface.
    *
    * @var \Drupal\geofield\GeoPHP\GeoPHPInterface
    */

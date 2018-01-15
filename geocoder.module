@@ -8,26 +8,28 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
+ * Implements hook_theme().
+ */
+function geocoder_theme($existing, $type, $theme, $path) {
+  return [
+    'geocoder_help' => [
+      'template' => 'help',
+    ],
+  ];
+}
+
+/**
  * Implements hook_help().
  */
 function geocoder_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the geocoder module.
     case 'help.page.geocoder':
-      $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('This is a complete rewrite of the <a href="https://www.drupal.org/project/geocoder" target="_blank">Geocoder module for Drupal 8</a> based on the <a href="http://geocoder-php.org/"  target="_blank">Geocoder PHP library</a> - <a href="https://github.com/geocoder-php/Geocoder/tree/3.x"  target="_blank">Version 3.x</a>') . '</p>';
-      $output .= '<h3>' . t('Features') . '</h3>';
-      $output .= '<p><ul>';
-      $output .= '<li>' . t('Solid API based on <a href="http://geocoder-php.org" target="_blank">Geocoder PHP library</a>') . '</li>';
-      $output .= '<li>' . t('Geocode and Reverse Geocode using one or multiple Geocoder providers (ArcGISOnline, BingMaps, File, GoogleMaps,  Nominatim, OpeneStreetMap, etc);') . '</li>';
-      $output .= '<li>' . t('Results can be dumped into multiple formats such as WKT, GeoJson, etc ...;') . '</li>';
-      $output .= '<li>' . t('The Geocoder Provider and Dumper plugins are extendable through a custom module;') . '</li>';
-      $output .= '<li>' . t('Submodule Geocoder Field provides Drupal fields widgets and formatters, with even more options;') . '</li>';
-      $output .= '<li>' . t('<a href="https://www.drupal.org/project/geofield" target="_blank">Geofield</a> and <a href="https://www.drupal.org/project/address" target="_blank">Address</a> field integrations;') . '</li>';
-      $output .= '<li>' . t('Caching results capabilities, enabled by default;') . '</li>';
-      $output .= '</ul></p>';
-      return $output;
+      $element = [
+        '#theme' => 'geocoder_help',
+      ];
+
+      return \Drupal::service('renderer')->render($element);
 
     default:
       return '';

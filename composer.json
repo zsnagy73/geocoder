@@ -1,6 +1,6 @@
 {
     "name": "drupal/geocoder",
-    "description": "A Drupal Module and a Services based API to perform Geocode & Reverse Geocode operations among GIS data and Addresses types & formats.",
+    "description": "A Drupal module and a services based API to perform Geocode & Reverse Geocode operations among GIS data and addresses types & formats.",
     "type": "drupal-module",
     "license": "GPL-2.0+",
     "minimum-stability": "dev",
@@ -16,9 +16,9 @@
             "role": "Maintainer"
         },
         {
-          "name": "Italo Mairo  (@itamair)",
+          "name": "Italo Mairo (@itamair)",
           "homepage": "https://www.drupal.org/u/itamair",
-          "role": "Maintainer"
+          "role": "Co-maintainer"
         }
     ],
     "support": {

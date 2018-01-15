@@ -24,18 +24,22 @@ function geocoder_field_form_alter(array &$form, FormStateInterface $form_state,
     $entity_form = $form_state->getFormObject();
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $entity_form->getEntity();
+
     foreach ($entity->getFields() as $field_name => $field) {
       /** @var \Drupal\Core\Field\FieldConfigInterface $field_config */
       if (!($field_config = $field->getFieldDefinition()) instanceof FieldConfigInterface) {
         // Only configurable fields are subject of geocoding.
         continue;
       }
+
       // Eventually Disable the Geocoded Field.
       $geocoder = $field_config->getThirdPartySettings('geocoder_field');
+
       if (isset($geocoder['method']) && $geocoder['method'] !== 'none') {
         if (isset($geocoder['disabled']) && $geocoder['disabled'] == TRUE) {
           $form[$field_name]['#disabled'] = TRUE;
         }
+
         // Eventually Hide the Geocoded Field.
         if (isset($geocoder['hidden']) && $geocoder['hidden'] == TRUE) {
           $form[$field_name]['#access'] = FALSE;
@@ -51,6 +55,7 @@ function geocoder_field_form_alter(array &$form, FormStateInterface $form_state,
 function geocoder_field_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   /** @var \Drupal\Core\Field\FieldConfigInterface $field */
   $field = $form_state->getFormObject()->getEntity();
+
   /** @var \Drupal\geocoder_field\GeocoderFieldPluginInterface $field_plugin */
   if (!$field_plugin = \Drupal::service('geocoder_field.plugin.manager.field')->getPluginByFieldType($field->getType())) {
     // There's no geocoding field plugin to handle this type of field.
@@ -58,11 +63,13 @@ function geocoder_field_form_field_config_edit_form_alter(array &$form, FormStat
   }
 
   $form['third_party_settings']['geocoder_field'] = $field_plugin->getSettingsForm($field, $form, $form_state);
+
   // Temporary store the field plugin to be used in the validation phase.
   $form['third_party_settings']['geocoder_field']['field_plugin'] = [
     '#type' => 'value',
     '#value' => $field_plugin,
   ];
+
   $form['#validate'][] = 'geocoder_field_field_config_edit_form_validate';
 }
 
@@ -77,26 +84,32 @@ function geocoder_field_form_field_config_edit_form_alter(array &$form, FormStat
 function geocoder_field_field_config_edit_form_validate(array $form, FormStateInterface $form_state) {
   // Clean-up and normalize the plugin list.
   $trail = ['third_party_settings', 'geocoder_field', 'plugins'];
-  $plugins = array_keys(array_filter($form_state->getValue($trail),
-    function ($item) {
-      return (bool) $item['checked'];
-    }
-  ));
+  $plugins = array_keys(
+    array_filter(
+      $form_state->getValue($trail),
+      function ($item) {
+        return (bool) $item['checked'];
+      }
+    ));
   $form_state->setValue($trail, $plugins);
 
   // Give a chance to the geocoder field plugin to perform its own validation.
   $geocoder_data = (new FormState())->setValues($form_state->getValue(['third_party_settings', 'geocoder_field']));
   $trail = ['third_party_settings', 'geocoder_field', 'field_plugin'];
+
   /** @var \Drupal\geocoder_field\GeocoderFieldPluginInterface $field_plugin */
   $field_plugin = $form_state->getValue($trail);
   $field_plugin->validateSettingsForm($form, $geocoder_data);
+
   // Update the $form_state with the $geocoder_data possibly altered in the
   // validateSettingsForm method.
   $form_state->setValue(['third_party_settings', 'geocoder_field'], $geocoder_data->getValues());
+
   // Copy back any error.
   foreach ($geocoder_data->getErrors() as $name => $error) {
     $form_state->setErrorByName($name, $error);
   }
+
   // Unset temporary field plugin value.
   $form_state->unsetValue($trail);
 }
@@ -127,6 +140,7 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
       // Only configurable fields are subject of geocoding.
       continue;
     }
+
     $geocoder = $field_config->getThirdPartySettings('geocoder_field');
     if (empty($geocoder['method']) || $geocoder['method'] === 'none') {
       // This field was not configured to geocode/reverse_geocode from/to
@@ -164,12 +178,12 @@ function geocoder_field_entity_presave(EntityInterface $entity) {
         /* @var \Geocoder\Model\AddressCollection $address_collection */
         switch ($geocoder['method']) {
           case 'source':
-            $failure_status_message = t("Unable to Geocode '@text'.", ['@text' => $value['value']]);
+            $failure_status_message = t("Unable to geocode '@text'.", ['@text' => $value['value']]);
             $address_collection = \Drupal::service('geocoder')->geocode($value['value'], $geocoder['plugins'], $geocoder_plugins_options);
             break;
 
           case 'destination':
-            $failure_status_message = t("Unable to Reverse Geocode the '@field_name' value.", ['@field_name' => $field_name]);
+            $failure_status_message = t("Unable to reverse geocode the <em>@field_name</em> value.", ['@field_name' => $field_name]);
             $address_collection = isset($value['lat']) && isset($value['lon']) ? \Drupal::service('geocoder')->reverse($value['lat'], $value['lon'], $geocoder['plugins'], $geocoder_plugins_options) : NULL;
             break;
 

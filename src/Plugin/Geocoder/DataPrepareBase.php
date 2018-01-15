@@ -142,7 +142,7 @@ abstract class DataPrepareBase extends GeocoderPluginBase implements DataPrepare
    * @inheritDoc
    */
   public function getCurrentField() {
-    return $this->$fieldId;
+    return $this->fieldId;
   }
 
   /**

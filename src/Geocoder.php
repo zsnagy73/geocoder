@@ -60,10 +60,10 @@ class Geocoder implements GeocoderInterface {
         return $provider->reverse($latitude, $longitude);
       }
       catch (InvalidCredentials $e) {
-        static::log($e->getMessage(), 'error');
+        static::log($e->getMessage());
       }
       catch (\Exception $e) {
-        static::log($e->getMessage(), 'error');
+        static::log($e->getMessage());
       }
     }
 

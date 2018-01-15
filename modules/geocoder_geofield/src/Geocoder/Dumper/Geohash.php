@@ -9,6 +9,7 @@ use Geocoder\Model\Address;
  * Class for Geohash.
  */
 class Geohash extends Geometry implements Dumper {
+
   /**
    * Dumper.
    *
@@ -17,21 +18,17 @@ class Geohash extends Geometry implements Dumper {
   protected $dumper;
 
   /**
-   * Geophp.
+   * Geophp interface.
    *
    * @var \Drupal\geofield\GeoPHP\GeoPHPInterface
    */
   protected $geophp;
 
   /**
-   * Address.
-   *
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function dump(Address $address) {
-    /* @var \Geometry $geometry */
-    $geometry = parent::dump($address);
-    return $geometry->out('geohash');
+    return parent::dump($address)->out('geohash');
   }
 
 }

@@ -3,6 +3,7 @@
 namespace Drupal\geocoder;
 
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Provides a base class for geocoder plugin managers.
@@ -38,9 +39,32 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
    *   A list of plugins in a format suitable for form API '#options' key.
    */
   public function getPluginsAsOptions() {
-    $options = array_map(function (array $definition) {
-      return isset($definition['name']) ? $definition['name'] : $definition['id'];
+    return array_map(function ($plugin) {
+      return $plugin['name'];
+    }, $this->getPlugins());
+  }
+
+  /**
+   * Return the array of plugins and their settings if any.
+   *
+   * @return array
+   *   A list of plugins with their settings.
+   */
+  public function getPlugins() {
+    $config = \Drupal::config('geocoder.settings');
+    $plugins_options = Json::decode($config->get('plugins_options'));
+
+    $options = array_map(function (array $definition) use ($plugins_options) {
+      $plugins_options += [$definition['id'] => []];
+      $definition += ['name' => $definition['id'], 'arguments' => []];
+
+      return [
+        'id' => $definition['id'],
+        'name' => $definition['name'],
+        'settings' => array_merge($definition['arguments'], $plugins_options[$definition['id']]),
+      ];
     }, $this->getDefinitions());
+
     asort($options);
 
     return $options;

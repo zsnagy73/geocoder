@@ -65,6 +65,7 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
   public function getOrderedGeocodeFields(ContentEntityInterface $entity) {
     $geocoder_fields = [];
     $results = [];
+
     foreach ($entity->getFields() as $field_name => $field) {
       /** @var \Drupal\Core\Field\FieldConfigInterface $field_config */
       if (!($field_config = $field->getFieldDefinition()) instanceof FieldConfigInterface) {
@@ -83,7 +84,6 @@ class PreprocessorPluginManager extends GeocoderPluginManagerBase {
         'field_value' => $field,
         'weight' => isset($geocoder['weight']) ? $geocoder['weight'] : 0,
       ];
-
     }
 
     usort($geocoder_fields, function ($a, $b) {

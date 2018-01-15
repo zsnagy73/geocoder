@@ -75,6 +75,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    */
   private function getFieldsOptions($entity_type_id, $bundle, $field_name, array $field_types) {
     $options = [];
+
     foreach ($this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle) as $id => $definition) {
       if (in_array($definition->getType(), $field_types)
         && ($definition->getName()) !== $field_name
@@ -87,6 +88,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
           ]);
       }
     }
+
     return $options;
   }
 
@@ -107,6 +109,7 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
         return $geocoder_field_plugin;
       }
     }
+
     return NULL;
   }
 
@@ -124,9 +127,12 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The array of source fields and their label.
    */
   public function getGeocodeSourceFields($entity_type_id, $bundle, $field_name) {
-    $field_types = $this->preprocessorPluginManager->getGeocodeSourceFieldsTypes();
-    $options = $this->getFieldsOptions($entity_type_id, $bundle, $field_name, $field_types);
-    return $options;
+    return $this->getFieldsOptions(
+      $entity_type_id,
+      $bundle,
+      $field_name,
+      $this->preprocessorPluginManager->getGeocodeSourceFieldsTypes()
+    );
   }
 
   /**
@@ -143,9 +149,12 @@ class GeocoderFieldPluginManager extends DefaultPluginManager {
    *   The array of source fields and their label.
    */
   public function getReverseGeocodeSourceFields($entity_type_id, $bundle, $field_name) {
-    $field_types = $this->preprocessorPluginManager->getReverseGeocodeSourceFieldsTypes();
-    $options = $this->getFieldsOptions($entity_type_id, $bundle, $field_name, $field_types);
-    return $options;
+    return $this->getFieldsOptions(
+      $entity_type_id,
+      $bundle,
+      $field_name,
+      $this->preprocessorPluginManager->getReverseGeocodeSourceFieldsTypes()
+    );
   }
 
 }

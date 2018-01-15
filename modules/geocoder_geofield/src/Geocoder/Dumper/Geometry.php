@@ -25,20 +25,18 @@ class Geometry implements Dumper {
   private $geophp;
 
   /**
-   * Address.
-   *
-   * @inheritdoc
-   */
-  public function dump(Address $address) {
-    return $this->geophp->load($this->dumper->dump($address), 'json');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function __construct() {
     $this->dumper = \Drupal::service('plugin.manager.geocoder.dumper')->createInstance('geojson');
     $this->geophp = \Drupal::service('geofield.geophp');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function dump(Address $address) {
+    return $this->geophp->load($this->dumper->dump($address), 'json');
   }
 
 }

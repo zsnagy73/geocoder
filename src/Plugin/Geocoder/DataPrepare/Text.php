@@ -12,7 +12,8 @@ use Drupal\geocoder\Plugin\GeocoderPluginInterface;
  *  id = "data_prepare_string",
  *  name = "Text",
  *  field_types = {
- *     "string"
+ *     "string",
+ *     "string_long",
  *   }
  * )
  */
@@ -24,15 +25,12 @@ class Text extends DataPrepareBase implements GeocoderPluginInterface {
    * @inheritDoc
    */
   public function getPreparedReverseGeocodeValues(array $values = []) {
-    foreach ($values as $index => $value) {
-      list($lat, $lon) = explode(',', trim($value['value']));
-      $values[$index] += [
-        'lat' => trim($lat),
-        'lon' => trim($lon),
-      ];
-    }
-
-    return $values;
+    return array_map(function ($value) {
+      return array_combine(['lat', 'lon'], array_map(
+        'trim',
+        explode(',', trim($value['value']), 2)
+      ));
+    }, $values);
   }
 
 }

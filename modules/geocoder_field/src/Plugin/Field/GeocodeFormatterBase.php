@@ -195,6 +195,11 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $dumper_plugins = $this->dumperPluginManager->getPluginsAsOptions();
     $dumper_plugin = $this->getSetting('dumper');
 
+    // Replace the plugin array with its name.
+    array_walk($provider_plugin_ids, function (&$item) {
+      $item = $item['name'];
+    });
+
     $summary[] = t('Geocoder plugin(s): @plugin_ids', [
       '@plugin_ids' => !empty($provider_plugin_ids) ? implode(', ', $provider_plugin_ids) : $this->t('Not set'),
     ]);
@@ -230,15 +235,22 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * Get the list of enabled Provider plugins.
    *
    * @return array
-   *   Provider plugin IDs.
+   *   Provider plugin IDs and their properties (id, name, settings).
    */
   public function getEnabledProviderPlugins() {
-    $provider_plugin_ids = [];
-    $geocoder_plugins = $this->providerPluginManager->getPluginsAsOptions();
+    $geocoder_plugins = $this->providerPluginManager->getPlugins();
+    $plugins_settings = $this->getSetting('plugins');
 
-    foreach ($this->getSetting('plugins') as $plugin_id => $plugin) {
-      if ($plugin['checked']) {
-        $provider_plugin_ids[$plugin_id] = $geocoder_plugins[$plugin_id];
+    // Filter out unchecked plugins.
+    $provider_plugin_ids = array_filter($plugins_settings, function ($plugin) {
+      return $plugin['checked'] == TRUE;
+    });
+
+    $provider_plugin_ids = array_combine(array_keys($provider_plugin_ids), array_keys($provider_plugin_ids));
+
+    foreach ($geocoder_plugins as $plugin) {
+      if (isset($provider_plugin_ids[$plugin['id']])) {
+        $provider_plugin_ids[$plugin['id']] = $plugin;
       }
     }
 
@@ -249,12 +261,9 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * {@inheritdoc}
    */
   public static function validatePluginsSettingsForm(array $element, FormStateInterface &$form_state) {
-    $plugins = [];
-    foreach ($element['#value'] as $k => $value) {
-      if (isset($value['checked']) && $value['checked'] == '1') {
-        $plugins[] = $k;
-      }
-    }
+    $plugins = array_filter($element['#value'], function ($value) {
+      return isset($value['checked']) && TRUE == $value['checked'];
+    });
 
     if (empty($plugins)) {
       $form_state->setError($element, t('The selected Geocode operation needs at least one plugin.'));

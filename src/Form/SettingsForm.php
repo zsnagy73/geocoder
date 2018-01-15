@@ -110,6 +110,7 @@ class SettingsForm extends ConfigFormBase {
     $form['cache'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Should we cache the results?'),
+      '#description' => $this->t('To prevent sending multiple times the same request, you can enable to cache to save temporarly the result of the geocode and reverse geocode in the cache.'),
       '#default_value' => $config->get('cache'),
     ];
 
@@ -145,7 +146,6 @@ class SettingsForm extends ConfigFormBase {
 
     $rows = [];
     foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
-
       $rows[$plugin_id] = [
         'name' => [
           '#plain_text' => $plugin_name,
@@ -182,7 +182,7 @@ class SettingsForm extends ConfigFormBase {
           'notes' => [
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => $this->t("This plugins don't accept arguments"),
+            '#value' => $this->t("This plugin don't accept arguments."),
             '#attributes' => [
               'class' => [
                 'options-notes',
@@ -191,6 +191,7 @@ class SettingsForm extends ConfigFormBase {
           ],
         ];
       }
+
       // Customize the Row Plugin Options based on the Plugin Id.
       $rows[$plugin_id] = $this->pluginRowCustomize($rows[$plugin_id], $plugin_id, $plugins_options);
     }
@@ -211,7 +212,6 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
     // Get all the form state values, in an array structure.
     $form_state_values = $form_state->getValues();
 
@@ -248,11 +248,7 @@ class SettingsForm extends ConfigFormBase {
    *   The altered row.
    */
   private function pluginRowCustomize(array $row, $plugin_id, array $plugins_options) {
-
-    $language_id = $this->languageManager->getCurrentLanguage()->getId();
-
     switch ($plugin_id) {
-
       case 'googlemaps':
         if (empty($plugins_options[$plugin_id]['apiKey'])) {
           $row['options']['googlemaps_notes'] = [
@@ -269,11 +265,9 @@ class SettingsForm extends ConfigFormBase {
         break;
 
       default:
-
     }
 
     return $row;
-
   }
 
 }

@@ -5,7 +5,7 @@ namespace Drupal\geocoder;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\geocoder\Annotation\GeocoderProvider;
-use Drupal\Component\Serialization\Json;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -90,7 +90,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
    *   The plugins table list.
    */
   public function providersPluginsTableList(array $enabled_plugins) {
-    $geocoder_settings_link = $this->link->generate(t('Set/Edit options in the Geocoder Configuration Page</span>'), Url::fromRoute('geocoder.settings', [], [
+    $geocoder_settings_link = $this->link->generate(t('Edit options in the Geocoder configuration page</span>'), Url::fromRoute('geocoder.settings', [], [
       'query' => [
         'destination' => Url::fromRoute('<current>')
           ->toString(),
@@ -100,7 +100,7 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     $options_field_description = [
       '#type' => 'html_tag',
       '#tag' => 'div',
-      '#value' => $this->t('Object literals in javascript object notation (json) format. @geocoder_settings_link', [
+      '#value' => $this->t('Object literals in YAML format. @geocoder_settings_link', [
         '@geocoder_settings_link' => $geocoder_settings_link ,
       ]),
       '#attributes' => [
@@ -145,36 +145,57 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
 
     // Reorder the plugins promoting the default ones in the proper order.
     $plugins = array_combine($enabled_plugins, $enabled_plugins);
-    $plugins_options = Json::decode($this->config->get('plugins_options'));
-    foreach ($this->getPluginsAsOptions() as $plugin_id => $plugin_name) {
+    foreach ($this->getPlugins() as $plugin) {
       // Non-default values are appended at the end.
-      $plugins[$plugin_id] = $plugin_name;
+      $plugins[$plugin['id']] = $plugin;
     }
-    $i = 1;
-    foreach ($plugins as $plugin_id => $plugin_name) {
-      $element['plugins'][$plugin_id] = [
+
+    $plugins = array_map(function ($plugin, $weight) use ($enabled_plugins) {
+      return array_merge($plugin, [
+        'checked' => in_array($plugin['id'], $enabled_plugins),
+        'weight' => $weight,
+        'settings' => (empty($plugin['settings']) ? (string) $this->t("This plugin don't accept arguments.") : Yaml::encode($plugin['settings'])),
+      ]);
+    }, $plugins, range(0, count($plugins) - 1));
+
+    uasort($plugins, function ($pluginA, $pluginB) {
+      $order = strcmp($pluginB['checked'], $pluginA['checked']);
+
+      if (0 === $order) {
+        $order = $pluginA['weight'] - $pluginB['weight'];
+
+        if (0 === $order) {
+          $order = strcmp($pluginA['name'], $pluginB['name']);
+        }
+      }
+
+      return $order;
+    });
+
+    foreach ($plugins as $plugin) {
+      $element['plugins'][$plugin['id']] = [
         'checked' => [
           '#type' => 'checkbox',
-          '#title' => $plugin_name,
-          '#default_value' => in_array($plugin_id, $enabled_plugins),
+          '#title' => $plugin['name'],
+          '#default_value' => $plugin['checked'],
         ],
         'weight' => [
           '#type' => 'weight',
-          '#title' => $this->t('Weight for @title', ['@title' => $plugin_name]),
+          '#title' => $this->t('Weight for @title', ['@title' => $plugin['name']]),
           '#title_display' => 'invisible',
-          '#default_value' => $i,
+          '#default_value' => $plugin['weight'],
           '#delta' => 20,
           '#attributes' => ['class' => ['plugins-order-weight']],
         ],
-        'options' => [
+        'settings' => [
           '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#value' => !empty($plugins_options[$plugin_id]) ? Json::encode($plugins_options[$plugin_id]) : '',
+          '#tag' => 'pre',
+          '#value' => $plugin['settings'],
         ],
         '#attributes' => ['class' => ['draggable']],
       ];
-      $i++;
     }
+
     return $element['plugins'];
   }
 

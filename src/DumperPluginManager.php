@@ -57,15 +57,18 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
       $country_code = isset($geojson_array['properties']['country']) ? strtoupper(substr($geojson_array['properties']['country'], 0, 2)) : '';
     }
 
-    $address_field_value = [
-      'country_code' => $country_code,
-      'address_line1' => isset($geojson_array['properties']['streetName']) ? $geojson_array['properties']['streetName'] : '',
-      'postal_code' => isset($geojson_array['properties']['postalCode']) ? $geojson_array['properties']['postalCode'] : '',
-      'locality' => isset($geojson_array['properties']['locality']) ? $geojson_array['properties']['locality'] : '',
+    $geojson_array['properties'] += [
+      'streetName' => '',
+      'postalCode' => '',
+      'locality' => '',
     ];
 
-    return $address_field_value;
-
+    return [
+      'country_code' => $country_code,
+      'address_line1' => $geojson_array['properties']['streetName'],
+      'postal_code' => $geojson_array['properties']['postalCode'],
+      'locality' => $geojson_array['properties']['locality'],
+    ];
   }
 
   /**

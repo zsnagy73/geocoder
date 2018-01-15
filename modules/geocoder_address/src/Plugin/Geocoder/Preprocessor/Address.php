@@ -31,6 +31,7 @@ class Address extends PreprocessorBase {
       'postal_code' => NULL,
       'country_code' => NULL,
     ];
+
     foreach ($this->field->getValue() as $delta => $value) {
       $value += $defaults;
       $address = [
