@@ -1,2 +1,2 @@
 cache: 1
-plugins_options: '{"arcgisonline":{"sourceCountry":"","useSsl":0},"bingmaps":{"apiKey":"","locale":""},"geonames":{"username":"","locale":""},"googlemaps":{"locale":"","region":"","apiKey":"","useSsl":0},"ipinfodb":{"apiKey":"","precision":""},"mapquest":{"apiKey":"","licensed":0},"maxmind":{"apiKey":"","service":"","useSsl":0},"nominatim":{"rootUrl":"","locale":""},"opencage":{"apiKey":"","locale":"","useSsl":0},"tomtom":{"apiKey":"","locale":""},"file":[],"freegeoip":[],"geoplugin":[],"geoip":[],"hostip":[],"openstreetmap":[],"random":[],"yandex":[]}'
+plugins_options: '{}'
