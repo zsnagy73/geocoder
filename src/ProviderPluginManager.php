@@ -151,10 +151,12 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
     }
 
     $plugins = array_map(function ($plugin, $weight) use ($enabled_plugins) {
+      $checked = in_array($plugin['id'], $enabled_plugins);
+
       return array_merge($plugin, [
-        'checked' => in_array($plugin['id'], $enabled_plugins),
-        'weight' => $weight,
-        'settings' => (empty($plugin['settings']) ? (string) $this->t("This plugin don't accept arguments.") : Yaml::encode($plugin['settings'])),
+        'checked' => $checked,
+        'weight' => $checked ? $weight : 0,
+        'arguments' => (empty($plugin['arguments']) ? (string) $this->t("This plugin doesn't accept arguments.") : Yaml::encode($plugin['arguments'])),
       ]);
     }, $plugins, range(0, count($plugins) - 1));
 
@@ -187,10 +189,10 @@ class ProviderPluginManager extends GeocoderPluginManagerBase {
           '#delta' => 20,
           '#attributes' => ['class' => ['plugins-order-weight']],
         ],
-        'settings' => [
+        'arguments' => [
           '#type' => 'html_tag',
           '#tag' => 'pre',
-          '#value' => $plugin['settings'],
+          '#value' => $plugin['arguments'],
         ],
         '#attributes' => ['class' => ['draggable']],
       ];

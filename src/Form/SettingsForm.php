@@ -100,7 +100,6 @@ class SettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('geocoder.settings');
-    $language_id = $this->languageManager->getCurrentLanguage()->getId();
 
     // Attach Geofield Map Library.
     $form['#attached']['library'] = [
@@ -141,48 +140,52 @@ class SettingsForm extends ConfigFormBase {
       ],
     ];
 
-    // Get the set plugins options.
-    $plugins_options = Json::decode($config->get('plugins_options'));
-
     $rows = [];
-    foreach ($this->providerPluginManager->getPluginsAsOptions() as $plugin_id => $plugin_name) {
-      $rows[$plugin_id] = [
+    foreach ($this->providerPluginManager->getPlugins() as $plugin) {
+      $rows[$plugin['id']] = [
         'name' => [
-          '#plain_text' => $plugin_name,
+          '#plain_text' => $plugin['name'],
         ],
       ];
 
-      $plugin_definition = $this->providerPluginManager->getDefinition($plugin_id);
       // Expose an Options Field if the Plugin accepts arguments.
-      if (!empty($plugin_definition['arguments'])) {
-        foreach ($plugin_definition['arguments'] as $option_key => $value) {
-          // If the argument is boolean generate a checkbox field.
+      if (!empty($plugin['arguments'])) {
+        foreach ($plugin['arguments'] as $option_key => $value) {
+          $plugin['arguments'] += [$option_key => $value];
+
           if (is_bool($value)) {
-            $rows[$plugin_id]['options'][$option_key] = [
+            // If the argument is boolean generate a checkbox field.
+            $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'checkbox',
               '#title' => $option_key,
-              '#default_value' => isset($plugins_options[$plugin_id][$option_key]) ? $plugins_options[$plugin_id][$option_key] : $value,
+              '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
-          // A textfield field otherwise.
           else {
-            $rows[$plugin_id]['options'][$option_key] = [
+            // Handle args without values.
+            if (!is_string($option_key)) {
+              $option_key = $value;
+              $value = NULL;
+            }
+
+            // A textfield field otherwise.
+            $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'textfield',
               '#size' => 50,
               '#title' => $option_key,
-              '#default_value' => isset($plugins_options[$plugin_id][$option_key]) ? $plugins_options[$plugin_id][$option_key] : NULL,
+              '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
         }
       }
       else {
-        $rows[$plugin_id]['options'] = [
+        $rows[$plugin['id']]['options'] = [
           '#type' => 'value',
           '#value' => [],
           'notes' => [
             '#type' => 'html_tag',
             '#tag' => 'div',
-            '#value' => $this->t("This plugin don't accept arguments."),
+            '#value' => $this->t("This plugin doesn't accept arguments."),
             '#attributes' => [
               'class' => [
                 'options-notes',
@@ -193,7 +196,7 @@ class SettingsForm extends ConfigFormBase {
       }
 
       // Customize the Row Plugin Options based on the Plugin Id.
-      $rows[$plugin_id] = $this->pluginRowCustomize($rows[$plugin_id], $plugin_id, $plugins_options);
+      $rows[$plugin['id']] = $this->pluginRowCustomize($rows[$plugin['id']], $plugin['id'], $plugin['arguments']);
     }
 
     foreach ($rows as $plugin_id => $row) {
