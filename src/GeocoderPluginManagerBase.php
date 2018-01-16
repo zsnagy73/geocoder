@@ -52,12 +52,14 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
    */
   public function getPlugins() {
     $config = \Drupal::config('geocoder.settings');
-    $plugins_options = !empty($config->get('plugins_options')) ? Json::decode($config->get('plugins_options')) : [];
 
-    $definitions = array_map(function (array $definition) use ($plugins_options) {
-      $plugins_options += [$definition['id'] => []];
+    // @TODO: Find a better way to achieve this.
+    $geocoder_plugins_options = !empty($config->get('plugins_options')) ? Json::decode($config->get('plugins_options')) : [];
+
+    $definitions = array_map(function (array $definition) use ($geocoder_plugins_options) {
+      $geocoder_plugins_options += [$definition['id'] => []];
       $definition += ['name' => $definition['id']];
-      $definition['arguments'] = array_merge($definition['arguments'], $plugins_options[$definition['id']]);
+      $definition['arguments'] = array_merge($definition['arguments'], $geocoder_plugins_options[$definition['id']]);
 
       return $definition;
     }, $this->getDefinitions());

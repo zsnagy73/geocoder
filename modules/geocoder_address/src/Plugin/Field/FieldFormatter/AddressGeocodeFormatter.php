@@ -26,7 +26,9 @@ class AddressGeocodeFormatter extends GeocodeFormatter {
     $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
-    $geocoder_plugins_options = Json::decode($this->config->get('plugins_options'));
+
+    // @TODO: Find a better way to achieve this.
+    $geocoder_plugins_options = !empty($this->config->get('plugins_options')) ? Json::decode($this->config->get('plugins_options')) : [];
 
     foreach ($items as $delta => $item) {
       $value = $item->getValue();

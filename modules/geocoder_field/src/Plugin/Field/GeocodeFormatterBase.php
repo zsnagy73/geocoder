@@ -218,7 +218,9 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
-    $geocoder_plugins_options = Json::decode($this->config->get('plugins_options'));
+
+    // @TODO: Find a better way to achieve this.
+    $geocoder_plugins_options = !empty($this->config->get('plugins_options')) ? Json::decode($this->config->get('plugins_options')) : [];
 
     foreach ($items as $delta => $item) {
       if ($address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins), $geocoder_plugins_options)) {
@@ -235,7 +237,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
    * Get the list of enabled Provider plugins.
    *
    * @return array
-   *   Provider plugin IDs and their properties (id, name, settings).
+   *   Provider plugin IDs and their properties (id, name, arguments...).
    */
   public function getEnabledProviderPlugins() {
     $geocoder_plugins = $this->providerPluginManager->getPlugins();
