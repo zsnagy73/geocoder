@@ -2,6 +2,7 @@
 
 namespace Drupal\geocoder\Form;
 
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -18,7 +19,14 @@ use Drupal\Core\Render\RendererInterface;
 class SettingsForm extends ConfigFormBase {
 
   /**
-   * The Link generator Service.
+   * The typed config service.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfigManager;
+
+  /**
+   * The Link generator service.
    *
    * @var \Drupal\Core\Utility\LinkGeneratorInterface
    */
@@ -32,7 +40,7 @@ class SettingsForm extends ConfigFormBase {
   protected $languageManager;
 
   /**
-   * The Renderer service property.
+   * The Renderer service.
    *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
@@ -46,10 +54,12 @@ class SettingsForm extends ConfigFormBase {
   protected $providerPluginManager;
 
   /**
-   * GeofieldMapSettingsForm constructor.
+   * SettingsForm constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config service.
    * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
    *   The Link Generator service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -61,12 +71,14 @@ class SettingsForm extends ConfigFormBase {
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
     LinkGeneratorInterface $link_generator,
     RendererInterface $renderer,
     LanguageManagerInterface $language_manager,
     ProviderPluginManager $provider_plugin_manager
   ) {
     parent::__construct($config_factory);
+    $this->typedConfigManager = $typedConfigManager;
     $this->link = $link_generator;
     $this->renderer = $renderer;
     $this->languageManager = $language_manager;
@@ -77,9 +89,9 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('link_generator'),
       $container->get('renderer'),
       $container->get('language_manager'),
@@ -141,6 +153,11 @@ class SettingsForm extends ConfigFormBase {
 
     $rows = [];
     foreach ($this->providerPluginManager->getPlugins() as $plugin) {
+      if ($this->typedConfigManager->hasConfigSchema('geocoder.settings.plugins.' . $plugin['id'])) {
+        $plugin_config_schema = $this->typedConfigManager->getDefinition('geocoder.settings.plugins.' . $plugin['id']);
+        $plugin_config_schema = $plugin_config_schema['mapping'];
+      }
+
       $rows[$plugin['id']] = [
         'name' => [
           '#plain_text' => $plugin['name'],
@@ -156,7 +173,7 @@ class SettingsForm extends ConfigFormBase {
             // If the argument is boolean generate a checkbox field.
             $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'checkbox',
-              '#title' => $option_key,
+              '#title' => $plugin_config_schema[$option_key]['label'],
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
@@ -171,7 +188,7 @@ class SettingsForm extends ConfigFormBase {
             $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'textfield',
               '#size' => 50,
-              '#title' => $option_key,
+              '#title' => $plugin_config_schema[$option_key]['label'],
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
