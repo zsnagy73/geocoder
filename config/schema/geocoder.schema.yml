@@ -6,7 +6,8 @@ geocoder.settings:
   mapping:
     cache:
       type: boolean
-      label: 'Cache results'
+      label: 'Should we cache the results ?'
+      description: 'To prevent sending multiple times the same request, you can enable to cache to save temporarily the result of the geocode and reverse geocode in the cache.'
     plugins_options:
       type: sequence
       label: 'Plugins arguments'
@@ -21,6 +22,7 @@ geocoder.settings.plugins.googlemaps:
     apikey:
       type: string
       label: 'The apikey'
+      description: '<a href="https://developers.google.com/maps/documentation/javascript/get-api-key">Get a valid Google Maps Api Key</a>'
     locale:
       type: string
       label: 'The locale'

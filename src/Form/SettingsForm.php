@@ -109,8 +109,18 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return ['geocoder.settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('geocoder.settings');
+
+    $geocoder_config_schema = $this->typedConfigManager->getDefinition('geocoder.settings');
+    $geocoder_config_schema = $geocoder_config_schema['mapping'];
 
     // Attach Geofield Map Library.
     $form['#attached']['library'] = [
@@ -119,8 +129,8 @@ class SettingsForm extends ConfigFormBase {
 
     $form['cache'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Should we cache the results?'),
-      '#description' => $this->t('To prevent sending multiple times the same request, you can enable to cache to save temporarly the result of the geocode and reverse geocode in the cache.'),
+      '#title' => $geocoder_config_schema['cache']['label'],
+      '#description' => $geocoder_config_schema['cache']['description'],
       '#default_value' => $config->get('cache'),
     ];
 
@@ -169,11 +179,19 @@ class SettingsForm extends ConfigFormBase {
         foreach ($plugin['arguments'] as $option_key => $value) {
           $plugin['arguments'] += [$option_key => $value];
 
+          $plugin_config_schema += [
+            $option_key => [
+              'label' => $option_key,
+              'description' => NULL,
+            ],
+          ];
+
           if (is_bool($value)) {
             // If the argument is boolean generate a checkbox field.
             $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'checkbox',
               '#title' => $plugin_config_schema[$option_key]['label'],
+              '#description' => $plugin_config_schema[$option_key]['description'],
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
@@ -189,6 +207,7 @@ class SettingsForm extends ConfigFormBase {
               '#type' => 'textfield',
               '#size' => 50,
               '#title' => $plugin_config_schema[$option_key]['label'],
+              '#description' => $plugin_config_schema[$option_key]['description'],
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
@@ -210,9 +229,6 @@ class SettingsForm extends ConfigFormBase {
           ],
         ];
       }
-
-      // Customize the Row Plugin Options based on the Plugin Id.
-      $rows[$plugin['id']] = $this->pluginRowCustomize($rows[$plugin['id']], $plugin['id'], $plugin['arguments']);
     }
 
     foreach ($rows as $plugin_id => $row) {
@@ -244,49 +260,6 @@ class SettingsForm extends ConfigFormBase {
     $this->config('geocoder.settings')->save();
 
     parent::submitForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames() {
-    return ['geocoder.settings'];
-  }
-
-  /**
-   * Eventually Customize the Row Plugin Options based on the Plugin Id.
-   *
-   * @param array $row
-   *   The Row.
-   * @param string $plugin_id
-   *   The Plugin id.
-   * @param array $plugins_options
-   *   The Plugin options array.
-   *
-   * @return array
-   *   The altered row.
-   */
-  private function pluginRowCustomize(array $row, $plugin_id, array $plugins_options) {
-    switch ($plugin_id) {
-      case 'googlemaps':
-        if (empty($plugins_options[$plugin_id]['apiKey'])) {
-          $row['options']['googlemaps_notes'] = [
-            '#type' => 'html_tag',
-            '#tag' => 'div',
-            '#value' => $this->t('@gmap_api_key_link', [
-              '@gmap_api_key_link' => $this->link->generate($this->t('Get a valid Google Maps Api Key'), Url::fromUri('https://developers.google.com/maps/documentation/javascript/get-api-key', [
-                'absolute' => TRUE,
-                'attributes' => ['target' => 'blank'],
-              ])),
-            ]),
-          ];
-        }
-        break;
-
-      default:
-    }
-
-    return $row;
   }
 
 }
