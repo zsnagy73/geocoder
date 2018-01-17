@@ -2,6 +2,7 @@
 
 namespace Drupal\geocoder;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
@@ -52,7 +53,21 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
   public function getPlugins() {
     $config = \Drupal::config('geocoder.settings');
 
-    $plugins_arguments = !empty($config->get('plugins_options')) ? $config->get('plugins_options') : [];
+    $plugins_arguments = $config->get('plugins_options');
+
+    // Convert old JSON config.
+    // This should be removed before the stable release 8.x-2.0.
+    if (is_string($plugins_arguments) && $json = Json::decode($plugins_arguments)) {
+      // Convert each plugins property in lowercase.
+      $plugins_arguments = array_map(function ($old_plugin_arguments) {
+        return array_combine(
+          array_map(function ($k) {
+            return strtolower($k);
+          }, array_keys($old_plugin_arguments)),
+          $old_plugin_arguments
+        );
+      }, $json);
+    }
 
     $definitions = array_map(function (array $definition) use ($plugins_arguments) {
       $plugins_arguments += [$definition['id'] => []];
