@@ -84,8 +84,10 @@ class DumperPluginManager extends GeocoderPluginManagerBase {
   public function fixDumperFieldIncompatibility(&$dumper_result, $dumper, FieldConfigInterface $field_config) {
     // Fix not UTF-8 encoded result strings.
     // https://stackoverflow.com/questions/6723562/how-to-detect-malformed-utf-8-string-in-php
-    if (!preg_match('//u', $dumper_result)) {
-      $dumper_result = utf8_encode($dumper_result);
+    if (is_string($dumper_result)) {
+      if (!preg_match('//u', $dumper_result)) {
+        $dumper_result = utf8_encode($dumper_result);
+      }
     }
 
     // If the field is a string|text type check if the result length is
