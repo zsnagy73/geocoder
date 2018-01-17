@@ -12,7 +12,7 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   name = "TomTom",
  *   handler = "\Geocoder\Provider\TomTom",
  *   arguments = {
- *     "apiKey" = NULL,
+ *     "apikey" = NULL,
  *     "locale" = NULL
  *   }
  * )

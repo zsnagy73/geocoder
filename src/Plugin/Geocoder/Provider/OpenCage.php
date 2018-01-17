@@ -12,8 +12,8 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   name = "OpenCage",
  *   handler = "",
  *   arguments = {
- *     "apiKey" = NULL,
- *     "useSsl" = FALSE,
+ *     "apikey" = NULL,
+ *     "usessl" = FALSE,
  *     "locale" = NULL
  *   }
  * )

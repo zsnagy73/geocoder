@@ -14,8 +14,8 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   arguments = {
  *     "locale" = NULL,
  *     "region" = NULL,
- *     "useSsl" = FALSE,
- *     "apiKey" = NULL,
+ *     "usessl" = FALSE,
+ *     "apikey" = NULL,
  *   }
  * )
  */

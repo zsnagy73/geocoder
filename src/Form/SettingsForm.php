@@ -10,7 +10,6 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\geocoder\ProviderPluginManager;
 use Drupal\Core\Url;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Render\RendererInterface;
 
 /**
@@ -224,7 +223,7 @@ class SettingsForm extends ConfigFormBase {
     }
 
     $this->config('geocoder.settings')->set('cache', $form_state_values['cache']);
-    $this->config('geocoder.settings')->set('plugins_options', Json::encode($plugins_options));
+    $this->config('geocoder.settings')->set('plugins_options', $plugins_options);
     $this->config('geocoder.settings')->save();
 
     parent::submitForm($form, $form_state);

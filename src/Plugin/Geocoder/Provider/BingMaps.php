@@ -12,7 +12,7 @@ use Drupal\geocoder\ProviderUsingHandlerWithAdapterBase;
  *   name = "BingMaps",
  *   handler = "\Geocoder\Provider\BingMaps",
  *   arguments = {
- *     "apiKey" = NULL,
+ *     "apikey" = NULL,
  *     "locale" = NULL
  *   }
  * )
