@@ -14,7 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Base Plugin implementation of the Geocode formatter.
@@ -218,9 +217,7 @@ abstract class GeocodeFormatterBase extends FormatterBase implements ContainerFa
     $elements = [];
     $dumper = $this->dumperPluginManager->createInstance($this->getSetting('dumper'));
     $provider_plugins = $this->getEnabledProviderPlugins();
-
-    // @TODO: Find a better way to achieve this.
-    $geocoder_plugins_options = !empty($this->config->get('plugins_options')) ? Json::decode($this->config->get('plugins_options')) : [];
+    $geocoder_plugins_options = (array) $this->config->get('plugins_options');
 
     foreach ($items as $delta => $item) {
       if ($address_collection = $this->geocoder->geocode($item->value, array_keys($provider_plugins), $geocoder_plugins_options)) {
