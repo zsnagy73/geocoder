@@ -69,6 +69,8 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
       }, $json);
     }
 
+    $plugins_arguments = (array) $plugins_arguments;
+
     $definitions = array_map(function (array $definition) use ($plugins_arguments) {
       $plugins_arguments += [$definition['id'] => []];
       $definition += ['name' => $definition['id']];
