@@ -179,7 +179,6 @@ class SettingsForm extends ConfigFormBase {
       // Expose an Options Field if the Plugin accepts arguments.
       if (!empty($plugin['arguments'])) {
         foreach ($plugin['arguments'] as $option_key => $value) {
-
           $plugin_config_schema[$option_key] += [
             'label' => $plugin['id'],
             'description' => NULL,
@@ -199,15 +198,18 @@ class SettingsForm extends ConfigFormBase {
             case 'boolean':
               $type = 'checkbox';
               break;
+
             case 'string':
             case 'color_hex':
             case 'path':
             case 'label':
               $type = 'textfield';
               break;
+
             case 'text':
               $type = 'textarea';
               break;
+
             case 'integer':
               $type = 'number';
               break;
