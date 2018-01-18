@@ -179,6 +179,12 @@ class SettingsForm extends ConfigFormBase {
       // Expose an Options Field if the Plugin accepts arguments.
       if (!empty($plugin['arguments'])) {
         foreach ($plugin['arguments'] as $option_key => $value) {
+
+          $plugin_config_schema[$option_key] += [
+            'label' => $plugin['id'],
+            'description' => NULL,
+          ];
+
           $plugin['arguments'] += [$option_key => $value];
 
           $plugin_config_schema += [
@@ -188,31 +194,31 @@ class SettingsForm extends ConfigFormBase {
             ],
           ];
 
-          if (is_bool($value)) {
-            // If the argument is boolean generate a checkbox field.
-            $rows[$plugin['id']]['options'][$option_key] = [
-              '#type' => 'checkbox',
-              '#title' => $plugin_config_schema[$option_key]['label'],
-              '#description' => isset($plugin_config_schema[$option_key]['description']) ? $plugin_config_schema[$option_key]['description'] : '',
-              '#default_value' => $plugin['arguments'][$option_key],
-            ];
+          $type = 'textfield';
+          switch ($plugin_config_schema[$option_key]['type']) {
+            case 'boolean':
+              $type = 'checkbox';
+              break;
+            case 'string':
+            case 'color_hex':
+            case 'path':
+            case 'label':
+              $type = 'textfield';
+              break;
+            case 'text':
+              $type = 'textarea';
+              break;
+            case 'integer':
+              $type = 'number';
+              break;
           }
-          else {
-            // Handle args without values.
-            if (!is_string($option_key)) {
-              $option_key = $value;
-              $value = NULL;
-            }
 
-            // A textfield field otherwise.
-            $rows[$plugin['id']]['options'][$option_key] = [
-              '#type' => 'textfield',
-              '#size' => 50,
-              '#title' => $plugin_config_schema[$option_key]['label'],
-              '#description' => isset($plugin_config_schema[$option_key]['description']) ? $plugin_config_schema[$option_key]['description'] : '',
-              '#default_value' => $plugin['arguments'][$option_key],
-            ];
-          }
+          $rows[$plugin['id']]['options'][$option_key] = [
+            '#type' => $type,
+            '#title' => $plugin_config_schema[$option_key]['label'],
+            '#description' => $plugin_config_schema[$option_key]['description'],
+            '#default_value' => $plugin['arguments'][$option_key],
+          ];
         }
       }
       else {
