@@ -193,7 +193,7 @@ class SettingsForm extends ConfigFormBase {
             $rows[$plugin['id']]['options'][$option_key] = [
               '#type' => 'checkbox',
               '#title' => $plugin_config_schema[$option_key]['label'],
-              '#description' => $plugin_config_schema[$option_key]['description'],
+              '#description' => isset($plugin_config_schema[$option_key]['description']) ? $plugin_config_schema[$option_key]['description'] : '',
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
@@ -209,7 +209,7 @@ class SettingsForm extends ConfigFormBase {
               '#type' => 'textfield',
               '#size' => 50,
               '#title' => $plugin_config_schema[$option_key]['label'],
-              '#description' => $plugin_config_schema[$option_key]['description'],
+              '#description' => isset($plugin_config_schema[$option_key]['description']) ? $plugin_config_schema[$option_key]['description'] : '',
               '#default_value' => $plugin['arguments'][$option_key],
             ];
           }
