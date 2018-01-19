@@ -74,8 +74,8 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
 
     $definitions = array_map(function (array $definition) use ($plugins_arguments) {
       $plugins_arguments += [$definition['id'] => []];
-      $definition += ['name' => $definition['id']];
-      $definition['arguments'] = array_merge($definition['arguments'], $plugins_arguments[$definition['id']]);
+      $definition += ['name' => $definition['id'], 'arguments' => []];
+      $definition['arguments'] = array_merge((array) $definition['arguments'], (array) $plugins_arguments[$definition['id']]);
 
       return $definition;
     }, $this->getDefinitions());

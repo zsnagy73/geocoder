@@ -119,7 +119,7 @@ class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('geocoder.settings');
 
-    $geocoder_config_schema = $this->typedConfigManager->getDefinition('geocoder.settings');
+    $geocoder_config_schema = $this->typedConfigManager->getDefinition('geocoder.settings') + ['mapping' => []];
     $geocoder_config_schema = $geocoder_config_schema['mapping'];
 
     // Attach Geofield Map Library.
@@ -176,54 +176,53 @@ class SettingsForm extends ConfigFormBase {
         ],
       ];
 
-      // Expose an Options Field if the Plugin accepts arguments.
-      if (!empty($plugin['arguments'])) {
-        foreach ($plugin['arguments'] as $option_key => $value) {
-          $plugin_config_schema[$option_key] += [
-            'label' => $plugin['id'],
+      foreach ($plugin_config_schema as $argument => $argument_type) {
+        $plugin_config_schema[$argument] += [
+          'label' => $plugin['id'],
+          'description' => NULL,
+        ];
+
+        $plugin['arguments'] += [$argument => $plugin['arguments'][$argument]];
+
+        $plugin_config_schema += [
+          $argument => [
+            'label' => $argument,
             'description' => NULL,
-          ];
+          ],
+        ];
 
-          $plugin['arguments'] += [$option_key => $value];
+        switch ($argument_type['type']) {
+          case 'boolean':
+            $type = 'checkbox';
+            break;
 
-          $plugin_config_schema += [
-            $option_key => [
-              'label' => $option_key,
-              'description' => NULL,
-            ],
-          ];
+          case 'string':
+          case 'color_hex':
+          case 'path':
+          case 'label':
+            $type = 'textfield';
+            break;
 
-          $type = 'textfield';
-          switch ($plugin_config_schema[$option_key]['type']) {
-            case 'boolean':
-              $type = 'checkbox';
-              break;
+          case 'text':
+            $type = 'textarea';
+            break;
 
-            case 'string':
-            case 'color_hex':
-            case 'path':
-            case 'label':
-              $type = 'textfield';
-              break;
-
-            case 'text':
-              $type = 'textarea';
-              break;
-
-            case 'integer':
-              $type = 'number';
-              break;
-          }
-
-          $rows[$plugin['id']]['options'][$option_key] = [
-            '#type' => $type,
-            '#title' => $plugin_config_schema[$option_key]['label'],
-            '#description' => $plugin_config_schema[$option_key]['description'],
-            '#default_value' => $plugin['arguments'][$option_key],
-          ];
+          case 'integer':
+            $type = 'number';
+            break;
+          default:
+            $type = 'textfield';
         }
+
+        $rows[$plugin['id']]['options'][$argument] = [
+          '#type' => $type,
+          '#title' => $plugin_config_schema[$argument]['label'],
+          '#description' => $plugin_config_schema[$argument]['description'],
+          '#default_value' => $plugin['arguments'][$argument],
+        ];
       }
-      else {
+
+      if (empty($rows[$plugin['id']]['options'])) {
         $rows[$plugin['id']]['options'] = [
           '#type' => 'value',
           '#value' => [],
