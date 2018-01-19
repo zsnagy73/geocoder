@@ -52,9 +52,7 @@ abstract class GeocoderPluginManagerBase extends DefaultPluginManager {
    *   A list of plugins with their settings.
    */
   public function getPlugins() {
-    $config = \Drupal::config('geocoder.settings');
-
-    $plugins_arguments = $config->get('plugins_options');
+    $plugins_arguments = $this->config->get('plugins_options');
 
     // Convert old JSON config.
     // This should be removed before the stable release 8.x-2.0.
