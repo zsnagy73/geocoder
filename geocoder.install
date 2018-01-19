@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Update geofield third_party_settings.
+ */
+function geocoder_update_8201() {
+  $fieldmap = \Drupal::entityManager()->getFieldMap();
+  foreach ($fieldmap as $entity => $fields) {
+    foreach ($fields as $field => $field_settings) {
+      if ($field_settings['type'] == 'geofield') {
+        foreach ($field_settings['bundles'] as $bundle) {
+          $config_factory = \Drupal::configFactory();
+          $config_name = "field.field." . $entity . "." . $bundle . "." . "$field";
+          $config = $config_factory->getEditable($config_name);
+          $geocoder_field = $config->get('third_party_settings.geocoder_field');
+          // Check if we still have third party settings from prior beta version.
+          if (isset($geocoder_field['field']) && !isset($geocoder_field['geocode_field'])) {
+            $geocoder_field['geocode_field'] = $geocoder_field['field'];
+            unset($geocoder_field['field']);
+            $geocoder_field['weight'] = '0';
+            $geocoder_field['hidden'] = '0';
+            $geocoder_field['disabled'] = '0';
+            $geocoder_field['reverse_geocode_field'] = [];
+            $config->set('third_party_settings.geocoder_field', $geocoder_field)->save(TRUE);
+          }
+        }
+      }
+    }
+  }
+}
